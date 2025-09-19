@@ -11,7 +11,7 @@ html {
 }
 
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Nunito', sans-serif;
     line-height: 1.6;
     color: #333;
     background-color: #f8f6f0;
@@ -64,14 +64,22 @@ body {
 }
 
 .cafe-name {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Nunito', sans-serif;
     font-size: 2.5rem;
-    font-weight: 700;
+    font-weight: 800;
     margin-bottom: 0.5rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    color: #87CEEB;
+    text-shadow: 
+        0 0 10px #87CEEB,
+        0 0 20px #87CEEB,
+        0 0 30px #87CEEB,
+        2px 2px 4px rgba(0,0,0,0.5);
+    letter-spacing: 2px;
+    text-transform: uppercase;
 }
 
 .cafe-tagline {
+    font-family: 'Nunito', sans-serif;
     font-size: 1.1rem;
     font-weight: 300;
     opacity: 0.9;
@@ -85,11 +93,14 @@ body {
 }
 
 .main-nav h2 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Nunito', sans-serif;
     font-size: 2rem;
     text-align: center;
     margin-bottom: 2rem;
-    color: #2c3e50;
+    color: #87CEEB;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 800;
 }
 
 .category-grid {
@@ -134,13 +145,17 @@ body {
 }
 
 .category-card h3 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Nunito', sans-serif;
     font-size: 1.3rem;
     margin-bottom: 0.25rem;
-    color: #2c3e50;
+    color: #000000;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-weight: 800;
 }
 
 .category-card p {
+    font-family: 'Nunito', sans-serif;
     color: #7f8c8d;
     font-size: 0.85rem;
     line-height: 1.3;
@@ -161,13 +176,17 @@ body {
 }
 
 .category-header h2 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Nunito', sans-serif;
     font-size: 2.5rem;
-    color: #2c3e50;
+    color: #87CEEB;
     margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 800;
 }
 
 .category-header p {
+    font-family: 'Nunito', sans-serif;
     color: #7f8c8d;
     font-size: 1.1rem;
 }
@@ -203,19 +222,21 @@ body {
 }
 
 .item-name {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Nunito', sans-serif;
     font-size: 1.3rem;
     color: #2c3e50;
     font-weight: 600;
 }
 
 .item-price {
+    font-family: 'Nunito', sans-serif;
     font-size: 1.2rem;
     color: #e67e22;
     font-weight: 600;
 }
 
 .item-description {
+    font-family: 'Nunito', sans-serif;
     color: #7f8c8d;
     font-size: 0.95rem;
     line-height: 1.5;
@@ -231,6 +252,7 @@ body {
     border: none;
     padding: 12px 18px;
     border-radius: 25px;
+    font-family: 'Nunito', sans-serif;
     font-size: 0.95rem;
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
@@ -254,9 +276,16 @@ body {
     
     .cafe-name {
         font-size: 1.8rem;
+        letter-spacing: 1px;
+        text-shadow: 
+            0 0 8px #87CEEB,
+            0 0 16px #87CEEB,
+            0 0 24px #87CEEB,
+            2px 2px 4px rgba(0,0,0,0.5);
     }
     
     .cafe-tagline {
+        font-family: 'Nunito', sans-serif;
         font-size: 0.95rem;
     }
     
@@ -267,6 +296,7 @@ body {
     .main-nav h2 {
         font-size: 1.5rem;
         margin-bottom: 1.5rem;
+        letter-spacing: 0.5px;
     }
     
     .category-grid {
@@ -289,9 +319,12 @@ body {
     .category-card h3 {
         font-size: 1.1rem;
         margin-bottom: 0.2rem;
+        letter-spacing: 0.3px;
+        color: #000000;
     }
     
     .category-card p {
+        font-family: 'Nunito', sans-serif;
         font-size: 0.8rem;
         line-height: 1.2;
     }
@@ -306,9 +339,11 @@ body {
     
     .category-header h2 {
         font-size: 1.8rem;
+        letter-spacing: 0.5px;
     }
     
     .category-header p {
+        font-family: 'Nunito', sans-serif;
         font-size: 1rem;
     }
     
@@ -324,14 +359,17 @@ body {
     }
     
     .item-name {
+        font-family: 'Nunito', sans-serif;
         font-size: 1.2rem;
     }
     
     .item-price {
+        font-family: 'Nunito', sans-serif;
         font-size: 1.1rem;
     }
     
     .item-description {
+        font-family: 'Nunito', sans-serif;
         font-size: 0.9rem;
     }
     
@@ -339,6 +377,7 @@ body {
         top: 10px;
         left: 10px;
         padding: 10px 15px;
+        font-family: 'Nunito', sans-serif;
         font-size: 0.9rem;
     }
 }
@@ -350,9 +389,16 @@ body {
     
     .cafe-name {
         font-size: 1.6rem;
+        letter-spacing: 0.5px;
+        text-shadow: 
+            0 0 6px #87CEEB,
+            0 0 12px #87CEEB,
+            0 0 18px #87CEEB,
+            2px 2px 4px rgba(0,0,0,0.5);
     }
     
     .cafe-tagline {
+        font-family: 'Nunito', sans-serif;
         font-size: 0.9rem;
     }
     
@@ -363,6 +409,7 @@ body {
     .main-nav h2 {
         font-size: 1.3rem;
         margin-bottom: 1rem;
+        letter-spacing: 0.3px;
     }
     
     .category-grid {
@@ -385,9 +432,12 @@ body {
     .category-card h3 {
         font-size: 1rem;
         margin-bottom: 0.15rem;
+        letter-spacing: 0.2px;
+        color: #000000;
     }
     
     .category-card p {
+        font-family: 'Nunito', sans-serif;
         font-size: 0.75rem;
         line-height: 1.1;
     }
@@ -398,9 +448,11 @@ body {
     
     .category-header h2 {
         font-size: 1.6rem;
+        letter-spacing: 0.3px;
     }
     
     .category-header p {
+        font-family: 'Nunito', sans-serif;
         font-size: 0.95rem;
     }
     
@@ -410,14 +462,17 @@ body {
     }
     
     .item-name {
+        font-family: 'Nunito', sans-serif;
         font-size: 1.1rem;
     }
     
     .item-price {
+        font-family: 'Nunito', sans-serif;
         font-size: 1rem;
     }
     
     .item-description {
+        font-family: 'Nunito', sans-serif;
         font-size: 0.85rem;
     }
     
@@ -425,6 +480,7 @@ body {
         top: 8px;
         left: 8px;
         padding: 8px 12px;
+        font-family: 'Nunito', sans-serif;
         font-size: 0.85rem;
     }
 }

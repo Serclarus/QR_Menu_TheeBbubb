@@ -1,186 +1,186 @@
 // Menu data
 const menuData = {
     'hot-drinks': {
-        title: 'Hot Drinks',
-        description: 'Warm beverages to start your day',
+        title: 'Sıcak İçecekler',
+        description: 'Gününüze başlamak için sıcak içecekler',
         items: [
             {
                 name: 'Espresso',
-                price: '$3.50',
-                description: 'Rich, full-bodied coffee with a perfect crema'
+                price: '₺35',
+                description: 'Mükemmel krema ile zengin, dolgun kahve'
             },
             {
                 name: 'Cappuccino',
-                price: '$4.25',
-                description: 'Espresso with steamed milk and foam'
+                price: '₺42',
+                description: 'Buharda ısıtılmış süt ve köpük ile espresso'
             },
             {
                 name: 'Latte',
-                price: '$4.75',
-                description: 'Smooth espresso with steamed milk and light foam'
+                price: '₺47',
+                description: 'Buharda ısıtılmış süt ve hafif köpük ile yumuşak espresso'
             },
             {
                 name: 'Americano',
-                price: '$3.75',
-                description: 'Espresso diluted with hot water for a clean taste'
+                price: '₺37',
+                description: 'Temiz tat için sıcak su ile seyreltilmiş espresso'
             },
             {
                 name: 'Mocha',
-                price: '$5.25',
-                description: 'Espresso with chocolate and steamed milk'
+                price: '₺52',
+                description: 'Çikolata ve buharda ısıtılmış süt ile espresso'
             },
             {
-                name: 'Hot Chocolate',
-                price: '$4.50',
-                description: 'Rich, creamy chocolate drink topped with whipped cream'
+                name: 'Sıcak Çikolata',
+                price: '₺45',
+                description: 'Krem şanti ile süslenmiş zengin, kremsi çikolata içeceği'
             },
             {
                 name: 'Chai Latte',
-                price: '$4.75',
-                description: 'Spiced tea with steamed milk and honey'
+                price: '₺47',
+                description: 'Buharda ısıtılmış süt ve bal ile baharatlı çay'
             },
             {
-                name: 'Green Tea',
-                price: '$3.25',
-                description: 'Premium green tea with antioxidants'
+                name: 'Yeşil Çay',
+                price: '₺32',
+                description: 'Antioksidanlarla premium yeşil çay'
             }
         ]
     },
     'cold-drinks': {
-        title: 'Cold Drinks',
-        description: 'Refreshing drinks for any time',
+        title: 'Soğuk İçecekler',
+        description: 'Her zaman için ferahlatıcı içecekler',
         items: [
             {
-                name: 'Iced Coffee',
-                price: '$4.00',
-                description: 'Cold-brewed coffee served over ice'
+                name: 'Buzlu Kahve',
+                price: '₺40',
+                description: 'Buz üzerinde servis edilen soğuk demlenmiş kahve'
             },
             {
-                name: 'Iced Latte',
-                price: '$4.75',
-                description: 'Espresso with cold milk over ice'
+                name: 'Buzlu Latte',
+                price: '₺47',
+                description: 'Buz üzerinde soğuk süt ile espresso'
             },
             {
                 name: 'Frappuccino',
-                price: '$5.50',
-                description: 'Blended coffee drink with ice and whipped cream'
+                price: '₺55',
+                description: 'Buz ve krem şanti ile karıştırılmış kahve içeceği'
             },
             {
                 name: 'Cold Brew',
-                price: '$4.25',
-                description: 'Smooth, less acidic coffee brewed cold for 12 hours'
+                price: '₺42',
+                description: '12 saat soğuk demlenmiş yumuşak, daha az asitli kahve'
             },
             {
-                name: 'Iced Tea',
-                price: '$3.50',
-                description: 'Refreshing black tea served over ice'
+                name: 'Buzlu Çay',
+                price: '₺35',
+                description: 'Buz üzerinde servis edilen ferahlatıcı siyah çay'
             },
             {
-                name: 'Lemonade',
-                price: '$3.75',
-                description: 'Fresh squeezed lemonade with mint'
+                name: 'Limonata',
+                price: '₺37',
+                description: 'Nane ile taze sıkılmış limonata'
             },
             {
                 name: 'Smoothie',
-                price: '$6.25',
-                description: 'Blended fruit smoothie with yogurt'
+                price: '₺62',
+                description: 'Yoğurt ile karıştırılmış meyve smoothie'
             },
             {
-                name: 'Sparkling Water',
-                price: '$2.50',
-                description: 'Refreshing sparkling water with lemon'
+                name: 'Maden Suyu',
+                price: '₺25',
+                description: 'Limon ile ferahlatıcı maden suyu'
             }
         ]
     },
     'meals': {
-        title: 'Meals',
-        description: 'Delicious food to satisfy your hunger',
+        title: 'Yemekler',
+        description: 'Açlığınızı giderecek lezzetli yemekler',
         items: [
             {
-                name: 'Avocado Toast',
-                price: '$8.50',
-                description: 'Smashed avocado on artisan bread with cherry tomatoes'
+                name: 'Avokado Tost',
+                price: '₺85',
+                description: 'Kiraz domates ile zanaatkar ekmeği üzerinde ezilmiş avokado'
             },
             {
-                name: 'Breakfast Sandwich',
-                price: '$7.75',
-                description: 'Egg, cheese, and bacon on a croissant'
+                name: 'Kahvaltı Sandviçi',
+                price: '₺77',
+                description: 'Kruvasan üzerinde yumurta, peynir ve pastırma'
             },
             {
-                name: 'Caesar Salad',
-                price: '$9.25',
-                description: 'Fresh romaine with parmesan, croutons, and caesar dressing'
+                name: 'Sezar Salatası',
+                price: '₺92',
+                description: 'Parmesan, kruton ve sezar sosu ile taze marul'
             },
             {
-                name: 'Club Sandwich',
-                price: '$10.50',
-                description: 'Turkey, bacon, lettuce, tomato on toasted bread'
+                name: 'Kulüp Sandviçi',
+                price: '₺105',
+                description: 'Kızarmış ekmek üzerinde hindi, pastırma, marul, domates'
             },
             {
                 name: 'Quiche Lorraine',
-                price: '$8.75',
-                description: 'Traditional quiche with bacon and gruyere cheese'
+                price: '₺87',
+                description: 'Pastırma ve gruyere peyniri ile geleneksel quiche'
             },
             {
-                name: 'Soup of the Day',
-                price: '$6.50',
-                description: 'Chef\'s daily special soup with bread'
+                name: 'Günün Çorbası',
+                price: '₺65',
+                description: 'Şefin günlük özel çorbası ekmek ile'
             },
             {
-                name: 'Grilled Cheese',
-                price: '$7.25',
-                description: 'Three cheese blend on sourdough bread'
+                name: 'Izgara Peynir',
+                price: '₺72',
+                description: 'Ekşi mayalı ekmek üzerinde üç peynir karışımı'
             },
             {
-                name: 'Veggie Wrap',
-                price: '$8.00',
-                description: 'Fresh vegetables and hummus in a spinach tortilla'
+                name: 'Sebze Wrap',
+                price: '₺80',
+                description: 'Ispanak tortilla içinde taze sebzeler ve humus'
             }
         ]
     },
     'desserts': {
-        title: 'Desserts',
-        description: 'Sweet treats to end your meal',
+        title: 'Tatlılar',
+        description: 'Yemeğinizi bitirmek için tatlı ikramlar',
         items: [
             {
-                name: 'Chocolate Cake',
-                price: '$5.75',
-                description: 'Rich chocolate cake with chocolate ganache'
+                name: 'Çikolatalı Kek',
+                price: '₺57',
+                description: 'Çikolata ganaj ile zengin çikolatalı kek'
             },
             {
                 name: 'Cheesecake',
-                price: '$6.25',
-                description: 'New York style cheesecake with berry compote'
+                price: '₺62',
+                description: 'Meyve kompostosu ile New York tarzı cheesecake'
             },
             {
                 name: 'Tiramisu',
-                price: '$6.50',
-                description: 'Classic Italian dessert with coffee and mascarpone'
+                price: '₺65',
+                description: 'Kahve ve mascarpone ile klasik İtalyan tatlısı'
             },
             {
-                name: 'Apple Pie',
-                price: '$5.50',
-                description: 'Homemade apple pie with cinnamon and vanilla ice cream'
+                name: 'Elmalı Turta',
+                price: '₺55',
+                description: 'Tarçın ve vanilyalı dondurma ile ev yapımı elmalı turta'
             },
             {
-                name: 'Chocolate Chip Cookies',
-                price: '$2.75',
-                description: 'Fresh baked cookies with premium chocolate chips'
+                name: 'Çikolata Parçacıklı Kurabiye',
+                price: '₺27',
+                description: 'Premium çikolata parçacıkları ile taze pişmiş kurabiyeler'
             },
             {
-                name: 'Croissant',
-                price: '$3.25',
-                description: 'Buttery, flaky French pastry'
+                name: 'Kruvasan',
+                price: '₺32',
+                description: 'Tereyağlı, katmerli Fransız hamur işi'
             },
             {
                 name: 'Muffin',
-                price: '$3.50',
-                description: 'Fresh baked muffin of the day'
+                price: '₺35',
+                description: 'Günün taze pişmiş muffin\'i'
             },
             {
-                name: 'Ice Cream',
-                price: '$4.25',
-                description: 'Two scoops of premium ice cream'
+                name: 'Dondurma',
+                price: '₺42',
+                description: 'İki top premium dondurma'
             }
         ]
     }
