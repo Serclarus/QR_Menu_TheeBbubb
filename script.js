@@ -250,27 +250,36 @@ categoryCards.forEach(card => {
 
 backBtn.addEventListener('click', showMainMenu);
 
-// Add touch support for mobile with scroll-friendly handling
+// Add touch support for mobile with improved scroll detection
 categoryCards.forEach(card => {
     let touchStartTime = 0;
     let touchStartY = 0;
+    let touchStartX = 0;
     let touchMoved = false;
+    let isScrolling = false;
     
     card.addEventListener('touchstart', (e) => {
         touchStartTime = Date.now();
         touchStartY = e.touches[0].clientY;
+        touchStartX = e.touches[0].clientX;
         touchMoved = false;
+        isScrolling = false;
+        
+        // Only show visual feedback if it's likely a tap
         card.style.transform = 'scale(0.98)';
         card.style.transition = 'transform 0.1s ease';
     });
     
     card.addEventListener('touchmove', (e) => {
         const touchY = e.touches[0].clientY;
+        const touchX = e.touches[0].clientX;
         const deltaY = Math.abs(touchY - touchStartY);
+        const deltaX = Math.abs(touchX - touchStartX);
         
-        // If user moved more than 10px, consider it a scroll
-        if (deltaY > 10) {
+        // If user moved more than 5px in any direction, consider it a scroll
+        if (deltaY > 5 || deltaX > 5) {
             touchMoved = true;
+            isScrolling = true;
             card.style.transform = '';
             card.style.transition = 'transform 0.3s ease';
         }
@@ -280,14 +289,17 @@ categoryCards.forEach(card => {
         const touchDuration = Date.now() - touchStartTime;
         
         // Only trigger click if:
-        // 1. Touch was short (less than 500ms)
-        // 2. User didn't scroll (moved less than 10px)
-        if (touchDuration < 500 && !touchMoved) {
+        // 1. Touch was very short (less than 300ms)
+        // 2. User didn't move at all (delta < 5px)
+        // 3. It's not a scroll gesture
+        // 4. Page is not currently scrolling
+        if (touchDuration < 300 && !touchMoved && !isScrolling && !isPageScrolling) {
             e.preventDefault();
+            e.stopPropagation();
             card.style.transform = '';
             card.style.transition = 'transform 0.3s ease';
             const category = card.getAttribute('data-category');
-            setTimeout(() => showCategory(category), 100);
+            setTimeout(() => showCategory(category), 50);
         } else {
             card.style.transform = '';
             card.style.transition = 'transform 0.3s ease';
@@ -297,8 +309,22 @@ categoryCards.forEach(card => {
     card.addEventListener('touchcancel', (e) => {
         card.style.transform = '';
         card.style.transition = 'transform 0.3s ease';
+        touchMoved = true;
+        isScrolling = true;
     });
 });
+
+// Global scroll detection
+let isPageScrolling = false;
+let scrollTimeout;
+
+document.addEventListener('scroll', () => {
+    isPageScrolling = true;
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+        isPageScrolling = false;
+    }, 150);
+}, { passive: true });
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
