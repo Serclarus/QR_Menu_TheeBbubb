@@ -250,24 +250,51 @@ categoryCards.forEach(card => {
 
 backBtn.addEventListener('click', showMainMenu);
 
-// Add touch support for mobile
+// Add touch support for mobile with scroll-friendly handling
 categoryCards.forEach(card => {
+    let touchStartTime = 0;
+    let touchStartY = 0;
+    let touchMoved = false;
+    
     card.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        card.style.transform = 'scale(0.95)';
+        touchStartTime = Date.now();
+        touchStartY = e.touches[0].clientY;
+        touchMoved = false;
+        card.style.transform = 'scale(0.98)';
         card.style.transition = 'transform 0.1s ease';
     });
     
+    card.addEventListener('touchmove', (e) => {
+        const touchY = e.touches[0].clientY;
+        const deltaY = Math.abs(touchY - touchStartY);
+        
+        // If user moved more than 10px, consider it a scroll
+        if (deltaY > 10) {
+            touchMoved = true;
+            card.style.transform = '';
+            card.style.transition = 'transform 0.3s ease';
+        }
+    });
+    
     card.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        card.style.transform = '';
-        card.style.transition = 'transform 0.3s ease';
-        const category = card.getAttribute('data-category');
-        setTimeout(() => showCategory(category), 100);
+        const touchDuration = Date.now() - touchStartTime;
+        
+        // Only trigger click if:
+        // 1. Touch was short (less than 500ms)
+        // 2. User didn't scroll (moved less than 10px)
+        if (touchDuration < 500 && !touchMoved) {
+            e.preventDefault();
+            card.style.transform = '';
+            card.style.transition = 'transform 0.3s ease';
+            const category = card.getAttribute('data-category');
+            setTimeout(() => showCategory(category), 100);
+        } else {
+            card.style.transform = '';
+            card.style.transition = 'transform 0.3s ease';
+        }
     });
     
     card.addEventListener('touchcancel', (e) => {
-        e.preventDefault();
         card.style.transform = '';
         card.style.transition = 'transform 0.3s ease';
     });
@@ -285,18 +312,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add smooth scrolling
     document.documentElement.style.scrollBehavior = 'smooth';
     
-    // Prevent zoom on double tap for mobile
+    // Prevent zoom on double tap for mobile (only on non-interactive elements)
     let lastTouchEnd = 0;
     document.addEventListener('touchend', function (event) {
-        const now = (new Date()).getTime();
-        if (now - lastTouchEnd <= 300) {
-            event.preventDefault();
+        // Only prevent zoom if it's not on a button or interactive element
+        if (!event.target.closest('.category-card, .back-btn, .menu-item')) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
         }
-        lastTouchEnd = now;
     }, false);
     
     // Improve scrolling performance
     document.body.style.webkitOverflowScrolling = 'touch';
+    
+    // Add passive event listeners for better scroll performance
+    document.addEventListener('touchstart', function() {}, {passive: true});
+    document.addEventListener('touchmove', function() {}, {passive: true});
 });
 
 // Handle browser back button
