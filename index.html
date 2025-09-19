@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cafe Menu - Scan QR Code</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Cafe Image -->
+        <header class="header">
+            <div class="cafe-image">
+                <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Cafe Interior" />
+                <div class="cafe-overlay">
+                    <h1 class="cafe-name">Bella Vista Cafe</h1>
+                    <p class="cafe-tagline">Fresh • Local • Delicious</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="main-nav">
+            <h2>Our Menu</h2>
+            <div class="category-grid">
+                <div class="category-card" data-category="hot-drinks">
+                    <div class="category-icon">☕</div>
+                    <h3>Hot Drinks</h3>
+                    <p>Warm beverages to start your day</p>
+                </div>
+                <div class="category-card" data-category="cold-drinks">
+                    <div class="category-icon">🧊</div>
+                    <h3>Cold Drinks</h3>
+                    <p>Refreshing drinks for any time</p>
+                </div>
+                <div class="category-card" data-category="meals">
+                    <div class="category-icon">🍽️</div>
+                    <h3>Meals</h3>
+                    <p>Delicious food to satisfy your hunger</p>
+                </div>
+                <div class="category-card" data-category="desserts">
+                    <div class="category-icon">🍰</div>
+                    <h3>Desserts</h3>
+                    <p>Sweet treats to end your meal</p>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Category Content -->
+        <main class="category-content" id="category-content">
+            <!-- Content will be dynamically loaded here -->
+        </main>
+
+        <!-- Back Button -->
+        <button class="back-btn" id="back-btn" style="display: none;">
+            ← Back to Menu
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

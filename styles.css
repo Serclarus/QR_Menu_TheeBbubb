@@ -1,0 +1,426 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f6f0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Header Styles */
+.header {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+}
+
+.cafe-image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.cafe-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cafe-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(0,0,0,0.6), rgba(0,0,0,0.3));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.cafe-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.cafe-tagline {
+    font-size: 1.1rem;
+    font-weight: 300;
+    opacity: 0.9;
+}
+
+/* Navigation Styles */
+.main-nav {
+    padding: 1.5rem 1rem;
+    background: white;
+    width: 100%;
+}
+
+.main-nav h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #2c3e50;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 0.5rem;
+}
+
+.category-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border-color: #e67e22;
+}
+
+.category-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.category-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+}
+
+.category-card p {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+}
+
+/* Category Content Styles */
+.category-content {
+    padding: 1.5rem 1rem;
+    background: white;
+    min-height: 60vh;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.category-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.category-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.category-header p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 0.5rem;
+}
+
+.menu-item {
+    background: #f8f6f0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    border-left: 4px solid #e67e22;
+    transition: all 0.3s ease;
+    touch-action: manipulation;
+}
+
+.menu-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.item-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.item-price {
+    font-size: 1.2rem;
+    color: #e67e22;
+    font-weight: 600;
+}
+
+.item-description {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Back Button */
+.back-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #e67e22;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.back-btn:hover {
+    background: #d35400;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header {
+        height: 200px;
+    }
+    
+    .cafe-name {
+        font-size: 1.8rem;
+    }
+    
+    .cafe-tagline {
+        font-size: 0.95rem;
+    }
+    
+    .main-nav {
+        padding: 1rem 0.75rem;
+    }
+    
+    .main-nav h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .category-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        padding: 0 0.25rem;
+    }
+    
+    .category-card {
+        padding: 1.25rem;
+        border-radius: 10px;
+    }
+    
+    .category-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .category-card h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .category-card p {
+        font-size: 0.9rem;
+    }
+    
+    .category-content {
+        padding: 1rem 0.75rem;
+    }
+    
+    .category-header {
+        margin-bottom: 1.5rem;
+    }
+    
+    .category-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .category-header p {
+        font-size: 1rem;
+    }
+    
+    .items-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        padding: 0 0.25rem;
+    }
+    
+    .menu-item {
+        padding: 1rem;
+        border-radius: 10px;
+    }
+    
+    .item-name {
+        font-size: 1.2rem;
+    }
+    
+    .item-price {
+        font-size: 1.1rem;
+    }
+    
+    .item-description {
+        font-size: 0.9rem;
+    }
+    
+    .back-btn {
+        top: 10px;
+        left: 10px;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        height: 180px;
+    }
+    
+    .cafe-name {
+        font-size: 1.6rem;
+    }
+    
+    .cafe-tagline {
+        font-size: 0.9rem;
+    }
+    
+    .main-nav {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .main-nav h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .category-card {
+        padding: 1rem;
+        border-radius: 8px;
+    }
+    
+    .category-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .category-card h3 {
+        font-size: 1.2rem;
+    }
+    
+    .category-card p {
+        font-size: 0.85rem;
+    }
+    
+    .category-content {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .category-header h2 {
+        font-size: 1.6rem;
+    }
+    
+    .category-header p {
+        font-size: 0.95rem;
+    }
+    
+    .menu-item {
+        padding: 0.875rem;
+        border-radius: 8px;
+    }
+    
+    .item-name {
+        font-size: 1.1rem;
+    }
+    
+    .item-price {
+        font-size: 1rem;
+    }
+    
+    .item-description {
+        font-size: 0.85rem;
+    }
+    
+    .back-btn {
+        top: 8px;
+        left: 8px;
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Animation for content loading */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
