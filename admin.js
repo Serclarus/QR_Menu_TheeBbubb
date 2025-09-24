@@ -1,13 +1,20 @@
 // Admin Panel JavaScript
 const ADMIN_PASSWORD = 'admin123'; // Change this password
 
-// Function to format price with ₺ symbol
+// Function to format price with ₺ symbol (right side)
 function formatPrice(price) {
     if (!price) return '';
-    // If price already has ₺ symbol, return as is
-    if (price.includes('₺')) return price;
-    // If it's just a number, add ₺ symbol
-    if (!isNaN(price)) return '₺' + price;
+    // Remove any existing ₺ symbols first
+    let cleanPrice = price.replace(/₺/g, '');
+    // If it's a number, add ₺ symbol on the right
+    if (!isNaN(cleanPrice) && cleanPrice !== '') {
+        return cleanPrice + ' ₺';
+    }
+    // If it already has ₺ on the left, move it to the right
+    if (price.includes('₺')) {
+        let cleanPrice = price.replace(/₺/g, '');
+        return cleanPrice + ' ₺';
+    }
     // Otherwise return as is
     return price;
 }
@@ -121,10 +128,10 @@ function showSection(sectionId) {
                 priceInput.addEventListener('input', function(e) {
                     let value = e.target.value;
                     // Remove any existing ₺ symbols
-                    value = value.replace(/₺/g, '');
-                    // Add ₺ at the beginning if there's a number
+                    value = value.replace(/₺/g, '').trim();
+                    // Add ₺ at the end if there's a number
                     if (value && !isNaN(value)) {
-                        e.target.value = '₺' + value;
+                        e.target.value = value + ' ₺';
                     }
                 });
             }
@@ -332,12 +339,12 @@ function saveMenuItem() {
     let price = document.getElementById('item-price').value;
     const description = document.getElementById('item-description').value;
     
-    // Ensure price has ₺ symbol
+    // Ensure price has ₺ symbol on the right
     if (price) {
         // Remove any existing ₺ symbols first
-        price = price.replace(/₺/g, '');
-        // Add ₺ symbol
-        price = '₺' + price;
+        price = price.replace(/₺/g, '').trim();
+        // Add ₺ symbol on the right
+        price = price + ' ₺';
     }
     
     if (!categoryKey) {

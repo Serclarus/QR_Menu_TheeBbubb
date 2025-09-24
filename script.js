@@ -219,13 +219,20 @@ function loadCafeData() {
     }
 }
 
-// Function to format price with ₺ symbol
+// Function to format price with ₺ symbol (right side)
 function formatPrice(price) {
     if (!price) return '';
-    // If price already has ₺ symbol, return as is
-    if (price.includes('₺')) return price;
-    // If it's just a number, add ₺ symbol
-    if (!isNaN(price)) return '₺' + price;
+    // Remove any existing ₺ symbols first
+    let cleanPrice = price.replace(/₺/g, '').trim();
+    // If it's a number, add ₺ symbol on the right
+    if (!isNaN(cleanPrice) && cleanPrice !== '') {
+        return cleanPrice + ' ₺';
+    }
+    // If it already has ₺ on the left, move it to the right
+    if (price.includes('₺')) {
+        let cleanPrice = price.replace(/₺/g, '').trim();
+        return cleanPrice + ' ₺';
+    }
     // Otherwise return as is
     return price;
 }
