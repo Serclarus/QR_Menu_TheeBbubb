@@ -219,6 +219,17 @@ function loadCafeData() {
     }
 }
 
+// Function to format price with ₺ symbol
+function formatPrice(price) {
+    if (!price) return '';
+    // If price already has ₺ symbol, return as is
+    if (price.includes('₺')) return price;
+    // If it's just a number, add ₺ symbol
+    if (!isNaN(price)) return '₺' + price;
+    // Otherwise return as is
+    return price;
+}
+
 // Function to load category titles
 function loadCategoryTitles() {
     const categories = JSON.parse(localStorage.getItem('categories') || '{}');
@@ -260,7 +271,7 @@ function showCategory(categoryKey) {
                 <div class="menu-item fade-in">
                     <div class="item-header">
                         <h3 class="item-name">${item.name}</h3>
-                        <span class="item-price">${item.price}</span>
+                        <span class="item-price">${formatPrice(item.price)}</span>
                     </div>
                     <p class="item-description">${item.description}</p>
                 </div>

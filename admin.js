@@ -1,6 +1,17 @@
 // Admin Panel JavaScript
 const ADMIN_PASSWORD = 'admin123'; // Change this password
 
+// Function to format price with ₺ symbol
+function formatPrice(price) {
+    if (!price) return '';
+    // If price already has ₺ symbol, return as is
+    if (price.includes('₺')) return price;
+    // If it's just a number, add ₺ symbol
+    if (!isNaN(price)) return '₺' + price;
+    // Otherwise return as is
+    return price;
+}
+
 // DOM elements
 const adminPanel = document.getElementById('admin-panel');
 const cafeForm = document.getElementById('cafe-form');
@@ -35,6 +46,17 @@ function setupEventListeners() {
     itemForm.addEventListener('submit', function(e) {
         e.preventDefault();
         saveMenuItem();
+    });
+    
+    // Auto-add ₺ symbol to price input
+    document.getElementById('item-price').addEventListener('input', function(e) {
+        let value = e.target.value;
+        // Remove any existing ₺ symbols
+        value = value.replace(/₺/g, '');
+        // Add ₺ at the beginning if there's a number
+        if (value && !isNaN(value)) {
+            e.target.value = '₺' + value;
+        }
     });
     
     // Category selection
@@ -269,7 +291,7 @@ function loadItemsForCategory(categoryKey) {
         itemDiv.innerHTML = `
             <h4>${item.name}</h4>
             <p>${item.description}</p>
-            <p class="price">${item.price}</p>
+            <p class="price">${formatPrice(item.price)}</p>
             <button class="btn btn-danger" onclick="deleteItem('${categoryKey}', ${index})">Sil</button>
             <button class="btn btn-secondary" onclick="editItem('${categoryKey}', ${index})">Düzenle</button>
         `;
@@ -280,8 +302,13 @@ function loadItemsForCategory(categoryKey) {
 function saveMenuItem() {
     const categoryKey = document.getElementById('item-category').value;
     const name = document.getElementById('item-name').value;
-    const price = document.getElementById('item-price').value;
+    let price = document.getElementById('item-price').value;
     const description = document.getElementById('item-description').value;
+    
+    // Ensure price has ₺ symbol
+    if (price && !price.includes('₺')) {
+        price = '₺' + price;
+    }
     
     if (!categoryKey) {
         showMessage('Lütfen bir kategori seçin!', 'error');
