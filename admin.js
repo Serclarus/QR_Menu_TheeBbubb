@@ -179,56 +179,56 @@ function loadDefaultData() {
             title: 'Sıcak İçecekler',
             description: 'Gününüze başlamak için sıcak içecekler',
             items: [
-                { name: 'Espresso', price: '₺35', description: 'Mükemmel krema ile zengin, dolgun kahve' },
-                { name: 'Cappuccino', price: '₺42', description: 'Buharda ısıtılmış süt ve köpük ile espresso' },
-                { name: 'Latte', price: '₺47', description: 'Buharda ısıtılmış süt ve hafif köpük ile yumuşak espresso' },
-                { name: 'Americano', price: '₺37', description: 'Temiz tat için sıcak su ile seyreltilmiş espresso' },
-                { name: 'Mocha', price: '₺52', description: 'Çikolata ve buharda ısıtılmış süt ile espresso' },
-                { name: 'Sıcak Çikolata', price: '₺45', description: 'Krem şanti ile süslenmiş zengin, kremsi çikolata içeceği' },
-                { name: 'Chai Latte', price: '₺47', description: 'Buharda ısıtılmış süt ve bal ile baharatlı çay' },
-                { name: 'Yeşil Çay', price: '₺32', description: 'Antioksidanlarla premium yeşil çay' }
+                { name: 'Espresso', price: '35 ₺', description: 'Mükemmel krema ile zengin, dolgun kahve' },
+                { name: 'Cappuccino', price: '42 ₺', description: 'Buharda ısıtılmış süt ve köpük ile espresso' },
+                { name: 'Latte', price: '47 ₺', description: 'Buharda ısıtılmış süt ve hafif köpük ile yumuşak espresso' },
+                { name: 'Americano', price: '37 ₺', description: 'Temiz tat için sıcak su ile seyreltilmiş espresso' },
+                { name: 'Mocha', price: '52 ₺', description: 'Çikolata ve buharda ısıtılmış süt ile espresso' },
+                { name: 'Sıcak Çikolata', price: '45 ₺', description: 'Krem şanti ile süslenmiş zengin, kremsi çikolata içeceği' },
+                { name: 'Chai Latte', price: '47 ₺', description: 'Buharda ısıtılmış süt ve bal ile baharatlı çay' },
+                { name: 'Yeşil Çay', price: '32 ₺', description: 'Antioksidanlarla premium yeşil çay' }
             ]
         },
         'cold-drinks': {
             title: 'Soğuk İçecekler',
             description: 'Her zaman için ferahlatıcı içecekler',
             items: [
-                { name: 'Buzlu Kahve', price: '₺40', description: 'Buz üzerinde servis edilen soğuk demlenmiş kahve' },
-                { name: 'Buzlu Latte', price: '₺47', description: 'Buz üzerinde soğuk süt ile espresso' },
-                { name: 'Frappuccino', price: '₺55', description: 'Buz ve krem şanti ile karıştırılmış kahve içeceği' },
-                { name: 'Cold Brew', price: '₺42', description: '12 saat soğuk demlenmiş yumuşak, daha az asitli kahve' },
-                { name: 'Buzlu Çay', price: '₺35', description: 'Buz üzerinde servis edilen ferahlatıcı siyah çay' },
-                { name: 'Limonata', price: '₺37', description: 'Nane ile taze sıkılmış limonata' },
-                { name: 'Smoothie', price: '₺62', description: 'Yoğurt ile karıştırılmış meyve smoothie' },
-                { name: 'Maden Suyu', price: '₺25', description: 'Limon ile ferahlatıcı maden suyu' }
+                { name: 'Buzlu Kahve', price: '40 ₺', description: 'Buz üzerinde servis edilen soğuk demlenmiş kahve' },
+                { name: 'Buzlu Latte', price: '47 ₺', description: 'Buz üzerinde soğuk süt ile espresso' },
+                { name: 'Frappuccino', price: '55 ₺', description: 'Buz ve krem şanti ile karıştırılmış kahve içeceği' },
+                { name: 'Cold Brew', price: '42 ₺', description: '12 saat soğuk demlenmiş yumuşak, daha az asitli kahve' },
+                { name: 'Buzlu Çay', price: '35 ₺', description: 'Buz üzerinde servis edilen ferahlatıcı siyah çay' },
+                { name: 'Limonata', price: '37 ₺', description: 'Nane ile taze sıkılmış limonata' },
+                { name: 'Smoothie', price: '62 ₺', description: 'Yoğurt ile karıştırılmış meyve smoothie' },
+                { name: 'Maden Suyu', price: '25 ₺', description: 'Limon ile ferahlatıcı maden suyu' }
             ]
         },
         'meals': {
             title: 'Yemekler',
             description: 'Açlığınızı giderecek lezzetli yemekler',
             items: [
-                { name: 'Avokado Tost', price: '₺85', description: 'Kiraz domates ile zanaatkar ekmeği üzerinde ezilmiş avokado' },
-                { name: 'Kahvaltı Sandviçi', price: '₺77', description: 'Kruvasan üzerinde yumurta, peynir ve pastırma' },
-                { name: 'Sezar Salatası', price: '₺92', description: 'Parmesan, kruton ve sezar sosu ile taze marul' },
-                { name: 'Kulüp Sandviçi', price: '₺105', description: 'Kızarmış ekmek üzerinde hindi, pastırma, marul, domates' },
-                { name: 'Quiche Lorraine', price: '₺87', description: 'Pastırma ve gruyere peyniri ile geleneksel quiche' },
-                { name: 'Günün Çorbası', price: '₺65', description: 'Şefin günlük özel çorbası ekmek ile' },
-                { name: 'Izgara Peynir', price: '₺72', description: 'Ekşi mayalı ekmek üzerinde üç peynir karışımı' },
-                { name: 'Sebze Wrap', price: '₺80', description: 'Ispanak tortilla içinde taze sebzeler ve humus' }
+                { name: 'Avokado Tost', price: '85 ₺', description: 'Kiraz domates ile zanaatkar ekmeği üzerinde ezilmiş avokado' },
+                { name: 'Kahvaltı Sandviçi', price: '77 ₺', description: 'Kruvasan üzerinde yumurta, peynir ve pastırma' },
+                { name: 'Sezar Salatası', price: '92 ₺', description: 'Parmesan, kruton ve sezar sosu ile taze marul' },
+                { name: 'Kulüp Sandviçi', price: '105 ₺', description: 'Kızarmış ekmek üzerinde hindi, pastırma, marul, domates' },
+                { name: 'Quiche Lorraine', price: '87 ₺', description: 'Pastırma ve gruyere peyniri ile geleneksel quiche' },
+                { name: 'Günün Çorbası', price: '65 ₺', description: 'Şefin günlük özel çorbası ekmek ile' },
+                { name: 'Izgara Peynir', price: '72 ₺', description: 'Ekşi mayalı ekmek üzerinde üç peynir karışımı' },
+                { name: 'Sebze Wrap', price: '80 ₺', description: 'Ispanak tortilla içinde taze sebzeler ve humus' }
             ]
         },
         'desserts': {
             title: 'Tatlılar',
             description: 'Yemeğinizi bitirmek için tatlı ikramlar',
             items: [
-                { name: 'Çikolatalı Kek', price: '₺57', description: 'Çikolata ganaj ile zengin çikolatalı kek' },
-                { name: 'Cheesecake', price: '₺62', description: 'Meyve kompostosu ile New York tarzı cheesecake' },
-                { name: 'Tiramisu', price: '₺65', description: 'Kahve ve mascarpone ile klasik İtalyan tatlısı' },
-                { name: 'Elmalı Turta', price: '₺55', description: 'Tarçın ve vanilyalı dondurma ile ev yapımı elmalı turta' },
-                { name: 'Çikolata Parçacıklı Kurabiye', price: '₺27', description: 'Premium çikolata parçacıkları ile taze pişmiş kurabiyeler' },
-                { name: 'Kruvasan', price: '₺32', description: 'Tereyağlı, katmerli Fransız hamur işi' },
-                { name: 'Muffin', price: '₺35', description: 'Günün taze pişmiş muffin\'i' },
-                { name: 'Dondurma', price: '₺42', description: 'İki top premium dondurma' }
+                { name: 'Çikolatalı Kek', price: '57 ₺', description: 'Çikolata ganaj ile zengin çikolatalı kek' },
+                { name: 'Cheesecake', price: '62 ₺', description: 'Meyve kompostosu ile New York tarzı cheesecake' },
+                { name: 'Tiramisu', price: '65 ₺', description: 'Kahve ve mascarpone ile klasik İtalyan tatlısı' },
+                { name: 'Elmalı Turta', price: '55 ₺', description: 'Tarçın ve vanilyalı dondurma ile ev yapımı elmalı turta' },
+                { name: 'Çikolata Parçacıklı Kurabiye', price: '27 ₺', description: 'Premium çikolata parçacıkları ile taze pişmiş kurabiyeler' },
+                { name: 'Kruvasan', price: '32 ₺', description: 'Tereyağlı, katmerli Fransız hamur işi' },
+                { name: 'Muffin', price: '35 ₺', description: 'Günün taze pişmiş muffin\'i' },
+                { name: 'Dondurma', price: '42 ₺', description: 'İki top premium dondurma' }
             ]
         }
     };
