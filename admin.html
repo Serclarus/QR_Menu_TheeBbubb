@@ -229,20 +229,8 @@
 </head>
 <body>
     <div class="admin-container">
-        <!-- Login Form -->
-        <div id="login-section" class="login-container">
-            <h1>Admin Girişi</h1>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="password">Şifre:</label>
-                    <input type="password" id="password" required>
-                </div>
-                <button type="submit" class="btn">Giriş Yap</button>
-            </form>
-        </div>
-
         <!-- Admin Panel -->
-        <div id="admin-panel" style="display: none;">
+        <div id="admin-panel">
             <div class="admin-header">
                 <h1>Menü Yönetimi</h1>
                 <p>Menünüzü kolayca düzenleyin</p>
@@ -292,11 +280,13 @@
                 <form id="category-form">
                     <div class="form-group">
                         <label for="category-title">Kategori Başlığı:</label>
-                        <input type="text" id="category-title" required>
+                        <input type="text" id="category-title" placeholder="Kategori adını değiştirin...">
+                        <small style="color: #666; font-size: 0.9rem;">Sadece başlığı değiştirmek için bu alanı doldurun</small>
                     </div>
                     <div class="form-group">
                         <label for="category-description">Kategori Açıklaması:</label>
-                        <textarea id="category-description" required></textarea>
+                        <textarea id="category-description" placeholder="Kategori açıklamasını değiştirin..."></textarea>
+                        <small style="color: #666; font-size: 0.9rem;">Sadece açıklamayı değiştirmek için bu alanı doldurun</small>
                     </div>
                     <button type="submit" class="btn">Kategoriyi Güncelle</button>
                 </form>

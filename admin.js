@@ -13,11 +13,6 @@ const itemCategory = document.getElementById('item-category');
 
 // Initialize admin panel
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is already logged in
-    if (localStorage.getItem('adminLoggedIn') === 'true') {
-        showAdminPanel();
-    }
-    
     // Load saved data
     loadMenuData();
     
@@ -26,18 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function setupEventListeners() {
-    // Login form
-    loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const password = document.getElementById('password').value;
-        if (password === ADMIN_PASSWORD) {
-            localStorage.setItem('adminLoggedIn', 'true');
-            showAdminPanel();
-        } else {
-            showMessage('Hatalı şifre!', 'error');
-        }
-    });
-    
     // Cafe form
     cafeForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -83,11 +66,6 @@ function setupEventListeners() {
     });
 }
 
-function showAdminPanel() {
-    loginSection.style.display = 'none';
-    adminPanel.style.display = 'block';
-    loadMenuData();
-}
 
 function showSection(sectionId) {
     // Hide all sections
@@ -236,24 +214,43 @@ function saveCategoryInfo() {
     const title = document.getElementById('category-title').value;
     const description = document.getElementById('category-description').value;
     
-    // Update categories
+    // Get existing data to preserve what's not being changed
     const categories = JSON.parse(localStorage.getItem('categories') || '{}');
-    categories[categoryKey] = { title, description };
-    localStorage.setItem('categories', JSON.stringify(categories));
-    
-    // Update menu data
     const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
-    if (menuData[categoryKey]) {
-        menuData[categoryKey].title = title;
-        menuData[categoryKey].description = description;
-        localStorage.setItem('menuData', JSON.stringify(menuData));
+    
+    // Update only if title is provided
+    if (title.trim()) {
+        if (!categories[categoryKey]) {
+            categories[categoryKey] = {};
+        }
+        categories[categoryKey].title = title;
+        
+        if (menuData[categoryKey]) {
+            menuData[categoryKey].title = title;
+        }
+        
+        // Update the category card text in admin panel
+        const categoryCard = document.querySelector(`[data-category="${categoryKey}"] h3`);
+        if (categoryCard) {
+            categoryCard.textContent = title;
+        }
     }
     
-    // Update the category card text in admin panel
-    const categoryCard = document.querySelector(`[data-category="${categoryKey}"] h3`);
-    if (categoryCard) {
-        categoryCard.textContent = title;
+    // Update description only if provided
+    if (description.trim()) {
+        if (!categories[categoryKey]) {
+            categories[categoryKey] = {};
+        }
+        categories[categoryKey].description = description;
+        
+        if (menuData[categoryKey]) {
+            menuData[categoryKey].description = description;
+        }
     }
+    
+    // Save the updated data
+    localStorage.setItem('categories', JSON.stringify(categories));
+    localStorage.setItem('menuData', JSON.stringify(menuData));
     
     showMessage('Kategori güncellendi!', 'success');
 }
