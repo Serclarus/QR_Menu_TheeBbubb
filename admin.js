@@ -2,9 +2,7 @@
 const ADMIN_PASSWORD = 'admin123'; // Change this password
 
 // DOM elements
-const loginSection = document.getElementById('login-section');
 const adminPanel = document.getElementById('admin-panel');
-const loginForm = document.getElementById('login-form');
 const cafeForm = document.getElementById('cafe-form');
 const categoryForm = document.getElementById('category-form');
 const itemForm = document.getElementById('item-form');
