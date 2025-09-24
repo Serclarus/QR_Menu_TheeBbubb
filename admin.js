@@ -22,6 +22,30 @@ function formatPrice(price) {
 // Test the formatPrice function
 console.log('Testing formatPrice:', formatPrice('35'), formatPrice('₺35'), formatPrice(''));
 
+// Function to convert all existing prices to new format
+function convertPricesToNewFormat() {
+    const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
+    let needsUpdate = false;
+    
+    Object.keys(menuData).forEach(categoryKey => {
+        const category = menuData[categoryKey];
+        if (category.items) {
+            category.items.forEach(item => {
+                if (item.price && item.price.includes('₺') && !item.price.includes(' ₺')) {
+                    // Convert from "₺35" to "35 ₺"
+                    item.price = item.price.replace(/₺/g, '').trim() + ' ₺';
+                    needsUpdate = true;
+                }
+            });
+        }
+    });
+    
+    if (needsUpdate) {
+        localStorage.setItem('menuData', JSON.stringify(menuData));
+        console.log('Converted existing prices to new format');
+    }
+}
+
 // DOM elements
 const adminPanel = document.getElementById('admin-panel');
 const cafeForm = document.getElementById('cafe-form');
@@ -32,6 +56,9 @@ const itemCategory = document.getElementById('item-category');
 
 // Initialize admin panel
 document.addEventListener('DOMContentLoaded', function() {
+    // Convert existing prices to new format first
+    convertPricesToNewFormat();
+    
     // Load saved data
     loadMenuData();
     

@@ -237,6 +237,30 @@ function formatPrice(price) {
     return price;
 }
 
+// Function to convert all existing prices to new format
+function convertPricesToNewFormat() {
+    const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
+    let needsUpdate = false;
+    
+    Object.keys(menuData).forEach(categoryKey => {
+        const category = menuData[categoryKey];
+        if (category.items) {
+            category.items.forEach(item => {
+                if (item.price && item.price.includes('₺') && !item.price.includes(' ₺')) {
+                    // Convert from "₺35" to "35 ₺"
+                    item.price = item.price.replace(/₺/g, '').trim() + ' ₺';
+                    needsUpdate = true;
+                }
+            });
+        }
+    });
+    
+    if (needsUpdate) {
+        localStorage.setItem('menuData', JSON.stringify(menuData));
+        console.log('Converted existing prices to new format');
+    }
+}
+
 // Function to load category titles
 function loadCategoryTitles() {
     const categories = JSON.parse(localStorage.getItem('categories') || '{}');
@@ -392,6 +416,9 @@ document.addEventListener('scroll', () => {
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
+    // Convert existing prices to new format first
+    convertPricesToNewFormat();
+    
     // Load data from localStorage
     loadMenuData();
     loadCafeData();
