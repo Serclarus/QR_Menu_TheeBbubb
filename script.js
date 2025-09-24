@@ -242,11 +242,15 @@ function convertPricesToNewFormat() {
     const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
     let needsUpdate = false;
     
+    console.log('Converting prices...', menuData);
+    
     Object.keys(menuData).forEach(categoryKey => {
         const category = menuData[categoryKey];
         if (category.items) {
             category.items.forEach(item => {
+                console.log('Checking item:', item.name, 'price:', item.price);
                 if (item.price && item.price.includes('₺') && !item.price.includes(' ₺')) {
+                    console.log('Converting price from', item.price, 'to', item.price.replace(/₺/g, '').trim() + ' ₺');
                     // Convert from "₺35" to "35 ₺"
                     item.price = item.price.replace(/₺/g, '').trim() + ' ₺';
                     needsUpdate = true;
@@ -258,6 +262,8 @@ function convertPricesToNewFormat() {
     if (needsUpdate) {
         localStorage.setItem('menuData', JSON.stringify(menuData));
         console.log('Converted existing prices to new format');
+    } else {
+        console.log('No prices needed conversion');
     }
 }
 
@@ -416,6 +422,10 @@ document.addEventListener('scroll', () => {
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
+    // Force clear old data and reload with new format
+    console.log('Clearing old menu data and reloading...');
+    localStorage.removeItem('menuData');
+    
     // Convert existing prices to new format first
     convertPricesToNewFormat();
     

@@ -56,6 +56,10 @@ const itemCategory = document.getElementById('item-category');
 
 // Initialize admin panel
 document.addEventListener('DOMContentLoaded', function() {
+    // Force clear old data and reload with new format
+    console.log('Admin: Clearing old menu data and reloading...');
+    localStorage.removeItem('menuData');
+    
     // Convert existing prices to new format first
     convertPricesToNewFormat();
     
