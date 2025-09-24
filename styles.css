@@ -328,15 +328,16 @@ body {
     }
     
     .category-icon {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
+        font-size: 1.8rem;
+        margin-bottom: 0.4rem;
     }
     
     .category-card h3 {
-        font-size: 1.1rem;
+        font-size: 0.95rem;
         margin-bottom: 0.2rem;
         letter-spacing: 0.3px;
         color: #000000;
+        line-height: 1.1;
     }
     
     .category-card p {
@@ -446,15 +447,16 @@ body {
     }
     
     .category-icon {
-        font-size: 1.8rem;
-        margin-bottom: 0.4rem;
+        font-size: 1.6rem;
+        margin-bottom: 0.3rem;
     }
     
     .category-card h3 {
-        font-size: 1rem;
+        font-size: 0.85rem;
         margin-bottom: 0.15rem;
         letter-spacing: 0.2px;
         color: #000000;
+        line-height: 1.1;
     }
     
     .category-card p {
