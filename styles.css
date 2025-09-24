@@ -28,11 +28,11 @@ body {
     position: relative;
 }
 
-/* Header Styles */
+/* Mobile-First Header Styles */
 .header {
     position: relative;
     width: 100%;
-    height: 250px;
+    height: 180px;
     overflow: hidden;
 }
 
@@ -65,17 +65,20 @@ body {
 
 .cafe-name {
     font-family: 'Nunito', sans-serif;
-    font-size: 2.5rem;
+    font-size: 1.6rem;
     font-weight: 800;
     margin-bottom: 0.5rem;
     color: #87CEEB;
     text-shadow: 
+        0 0 4px #87CEEB,
         0 0 8px #87CEEB,
+        0 0 12px #87CEEB,
         0 0 16px #87CEEB,
-        0 0 24px #87CEEB,
+        0 0 20px #87CEEB,
         2px 2px 4px rgba(0,0,0,0.5);
-    letter-spacing: 2px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
+    -webkit-text-stroke: 0.5px #87CEEB;
 }
 
 .cafe-tagline {
@@ -87,7 +90,7 @@ body {
 
 .cafe-description {
     font-family: 'Nunito', sans-serif;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     font-weight: 400;
     opacity: 0.9;
     margin-top: 0.5rem;
@@ -96,7 +99,7 @@ body {
 
 /* Navigation Styles */
 .main-nav {
-    padding: 1.5rem 1rem;
+    padding: 0.75rem 0.5rem;
     background: white;
     width: 100%;
     display: flex;
@@ -107,17 +110,21 @@ body {
 
 .main-nav h2 {
     font-family: 'Nunito', sans-serif;
-    font-size: 2rem;
+    font-size: 1.3rem;
     text-align: center;
-    margin: 0 auto 2rem auto;
+    margin: 0 auto 1rem auto;
     color: #87CEEB;
-    letter-spacing: 1px;
+    letter-spacing: 0.3px;
     text-transform: uppercase;
     font-weight: 800;
-    text-shadow: 0 0 10px rgba(0,0,0,0.5), 2px 2px 4px rgba(0,0,0,0.3);
-    background: url('title_background.png') center 4px/cover no-repeat;
-    background-size: 83% auto;
-    padding: 2rem 4rem;
+    text-shadow: 
+        -0.4px -0.4px 0 rgba(0,0,0,0.55),
+        0.4px -0.4px 0 rgba(0,0,0,0.55),
+        -0.4px 0.4px 0 rgba(0,0,0,0.55),
+        0.4px 0.4px 0 rgba(0,0,0,0.55);
+    background: url('title_background.png') center center/cover no-repeat;
+    background-size: 88% auto;
+    padding: 1.5rem 3rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -125,25 +132,24 @@ body {
     width: fit-content;
     margin-left: auto;
     margin-right: auto;
-    min-width: 300px;
-    min-height: 80px;
+    min-height: 60px;
 }
 
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 0.75rem;
-    max-width: 1200px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.4rem;
+    max-width: 100%;
     margin: 0 auto;
-    padding: 0 0.5rem;
+    padding: 0 0.2rem;
     justify-content: center;
     align-items: center;
 }
 
 .category-card {
     background: white;
-    border-radius: 10px;
-    padding: 1.25rem;
+    border-radius: 6px;
+    padding: 0.75rem;
     text-align: center;
     box-shadow: 0 3px 12px rgba(0,0,0,0.08);
     transition: all 0.3s ease;
@@ -151,8 +157,8 @@ body {
     border: 2px solid transparent;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-    min-height: 120px;
-    height: 120px;
+    min-height: 110px;
+    height: 110px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -304,93 +310,33 @@ body {
     box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .header {
-        height: 200px;
-    }
-    
-    .cafe-name {
-        font-size: 1.8rem;
-        letter-spacing: 1px;
-        text-shadow: 
-            0 0 5px #87CEEB,
-            0 0 10px #87CEEB,
-            0 0 15px #87CEEB,
-            0 0 20px #87CEEB,
-            0 0 25px #87CEEB,
-            0 0 30px #87CEEB,
-            2px 2px 4px rgba(0,0,0,0.5);
-    }
-    
-    .cafe-tagline {
-        font-family: 'Nunito', sans-serif;
-        font-size: 0.95rem;
-    }
-    
-    .cafe-description {
-        font-size: 0.8rem;
-    }
-    
-    .main-nav h2 {
-        background-size: 75% auto;
-    }
-    
-    .main-nav {
-        padding: 1rem 0.75rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .main-nav h2 {
-        font-size: 1.5rem;
-        margin: 0 auto 1.5rem auto;
-        letter-spacing: 0.5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 70px;
-    }
-    
-    .category-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.5rem;
-        padding: 0 0.25rem;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .category-card {
-        padding: 1rem;
-        border-radius: 8px;
-        min-height: 110px;
-        height: 110px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .category-icon {
-        font-size: 1.8rem;
-        margin-bottom: 0.4rem;
-    }
-    
-    .category-card h3 {
-        font-size: 1rem;
-        margin-bottom: 0.2rem;
-        letter-spacing: 0.3px;
-        color: #000000;
-        line-height: 1.1;
-    }
-    
-    .category-card p {
-        font-family: 'Nunito', sans-serif;
-        font-size: 0.8rem;
-        line-height: 1.2;
-    }
+/* Mobile-Optimized Styles */
+.category-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.4rem;
+    color: #e67e22;
+}
+
+.category-icon img {
+    width: 35px;
+    height: 35px;
+    margin-bottom: 0.4rem;
+}
+
+.category-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+    letter-spacing: 0.3px;
+    color: #000000;
+    line-height: 1.1;
+    font-weight: 800;
+}
+
+.category-card p {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.8rem;
+    line-height: 1.2;
+}
     
     .category-content {
         padding: 1rem 0.75rem;
