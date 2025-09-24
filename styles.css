@@ -455,6 +455,7 @@ body {
     
     .main-nav h2 {
         background-size: 70% auto;
+        background-position: center 3px;
     }
     
     .main-nav {
