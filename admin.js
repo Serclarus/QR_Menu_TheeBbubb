@@ -12,6 +12,9 @@ function formatPrice(price) {
     return price;
 }
 
+// Test the formatPrice function
+console.log('Testing formatPrice:', formatPrice('35'), formatPrice('₺35'), formatPrice(''));
+
 // DOM elements
 const adminPanel = document.getElementById('admin-panel');
 const cafeForm = document.getElementById('cafe-form');
@@ -48,16 +51,21 @@ function setupEventListeners() {
         saveMenuItem();
     });
     
-    // Auto-add ₺ symbol to price input
-    document.getElementById('item-price').addEventListener('input', function(e) {
-        let value = e.target.value;
-        // Remove any existing ₺ symbols
-        value = value.replace(/₺/g, '');
-        // Add ₺ at the beginning if there's a number
-        if (value && !isNaN(value)) {
-            e.target.value = '₺' + value;
+    // Auto-add ₺ symbol to price input - setup after DOM is ready
+    setTimeout(() => {
+        const priceInput = document.getElementById('item-price');
+        if (priceInput) {
+            priceInput.addEventListener('input', function(e) {
+                let value = e.target.value;
+                // Remove any existing ₺ symbols
+                value = value.replace(/₺/g, '');
+                // Add ₺ at the beginning if there's a number
+                if (value && !isNaN(value)) {
+                    e.target.value = '₺' + value;
+                }
+            });
         }
-    });
+    }, 100);
     
     // Category selection
     document.querySelectorAll('.category-card').forEach(card => {
@@ -103,6 +111,25 @@ function showSection(sectionId) {
     
     // Add active class to clicked button
     event.target.classList.add('active');
+    
+    // Setup ₺ symbol for price input when menu items section is shown
+    if (sectionId === 'menu-items') {
+        setTimeout(() => {
+            const priceInput = document.getElementById('item-price');
+            if (priceInput && !priceInput.hasAttribute('data-lira-setup')) {
+                priceInput.setAttribute('data-lira-setup', 'true');
+                priceInput.addEventListener('input', function(e) {
+                    let value = e.target.value;
+                    // Remove any existing ₺ symbols
+                    value = value.replace(/₺/g, '');
+                    // Add ₺ at the beginning if there's a number
+                    if (value && !isNaN(value)) {
+                        e.target.value = '₺' + value;
+                    }
+                });
+            }
+        }, 50);
+    }
 }
 
 function loadMenuData() {
@@ -306,7 +333,10 @@ function saveMenuItem() {
     const description = document.getElementById('item-description').value;
     
     // Ensure price has ₺ symbol
-    if (price && !price.includes('₺')) {
+    if (price) {
+        // Remove any existing ₺ symbols first
+        price = price.replace(/₺/g, '');
+        // Add ₺ symbol
         price = '₺' + price;
     }
     
