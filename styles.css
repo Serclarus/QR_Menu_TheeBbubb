@@ -99,6 +99,10 @@ body {
     padding: 1.5rem 1rem;
     background: white;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .main-nav h2 {
@@ -129,6 +133,8 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 0.5rem;
+    justify-content: center;
+    align-items: center;
 }
 
 .category-card {
@@ -329,6 +335,10 @@ body {
     
     .main-nav {
         padding: 1rem 0.75rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
     
     .main-nav h2 {
@@ -341,6 +351,8 @@ body {
         grid-template-columns: repeat(2, 1fr);
         gap: 0.5rem;
         padding: 0 0.25rem;
+        justify-content: center;
+        align-items: center;
     }
     
     .category-card {
@@ -455,20 +467,31 @@ body {
     
     .main-nav {
         padding: 0.75rem 0.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
     
     .main-nav h2 {
         font-size: 1.3rem;
-        margin-bottom: 1rem;
+        margin: 0 auto 1rem auto;
         letter-spacing: 0.3px;
         background-size: 70% auto;
         background-position: center 6px;
+        text-align: center;
+        display: block;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
     }
     
     .category-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 0.4rem;
         padding: 0 0.2rem;
+        justify-content: center;
+        align-items: center;
     }
     
     .category-card {
