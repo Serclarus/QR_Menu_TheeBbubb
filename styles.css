@@ -70,9 +70,9 @@ body {
     margin-bottom: 0.5rem;
     color: #87CEEB;
     text-shadow: 
-        0 0 10px #87CEEB,
-        0 0 20px #87CEEB,
-        0 0 30px #87CEEB,
+        0 0 8px #87CEEB,
+        0 0 16px #87CEEB,
+        0 0 24px #87CEEB,
         2px 2px 4px rgba(0,0,0,0.5);
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -323,6 +323,10 @@ body {
         font-size: 0.8rem;
     }
     
+    .main-nav h2 {
+        background-size: 75% auto;
+    }
+    
     .main-nav {
         padding: 1rem 0.75rem;
     }
@@ -431,18 +435,13 @@ body {
         font-size: 1.6rem;
         letter-spacing: 0.5px;
         text-shadow: 
-            0 0 3px #87CEEB,
-            0 0 6px #87CEEB,
-            0 0 9px #87CEEB,
+            0 0 4px #87CEEB,
+            0 0 8px #87CEEB,
             0 0 12px #87CEEB,
-            0 0 15px #87CEEB,
-            0 0 18px #87CEEB,
-            0 0 21px #87CEEB,
-            0 0 24px #87CEEB,
-            0 0 27px #87CEEB,
-            0 0 30px #87CEEB,
+            0 0 16px #87CEEB,
+            0 0 20px #87CEEB,
             2px 2px 4px rgba(0,0,0,0.5);
-        filter: drop-shadow(0 0 8px #87CEEB);
+        -webkit-text-stroke: 0.5px #87CEEB;
     }
     
     .cafe-tagline {
@@ -452,6 +451,10 @@ body {
     
     .cafe-description {
         font-size: 0.75rem;
+    }
+    
+    .main-nav h2 {
+        background-size: 70% auto;
     }
     
     .main-nav {
