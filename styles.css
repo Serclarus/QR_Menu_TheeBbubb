@@ -115,7 +115,7 @@ body {
     text-transform: uppercase;
     font-weight: 800;
     text-shadow: 0 0 10px rgba(0,0,0,0.5), 2px 2px 4px rgba(0,0,0,0.3);
-    background: url('title_background.png') center 1px/cover no-repeat;
+    background: url('title_background.png') center 4px/cover no-repeat;
     background-size: 83% auto;
     padding: 2rem 4rem;
     display: flex;
@@ -485,7 +485,7 @@ body {
         margin: 0 auto 1rem auto;
         letter-spacing: 0.3px;
         background-size: 70% auto;
-        background-position: center 6px;
+        background-position: center 9px;
         text-align: center;
         display: flex;
         align-items: center;
