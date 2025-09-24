@@ -111,7 +111,7 @@ body {
     text-transform: uppercase;
     font-weight: 800;
     text-shadow: 0 0 10px rgba(0,0,0,0.5), 2px 2px 4px rgba(0,0,0,0.3);
-    background: url('title_background.png') center 6px/cover no-repeat;
+    background: url('title_background.png') center 4px/cover no-repeat;
     background-size: contain;
     padding: 2rem 4rem;
     display: block;
@@ -305,8 +305,11 @@ body {
         font-size: 1.8rem;
         letter-spacing: 1px;
         text-shadow: 
+            0 0 5px #87CEEB,
             0 0 10px #87CEEB,
+            0 0 15px #87CEEB,
             0 0 20px #87CEEB,
+            0 0 25px #87CEEB,
             0 0 30px #87CEEB,
             2px 2px 4px rgba(0,0,0,0.5);
     }
@@ -428,8 +431,11 @@ body {
         font-size: 1.6rem;
         letter-spacing: 0.5px;
         text-shadow: 
+            0 0 5px #87CEEB,
             0 0 10px #87CEEB,
+            0 0 15px #87CEEB,
             0 0 20px #87CEEB,
+            0 0 25px #87CEEB,
             0 0 30px #87CEEB,
             2px 2px 4px rgba(0,0,0,0.5);
     }
