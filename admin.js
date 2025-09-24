@@ -261,6 +261,20 @@ function loadDefaultData() {
                 { name: 'Muffin', price: '35 ₺', description: 'Günün taze pişmiş muffin\'i' },
                 { name: 'Dondurma', price: '42 ₺', description: 'İki top premium dondurma' }
             ]
+        },
+        'nargile': {
+            title: 'Nargile',
+            description: 'Geleneksel nargile deneyimi için özel aromalar',
+            items: [
+                { name: 'Elma Nargile', price: '120 ₺', description: 'Geleneksel elma aroması ile klasik nargile' },
+                { name: 'Çilek Nargile', price: '120 ₺', description: 'Tatlı çilek aroması ile ferahlatıcı nargile' },
+                { name: 'Nane Nargile', price: '120 ₺', description: 'Serinletici nane aroması ile taze nargile' },
+                { name: 'Çikolata Nargile', price: '130 ₺', description: 'Zengin çikolata aroması ile lüks nargile' },
+                { name: 'Vanilya Nargile', price: '125 ₺', description: 'Kremalı vanilya aroması ile yumuşak nargile' },
+                { name: 'Karpuz Nargile', price: '120 ₺', description: 'Yaz mevsimi için ferahlatıcı karpuz aroması' },
+                { name: 'Mango Nargile', price: '125 ₺', description: 'Tropikal mango aroması ile egzotik nargile' },
+                { name: 'Karışık Meyve Nargile', price: '135 ₺', description: 'Çeşitli meyve aromalarının karışımı ile özel nargile' }
+            ]
         }
     };
     
