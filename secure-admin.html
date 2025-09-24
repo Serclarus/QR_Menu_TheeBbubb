@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        .secure-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            min-height: 100vh;
+        }
+        
+        .secure-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e67e22;
+        }
+        
+        .secure-header h1 {
+            color: #e67e22;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .security-indicator {
+            background: #27ae60;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .admin-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .admin-nav button {
+            background: #87CEEB;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-nav button:hover,
+        .admin-nav button.active {
+            background: #e67e22;
+            transform: translateY(-2px);
+        }
+        
+        .admin-section {
+            display: none;
+            background: #f8f6f0;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .admin-section.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #e67e22;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #d35400;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #7f8c8d;
+        }
+        
+        .btn-secondary:hover {
+            background: #6c7b7d;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .item-list {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .item-list h4 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        
+        .item-list p {
+            color: #7f8c8d;
+            margin-bottom: 0.5rem;
+        }
+        
+        .item-list .price {
+            color: #e67e22;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .category-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .category-card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-card:hover,
+        .category-card.selected {
+            border-color: #e67e22;
+            transform: translateY(-2px);
+        }
+        
+        .category-card h3 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        
+        .image-preview {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .security-warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            z-index: 1000;
+        }
+        
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        
+        @media (max-width: 768px) {
+            .secure-container {
+                padding: 1rem;
+            }
+            
+            .admin-nav {
+                flex-direction: column;
+            }
+            
+            .admin-nav button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="secure-container">
+        <!-- Security Check -->
+        <div id="security-check" style="display: none;">
+            <div style="text-align: center; padding: 2rem;">
+                <h2>🔒 Security Verification</h2>
+                <p>Verifying your access credentials...</p>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="admin-panel" style="display: none;">
+            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+            
+            <div class="secure-header">
+                <h1>🔐 Secure Admin Panel</h1>
+                <div class="security-indicator">🛡️ Secure Session Active</div>
+                <p>Advanced security enabled</p>
+            </div>
+
+            <div class="security-warning">
+                <strong>⚠️ Security Notice:</strong> This session is monitored and will automatically expire for your security.
+            </div>
+
+            <div class="admin-nav">
+                <button class="active" onclick="showSection('cafe-info')">Cafe Bilgileri</button>
+                <button onclick="showSection('categories')">Kategoriler</button>
+                <button onclick="showSection('menu-items')">Menü Öğeleri</button>
+                <button onclick="showSection('security')">Güvenlik</button>
+                <button onclick="returnToMenu()" style="background: #27ae60;">🏠 Menüye Dön</button>
+            </div>
+
+            <!-- Cafe Information Section -->
+            <div id="cafe-info" class="admin-section active">
+                <h2>Cafe Bilgileri</h2>
+                <form id="cafe-form">
+                    <div class="form-group">
+                        <label for="cafe-name">Cafe Adı:</label>
+                        <input type="text" id="cafe-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cafe-image">Cafe Resmi URL:</label>
+                        <input type="url" id="cafe-image" placeholder="https://example.com/image.jpg">
+                        <img id="image-preview" class="image-preview" style="display: none;">
+                    </div>
+                    <button type="submit" class="btn">Kaydet</button>
+                </form>
+            </div>
+
+            <!-- Categories Section -->
+            <div id="categories" class="admin-section">
+                <h2>Kategoriler</h2>
+                <div class="category-selector">
+                    <div class="category-card" data-category="hot-drinks">
+                        <h3>☕ Sıcak İçecekler</h3>
+                    </div>
+                    <div class="category-card" data-category="cold-drinks">
+                        <h3>🧊 Soğuk İçecekler</h3>
+                    </div>
+                    <div class="category-card" data-category="meals">
+                        <h3>🍽️ Yemekler</h3>
+                    </div>
+                    <div class="category-card" data-category="desserts">
+                        <h3>🍰 Tatlılar</h3>
+                    </div>
+                </div>
+                <form id="category-form">
+                    <div class="form-group">
+                        <label for="category-title">Kategori Başlığı:</label>
+                        <input type="text" id="category-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category-description">Kategori Açıklaması:</label>
+                        <textarea id="category-description" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Kategoriyi Güncelle</button>
+                </form>
+            </div>
+
+            <!-- Menu Items Section -->
+            <div id="menu-items" class="admin-section">
+                <h2>Menü Öğeleri</h2>
+                <div class="form-group">
+                    <label for="item-category">Kategori Seçin:</label>
+                    <select id="item-category" required>
+                        <option value="">Kategori seçin...</option>
+                        <option value="hot-drinks">Sıcak İçecekler</option>
+                        <option value="cold-drinks">Soğuk İçecekler</option>
+                        <option value="meals">Yemekler</option>
+                        <option value="desserts">Tatlılar</option>
+                    </select>
+                </div>
+                
+                <div id="items-list"></div>
+                
+                <form id="item-form">
+                    <div class="form-group">
+                        <label for="item-name">Öğe Adı:</label>
+                        <input type="text" id="item-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-price">Fiyat:</label>
+                        <input type="text" id="item-price" placeholder="₺35" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-description">Açıklama:</label>
+                        <textarea id="item-description" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Öğe Ekle</button>
+                    <button type="button" class="btn btn-secondary" onclick="clearItemForm()">Temizle</button>
+                </form>
+            </div>
+
+
+            <!-- Security Section -->
+            <div id="security" class="admin-section">
+                <h2>Güvenlik Ayarları</h2>
+                <div class="security-warning">
+                    <h3>🛡️ Aktif Güvenlik Önlemleri:</h3>
+                    <ul>
+                        <li>✅ Şifreli oturum yönetimi</li>
+                        <li>✅ Otomatik oturum sonlandırma (30 dakika)</li>
+                        <li>✅ Başarısız giriş denemesi sınırı (3 deneme)</li>
+                        <li>✅ Veri şifreleme</li>
+                        <li>✅ Gizli erişim kodu</li>
+                        <li>✅ Oturum izleme</li>
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <label for="new-password">Yeni Şifre:</label>
+                    <input type="password" id="new-password" placeholder="Yeni şifre girin" required>
+                    <small style="color: #666; font-size: 0.9rem;">En az 8 karakter, büyük/küçük harf, rakam ve özel karakter içermeli</small>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Şifre Tekrarı:</label>
+                    <input type="password" id="confirm-password" placeholder="Şifreyi tekrar girin" required>
+                </div>
+                <button onclick="changePassword()" class="btn">Şifre Değiştir</button>
+                <button onclick="exportData()" class="btn btn-secondary">Verileri Yedekle</button>
+                <button onclick="importData()" class="btn btn-secondary">Verileri Geri Yükle</button>
+                <input type="file" id="import-file" accept=".json" style="display: none;" onchange="handleImport()">
+                <button onclick="clearAllData()" class="btn btn-danger">Tüm Verileri Temizle</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="secure-admin-panel.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

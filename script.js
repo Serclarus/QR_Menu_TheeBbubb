@@ -1,5 +1,8 @@
-// Menu data
-const menuData = {
+// Load menu data from localStorage or use default
+let menuData = {};
+
+// Default menu data (fallback)
+const defaultMenuData = {
     'hot-drinks': {
         title: 'Sıcak İçecekler',
         description: 'Gününüze başlamak için sıcak içecekler',
@@ -186,6 +189,49 @@ const menuData = {
     }
 };
 
+// Function to load menu data
+function loadMenuData() {
+    const savedData = localStorage.getItem('menuData');
+    if (savedData) {
+        menuData = JSON.parse(savedData);
+    } else {
+        menuData = defaultMenuData;
+        localStorage.setItem('menuData', JSON.stringify(menuData));
+    }
+}
+
+// Function to load cafe data
+function loadCafeData() {
+    const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
+    
+    if (cafeData.description) {
+        const cafeDescriptionElement = document.querySelector('.cafe-description');
+        if (cafeDescriptionElement) {
+            cafeDescriptionElement.textContent = cafeData.description;
+        }
+    }
+    
+    if (cafeData.image) {
+        const cafeImageElement = document.querySelector('.cafe-image img');
+        if (cafeImageElement) {
+            cafeImageElement.src = cafeData.image;
+        }
+    }
+}
+
+// Function to load category titles
+function loadCategoryTitles() {
+    const categories = JSON.parse(localStorage.getItem('categories') || '{}');
+    
+    Object.keys(categories).forEach(categoryKey => {
+        const category = categories[categoryKey];
+        const categoryCard = document.querySelector(`[data-category="${categoryKey}"] h3`);
+        if (categoryCard && category.title) {
+            categoryCard.textContent = category.title;
+        }
+    });
+}
+
 // DOM elements
 const categoryContent = document.getElementById('category-content');
 const backBtn = document.getElementById('back-btn');
@@ -328,6 +374,11 @@ document.addEventListener('scroll', () => {
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
+    // Load data from localStorage
+    loadMenuData();
+    loadCafeData();
+    loadCategoryTitles();
+    
     // Add loading animation
     document.body.style.opacity = '0';
     setTimeout(() => {
