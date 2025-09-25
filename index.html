@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=33">
+    <link rel="stylesheet" href="styles.css?v=34">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -106,56 +106,59 @@
             }
         });
 
-        // Back gesture system - work with existing Menüye Dön button
-        let isBackConfirmationShown = false;
+        // New Navigation System - Simple and Clean
+        let currentPage = 'main'; // Track current page: 'main' or 'category'
+        let isExitPopupShown = false;
         
-        // Check if we're on main page
-        function isOnMainPage() {
+        // Update page state
+        function updatePageState() {
             const categoryContent = document.getElementById('category-content');
             const backBtn = document.getElementById('back-btn');
-            return categoryContent && categoryContent.style.display !== 'block' && 
-                   backBtn && backBtn.style.display === 'none';
+            
+            if (categoryContent && categoryContent.style.display === 'block') {
+                currentPage = 'category';
+            } else {
+                currentPage = 'main';
+            }
         }
         
-        // Handle browser back button
-        window.addEventListener('popstate', function(event) {
-            event.preventDefault();
+        // Handle back button for all devices
+        function handleBackButton() {
+            updatePageState();
             
-            if (isOnMainPage()) {
+            if (currentPage === 'main') {
                 // On main page - show exit confirmation
-                showBackConfirmation();
-            } else {
-                // In categories - trigger the existing Menüye Dön button
-                const backBtn = document.getElementById('back-btn');
-                if (backBtn && backBtn.style.display !== 'none') {
-                    backBtn.click();
+                if (!isExitPopupShown) {
+                    showExitConfirmation();
                 }
+            } else {
+                // In category - go back to main page
+                goBackToMain();
             }
-        });
-
-        // Handle Android back button
-        document.addEventListener('backbutton', function(event) {
-            event.preventDefault();
+        }
+        
+        // Go back to main page
+        function goBackToMain() {
+            const categoryContent = document.getElementById('category-content');
+            const backBtn = document.getElementById('back-btn');
+            const mainNav = document.querySelector('.main-nav');
+            const instagramSection = document.querySelector('.instagram-section');
             
-            if (isOnMainPage()) {
-                // On main page - show exit confirmation
-                showBackConfirmation();
-            } else {
-                // In categories - trigger the existing Menüye Dön button
-                const backBtn = document.getElementById('back-btn');
-                if (backBtn && backBtn.style.display !== 'none') {
-                    backBtn.click();
-                }
-            }
-        }, false);
-
-        function showBackConfirmation() {
-            if (isBackConfirmationShown) return;
-            isBackConfirmationShown = true;
-
+            if (categoryContent) categoryContent.style.display = 'none';
+            if (backBtn) backBtn.style.display = 'none';
+            if (mainNav) mainNav.style.display = 'block';
+            if (instagramSection) instagramSection.style.display = 'flex';
+            
+            currentPage = 'main';
+        }
+        
+        // Show exit confirmation popup
+        function showExitConfirmation() {
+            if (isExitPopupShown) return;
+            isExitPopupShown = true;
+            
             // Create overlay
             const overlay = document.createElement('div');
-            overlay.id = 'back-confirmation-overlay';
             overlay.style.cssText = `
                 position: fixed;
                 top: 0;
@@ -169,7 +172,7 @@
                 align-items: center;
                 font-family: 'Nunito', sans-serif;
             `;
-
+            
             // Create popup
             const popup = document.createElement('div');
             popup.style.cssText = `
@@ -181,11 +184,11 @@
                 max-width: 300px;
                 width: 90%;
             `;
-
+            
             popup.innerHTML = `
                 <h3 style="margin: 0 0 1rem 0; color: #333; font-size: 1.2rem;">Çıkmak İstiyor Musunuz?</h3>
                 <div style="display: flex; gap: 1rem; justify-content: center;">
-                    <button id="confirm-exit" style="
+                    <button id="exit-confirm" style="
                         background: #e74c3c;
                         color: white;
                         border: none;
@@ -195,7 +198,7 @@
                         cursor: pointer;
                         font-family: 'Nunito', sans-serif;
                     ">Çık</button>
-                    <button id="stay-here" style="
+                    <button id="exit-cancel" style="
                         background: #27ae60;
                         color: white;
                         border: none;
@@ -207,52 +210,63 @@
                     ">Kal</button>
                 </div>
             `;
-
+            
             overlay.appendChild(popup);
             document.body.appendChild(overlay);
-
-            // Handle button clicks
-            document.getElementById('confirm-exit').addEventListener('click', function() {
+            
+            // Handle exit button
+            document.getElementById('exit-confirm').addEventListener('click', function() {
                 document.body.removeChild(overlay);
-                isBackConfirmationShown = false;
-                
-                // Multiple methods to close the tab
-                try {
-                    // Method 1: Try window.close()
-                    if (window.close) {
-                        window.close();
-                    }
-                    
-                    // Method 2: Try to navigate away
+                isExitPopupShown = false;
+                // Try to close the tab/window
+                window.close();
+                // If that doesn't work, navigate away
+                setTimeout(() => {
                     window.location.href = 'about:blank';
-                    
-                    // Method 3: Try to close with opener
-                    if (window.opener) {
-                        window.opener = null;
-                        window.close();
-                    }
-                    
-                    // Method 4: Try to go back in history
-                    if (window.history.length > 1) {
-                        window.history.go(-window.history.length);
-                    }
-                    
-                } catch (e) {
-                    // If all methods fail, show message
-                    alert('Lütfen tarayıcıyı manuel olarak kapatın.');
-                }
+                }, 100);
             });
-
-            document.getElementById('stay-here').addEventListener('click', function() {
+            
+            // Handle cancel button
+            document.getElementById('exit-cancel').addEventListener('click', function() {
                 document.body.removeChild(overlay);
-                isBackConfirmationShown = false;
-                // Push a new state to prevent immediate back
-                history.pushState(null, null, location.href);
+                isExitPopupShown = false;
             });
         }
+        
+        // Event listeners for all back button types
+        window.addEventListener('popstate', function(event) {
+            event.preventDefault();
+            handleBackButton();
+        });
+        
+        document.addEventListener('backbutton', function(event) {
+            event.preventDefault();
+            handleBackButton();
+        }, false);
+        
+        // iOS back gesture support
+        document.addEventListener('gesturestart', function(event) {
+            if (event.touches.length === 1) {
+                let startX = event.touches[0].clientX;
+                let startY = event.touches[0].clientY;
+                
+                document.addEventListener('gesturechange', function gestureChange(event) {
+                    if (event.touches.length === 1) {
+                        let currentX = event.touches[0].clientX;
+                        let currentY = event.touches[0].clientY;
+                        
+                        // Check if it's a right swipe (back gesture)
+                        if (currentX > startX + 50 && Math.abs(currentY - startY) < 100) {
+                            handleBackButton();
+                            document.removeEventListener('gesturechange', gestureChange);
+                        }
+                    }
+                });
+            }
+        });
 
-        // Push initial state to handle back button
-        history.pushState(null, null, location.href);
+        // Initialize navigation system
+        updatePageState();
         
         // Mobile-friendly admin access - 5 clicks on cafe name OR long press
         let clickCount = 0;
