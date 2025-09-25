@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=28">
+    <link rel="stylesheet" href="styles.css?v=29">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -108,6 +108,7 @@
 
         // Back gesture system with confirmation popup - only on main page
         let isBackConfirmationShown = false;
+        let isNavigating = false;
         
         // Check if we're on main page (no category content visible)
         function isOnMainPage() {
@@ -119,6 +120,9 @@
         
         // Navigate back to main page
         function goToMainPage() {
+            if (isNavigating) return;
+            isNavigating = true;
+            
             const categoryContent = document.getElementById('category-content');
             const backBtn = document.getElementById('back-btn');
             const mainNav = document.querySelector('.main-nav');
@@ -128,10 +132,19 @@
             if (backBtn) backBtn.style.display = 'none';
             if (mainNav) mainNav.style.display = 'block';
             if (instagramSection) instagramSection.style.display = 'flex';
+            
+            // Push new state to prevent back button issues
+            history.pushState(null, null, location.href);
+            
+            setTimeout(() => {
+                isNavigating = false;
+            }, 100);
         }
         
         // Handle browser back button
         window.addEventListener('popstate', function(event) {
+            if (isNavigating) return;
+            
             if (!isBackConfirmationShown) {
                 event.preventDefault();
                 if (isOnMainPage()) {
@@ -144,6 +157,8 @@
 
         // Handle Android back button
         document.addEventListener('backbutton', function(event) {
+            if (isNavigating) return;
+            
             if (!isBackConfirmationShown) {
                 event.preventDefault();
                 if (isOnMainPage()) {
@@ -220,20 +235,23 @@
             document.getElementById('confirm-exit').addEventListener('click', function() {
                 document.body.removeChild(overlay);
                 isBackConfirmationShown = false;
-                // Try multiple methods to close the tab
-                if (window.close) {
-                    window.close();
-                }
-                // Alternative methods for different browsers
-                setTimeout(() => {
-                    if (window.opener) {
-                        window.opener = null;
+                
+                // Try to close the tab/window
+                try {
+                    // For mobile browsers, try to close the tab
+                    if (window.close) {
                         window.close();
-                    } else {
-                        // Navigate to a blank page as fallback
-                        window.location.href = 'about:blank';
                     }
-                }, 100);
+                    // For some browsers, try to navigate back in history
+                    if (window.history.length > 1) {
+                        window.history.go(-window.history.length);
+                    }
+                    // Last resort: try to close the window
+                    window.close();
+                } catch (e) {
+                    // If all else fails, show a message
+                    alert('Lütfen tarayıcıyı manuel olarak kapatın.');
+                }
             });
 
             document.getElementById('stay-here').addEventListener('click', function() {
