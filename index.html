@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=30">
+    <link rel="stylesheet" href="styles.css?v=31">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -109,6 +109,7 @@
         // Back gesture system with confirmation popup - only on main page
         let isBackConfirmationShown = false;
         let isNavigating = false;
+        let lastNavigationTime = 0;
         
         // Check if we're on main page (no category content visible)
         function isOnMainPage() {
@@ -122,6 +123,7 @@
         function goToMainPage() {
             if (isNavigating) return;
             isNavigating = true;
+            lastNavigationTime = Date.now();
             
             const categoryContent = document.getElementById('category-content');
             const backBtn = document.getElementById('back-btn');
@@ -136,46 +138,39 @@
             // Push new state to prevent back button issues
             history.pushState(null, null, location.href);
             
-            // Reset back confirmation flag to prevent popup
-            isBackConfirmationShown = false;
-            
             setTimeout(() => {
                 isNavigating = false;
-            }, 200);
+            }, 500);
         }
         
         // Handle browser back button
         window.addEventListener('popstate', function(event) {
-            if (isNavigating) return;
+            // Check if we just navigated (prevent popup after navigation)
+            if (isNavigating || (Date.now() - lastNavigationTime) < 1000) {
+                return;
+            }
             
-            // Small delay to ensure navigation is complete
-            setTimeout(() => {
-                if (!isBackConfirmationShown && !isNavigating) {
-                    event.preventDefault();
-                    if (isOnMainPage()) {
-                        showBackConfirmation();
-                    } else {
-                        goToMainPage();
-                    }
-                }
-            }, 50);
+            event.preventDefault();
+            if (isOnMainPage()) {
+                showBackConfirmation();
+            } else {
+                goToMainPage();
+            }
         });
 
         // Handle Android back button
         document.addEventListener('backbutton', function(event) {
-            if (isNavigating) return;
+            // Check if we just navigated (prevent popup after navigation)
+            if (isNavigating || (Date.now() - lastNavigationTime) < 1000) {
+                return;
+            }
             
-            // Small delay to ensure navigation is complete
-            setTimeout(() => {
-                if (!isBackConfirmationShown && !isNavigating) {
-                    event.preventDefault();
-                    if (isOnMainPage()) {
-                        showBackConfirmation();
-                    } else {
-                        goToMainPage();
-                    }
-                }
-            }, 50);
+            event.preventDefault();
+            if (isOnMainPage()) {
+                showBackConfirmation();
+            } else {
+                goToMainPage();
+            }
         }, false);
 
         function showBackConfirmation() {
