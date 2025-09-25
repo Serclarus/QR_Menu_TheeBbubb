@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=29">
+    <link rel="stylesheet" href="styles.css?v=30">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -136,37 +136,46 @@
             // Push new state to prevent back button issues
             history.pushState(null, null, location.href);
             
+            // Reset back confirmation flag to prevent popup
+            isBackConfirmationShown = false;
+            
             setTimeout(() => {
                 isNavigating = false;
-            }, 100);
+            }, 200);
         }
         
         // Handle browser back button
         window.addEventListener('popstate', function(event) {
             if (isNavigating) return;
             
-            if (!isBackConfirmationShown) {
-                event.preventDefault();
-                if (isOnMainPage()) {
-                    showBackConfirmation();
-                } else {
-                    goToMainPage();
+            // Small delay to ensure navigation is complete
+            setTimeout(() => {
+                if (!isBackConfirmationShown && !isNavigating) {
+                    event.preventDefault();
+                    if (isOnMainPage()) {
+                        showBackConfirmation();
+                    } else {
+                        goToMainPage();
+                    }
                 }
-            }
+            }, 50);
         });
 
         // Handle Android back button
         document.addEventListener('backbutton', function(event) {
             if (isNavigating) return;
             
-            if (!isBackConfirmationShown) {
-                event.preventDefault();
-                if (isOnMainPage()) {
-                    showBackConfirmation();
-                } else {
-                    goToMainPage();
+            // Small delay to ensure navigation is complete
+            setTimeout(() => {
+                if (!isBackConfirmationShown && !isNavigating) {
+                    event.preventDefault();
+                    if (isOnMainPage()) {
+                        showBackConfirmation();
+                    } else {
+                        goToMainPage();
+                    }
                 }
-            }
+            }, 50);
         }, false);
 
         function showBackConfirmation() {
