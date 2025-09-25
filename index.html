@@ -79,10 +79,13 @@
 
     <script src="script.js"></script>
     <script>
-        // Simple admin access - 5 clicks on cafe name
+        // Mobile-friendly admin access - 5 clicks on cafe name OR long press
         let clickCount = 0;
         let clickTimeout;
+        let longPressTimer;
+        let isLongPress = false;
         
+        // 5-click method
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('cafe-name')) {
                 clickCount++;
@@ -99,6 +102,40 @@
                 }
             } else {
                 clickCount = 0;
+            }
+        });
+        
+        // Long press method for mobile
+        document.addEventListener('touchstart', function(e) {
+            if (e.target.classList.contains('cafe-name')) {
+                isLongPress = false;
+                longPressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    showAdminLogin();
+                }, 2000); // 2 second long press
+            }
+        });
+        
+        document.addEventListener('touchend', function(e) {
+            if (e.target.classList.contains('cafe-name')) {
+                clearTimeout(longPressTimer);
+            }
+        });
+        
+        // Also add long press for mouse (desktop)
+        document.addEventListener('mousedown', function(e) {
+            if (e.target.classList.contains('cafe-name')) {
+                isLongPress = false;
+                longPressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    showAdminLogin();
+                }, 2000); // 2 second long press
+            }
+        });
+        
+        document.addEventListener('mouseup', function(e) {
+            if (e.target.classList.contains('cafe-name')) {
+                clearTimeout(longPressTimer);
             }
         });
         

@@ -18,6 +18,7 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    background-attachment: fixed;
 }
 
 .container {
@@ -26,6 +27,8 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
+    padding-bottom: 80px; /* Space for fixed Instagram button */
+    background-color: #f8f6f0;
 }
 
 /* Mobile-First Header Styles */
@@ -76,9 +79,24 @@ body {
         0 0 16px #87CEEB,
         0 0 20px #87CEEB,
         2px 2px 4px rgba(0,0,0,0.5);
+    filter: drop-shadow(0 0 6px #87CEEB);
+    -webkit-filter: drop-shadow(0 0 6px #87CEEB);
     letter-spacing: 0.5px;
     text-transform: uppercase;
     -webkit-text-stroke: 0.5px #87CEEB;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.cafe-name:active {
+    transform: scale(0.98);
+    opacity: 0.8;
 }
 
 .cafe-tagline {
@@ -112,7 +130,7 @@ body {
     font-family: 'Nunito', sans-serif;
     font-size: 1.25rem;
     text-align: center;
-    margin: 0 auto 0.4rem auto;
+    margin: 1.8rem auto 1.8rem auto;
     color: #87CEEB;
     letter-spacing: 0.3px;
     text-transform: uppercase;
@@ -325,11 +343,17 @@ body {
 
 /* Instagram Button Styles */
 .instagram-section {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 0.4rem 0.2rem;
-    margin-top: 0.4rem;
+    background: white;
+    border-top: 1px solid #e0e0e0;
+    z-index: 1000;
 }
 
 .instagram-btn {
@@ -481,6 +505,8 @@ body {
             0 0 16px #87CEEB,
             0 0 20px #87CEEB,
             2px 2px 4px rgba(0,0,0,0.5);
+        filter: drop-shadow(0 0 6px #87CEEB);
+        -webkit-filter: drop-shadow(0 0 6px #87CEEB);
         -webkit-text-stroke: 0.5px #87CEEB;
     }
     
