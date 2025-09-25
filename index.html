@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=17">
+    <link rel="stylesheet" href="styles.css?v=24">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -59,7 +59,7 @@
         
         <!-- Instagram Button -->
         <div class="instagram-section">
-            <a href="#" id="instagram-link" class="instagram-btn" target="_blank">
+            <a href="https://www.instagram.com/theebbubb/" id="instagram-link" class="instagram-btn">
                 <img src="instagram_icon.png" alt="Instagram" class="instagram-logo">
             </a>
         </div>
@@ -79,6 +79,33 @@
 
     <script src="script.js"></script>
     <script>
+        // Instagram button handler - try app first, then website in new tab
+        document.addEventListener('DOMContentLoaded', function() {
+            const instagramLink = document.getElementById('instagram-link');
+            if (instagramLink) {
+                instagramLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Try to open Instagram app first
+                    const appUrl = 'instagram://user?username=theebbubb';
+                    const webUrl = 'https://www.instagram.com/theebbubb/';
+                    
+                    // Create a hidden iframe to test if the app opens
+                    const iframe = document.createElement('iframe');
+                    iframe.style.display = 'none';
+                    iframe.src = appUrl;
+                    document.body.appendChild(iframe);
+                    
+                    // Set a timeout to check if the app opened
+                    setTimeout(() => {
+                        document.body.removeChild(iframe);
+                        // If we're still here, the app didn't open, so open the website in new tab
+                        window.open(webUrl, '_blank');
+                    }, 1000);
+                });
+            }
+        });
+        
         // Mobile-friendly admin access - 5 clicks on cafe name OR long press
         let clickCount = 0;
         let clickTimeout;

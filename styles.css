@@ -72,12 +72,11 @@ body {
     margin-bottom: 0.4rem;
     color: #87CEEB;
     text-shadow: 
-        0 0 1px #87CEEB,
-        0 0 2px #87CEEB,
-        0 0 3px #87CEEB,
-        0 0 4px #87CEEB;
-    filter: drop-shadow(0 0 1px #87CEEB);
-    -webkit-filter: drop-shadow(0 0 1px #87CEEB);
+        0 0 2px rgba(135, 206, 235, 0.3),
+        0 0 4px rgba(135, 206, 235, 0.2),
+        0 0 6px rgba(135, 206, 235, 0.1);
+    filter: drop-shadow(0 0 2px rgba(135, 206, 235, 0.3));
+    -webkit-filter: drop-shadow(0 0 2px rgba(135, 206, 235, 0.3));
     letter-spacing: 0.5px;
     text-transform: uppercase;
     -webkit-text-stroke: 0.5px #87CEEB;
@@ -127,7 +126,7 @@ body {
     font-family: 'Nunito', sans-serif;
     font-size: 1.25rem;
     text-align: center;
-    margin: 0.3rem auto 0.3rem auto;
+    margin: 1.6rem auto 1.6rem auto;
     color: #87CEEB;
     letter-spacing: 0.3px;
     text-transform: uppercase;
@@ -517,12 +516,11 @@ body {
         font-size: 1.6rem;
         letter-spacing: 0.5px;
         text-shadow: 
-            0 0 1px #87CEEB,
-            0 0 2px #87CEEB,
-            0 0 3px #87CEEB,
-            0 0 4px #87CEEB;
-        filter: drop-shadow(0 0 1px #87CEEB);
-        -webkit-filter: drop-shadow(0 0 1px #87CEEB);
+            0 0 2px rgba(135, 206, 235, 0.3),
+            0 0 4px rgba(135, 206, 235, 0.2),
+            0 0 6px rgba(135, 206, 235, 0.1);
+        filter: drop-shadow(0 0 2px rgba(135, 206, 235, 0.3));
+        -webkit-filter: drop-shadow(0 0 2px rgba(135, 206, 235, 0.3));
         -webkit-text-stroke: 0.5px #87CEEB;
     }
     
