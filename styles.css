@@ -404,7 +404,12 @@ body {
 
 /* Hide Instagram button when category content is shown */
 .instagram-section.hidden {
-    display: none;
+    display: none !important;
+}
+
+/* Hide Instagram button when category content is visible */
+.category-content[style*="display: block"] ~ .instagram-section {
+    display: none !important;
 }
 
 /* Mobile-specific Instagram button fixes */
