@@ -257,6 +257,13 @@ function loadCafeData() {
         }
     }
     
+    if (cafeData.instagramUrl) {
+        const instagramLink = document.getElementById('instagram-link');
+        if (instagramLink) {
+            instagramLink.href = cafeData.instagramUrl;
+        }
+    }
+    
     if (cafeData.image) {
         const cafeImageElement = document.querySelector('.cafe-image img');
         if (cafeImageElement) {
@@ -340,6 +347,12 @@ function showCategory(categoryKey) {
     // Hide main navigation
     mainNav.style.display = 'none';
     
+    // Hide Instagram button
+    const instagramSection = document.querySelector('.instagram-section');
+    if (instagramSection) {
+        instagramSection.classList.add('hidden');
+    }
+    
     // Show back button
     backBtn.style.display = 'block';
     
@@ -375,6 +388,12 @@ function showMainMenu() {
     backBtn.style.display = 'none';
     categoryContent.style.display = 'none';
     categoryContent.innerHTML = '';
+    
+    // Show Instagram button
+    const instagramSection = document.querySelector('.instagram-section');
+    if (instagramSection) {
+        instagramSection.classList.remove('hidden');
+    }
     
     // Scroll to top
     window.scrollTo(0, 0);

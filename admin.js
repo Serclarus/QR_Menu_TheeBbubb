@@ -182,6 +182,9 @@ function loadMenuData() {
         preview.src = cafeData.image;
         preview.style.display = 'block';
     }
+    if (cafeData.instagramUrl) {
+        document.getElementById('instagram-url').value = cafeData.instagramUrl;
+    }
     
     // Load categories
     const categories = JSON.parse(localStorage.getItem('categories') || '{}');
@@ -285,7 +288,8 @@ function loadDefaultData() {
 function saveCafeInfo() {
     const cafeData = {
         description: document.getElementById('cafe-description').value,
-        image: document.getElementById('cafe-image').value
+        image: document.getElementById('cafe-image').value,
+        instagramUrl: document.getElementById('instagram-url').value
     };
     
     localStorage.setItem('cafeData', JSON.stringify(cafeData));

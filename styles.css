@@ -32,7 +32,7 @@ body {
 .header {
     position: relative;
     width: 100%;
-    height: 180px;
+    height: 150px;
     overflow: hidden;
 }
 
@@ -65,9 +65,9 @@ body {
 
 .cafe-name {
     font-family: 'Nunito', sans-serif;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 800;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
     color: #87CEEB;
     text-shadow: 
         0 0 4px #87CEEB,
@@ -90,16 +90,16 @@ body {
 
 .cafe-description {
     font-family: 'Nunito', sans-serif;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 400;
     opacity: 0.9;
-    margin-top: 0.5rem;
+    margin-top: 0.4rem;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
 /* Navigation Styles */
 .main-nav {
-    padding: 0.75rem 0.5rem;
+    padding: 0.2rem 0.5rem;
     background: white;
     width: 100%;
     display: flex;
@@ -110,9 +110,9 @@ body {
 
 .main-nav h2 {
     font-family: 'Nunito', sans-serif;
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     text-align: center;
-    margin: 0 auto 1rem auto;
+    margin: 0 auto 0.4rem auto;
     color: #87CEEB;
     letter-spacing: 0.3px;
     text-transform: uppercase;
@@ -124,7 +124,7 @@ body {
         0.4px 0.4px 0 rgba(0,0,0,0.55);
     background: url('title_background.png') center center/cover no-repeat;
     background-size: 88% auto;
-    padding: 1.5rem 3rem;
+    padding: 0.7rem 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -132,24 +132,25 @@ body {
     width: fit-content;
     margin-left: auto;
     margin-right: auto;
-    min-height: 60px;
+    min-height: 40px;
 }
 
 .category-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.4rem;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0 0.2rem;
-    justify-content: center;
-    align-items: center;
+    gap: 0.5rem;
+    max-width: 100vw;
+    width: 100vw;
+    margin: 0;
+    padding: 0.5rem;
+    justify-content: stretch;
+    align-items: stretch;
 }
 
 .category-card {
     background: white;
     border-radius: 6px;
-    padding: 0.75rem;
+    padding: 0.9rem;
     text-align: center;
     box-shadow: 0 3px 12px rgba(0,0,0,0.08);
     transition: all 0.3s ease;
@@ -157,16 +158,17 @@ body {
     border: 2px solid transparent;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-    min-height: 110px;
-    height: 110px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    min-height: 97px !important;
+    height: 97px !important;
+    max-height: 97px !important;
+    width: 100%;
+    display: block;
+    position: relative;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    box-sizing: border-box;
 }
 
 .category-card:hover {
@@ -176,18 +178,29 @@ body {
 }
 
 .category-icon {
-    font-size: 2.5rem;
-    margin-bottom: 0.75rem;
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: block;
+    text-align: center;
+    margin-top: -5px;
 }
 
 .category-card h3 {
     font-family: 'Nunito', sans-serif;
-    font-size: 1.3rem;
-    margin-bottom: 0.25rem;
+    font-size: 0.8rem !important;
+    margin: 0;
+    padding: 0;
+    line-height: 1.1;
     color: #000000;
     letter-spacing: 0.5px;
     text-transform: uppercase;
     font-weight: 800;
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
 }
 
 .category-card p {
@@ -308,6 +321,68 @@ body {
     background: #d35400;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4);
+}
+
+/* Instagram Button Styles */
+.instagram-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.4rem 0.2rem;
+    margin-top: 0.4rem;
+}
+
+.instagram-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 6px;
+    padding: 0.4rem;
+    text-decoration: none;
+    color: #000;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+    font-size: 0.75rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    border: 2px solid transparent;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 48px;
+    height: 48px;
+    width: 48%;
+    min-width: 200px;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.instagram-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border-color: #bc1888;
+}
+
+.instagram-logo {
+    width: 150%;
+    height: 150%;
+    object-fit: contain;
+    display: block;
+    transform: translateZ(0);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: high-quality;
+    image-rendering: crisp-edges;
+    -webkit-backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    filter: contrast(1.2) brightness(1.1) saturate(1.1);
+    -webkit-filter: contrast(1.2) brightness(1.1) saturate(1.1);
+}
+
+/* Hide Instagram button when category content is shown */
+.instagram-section.hidden {
+    display: none;
 }
 
 /* Mobile-Optimized Styles */
@@ -444,34 +519,48 @@ body {
     
     .category-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 0.4rem;
-        padding: 0 0.2rem;
-        justify-content: center;
-        align-items: center;
+        gap: 0.5rem;
+        max-width: 100vw;
+        width: 100vw;
+        margin: 0;
+        padding: 0.5rem;
+        justify-content: stretch;
+        align-items: stretch;
     }
     
     .category-card {
         padding: 0.875rem;
         border-radius: 6px;
-        min-height: 100px;
-        height: 100px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        min-height: 97px !important;
+        height: 97px !important;
+        max-height: 97px !important;
+        width: 100%;
+        display: block;
+        position: relative;
+        box-sizing: border-box;
     }
     
     .category-icon {
-        font-size: 1.6rem;
-        margin-bottom: 0.3rem;
+        font-size: 2rem;
+        margin-bottom: 10px;
+        display: block;
+        text-align: center;
+        margin-top: -5px;
     }
     
     .category-card h3 {
-        font-size: 0.9rem;
-        margin-bottom: 0.15rem;
+        font-size: 0.6rem !important;
+        margin: 0;
+        padding: 0;
         letter-spacing: 0.2px;
         color: #000000;
         line-height: 1.1;
+        width: 100%;
+        text-align: center;
+        position: absolute;
+        bottom: 15px;
+        left: 0;
+        right: 0;
     }
     
     .category-card p {
