@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=24">
+    <link rel="stylesheet" href="styles.css?v=25">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -105,6 +105,110 @@
                 });
             }
         });
+
+        // Back gesture system with confirmation popup
+        let isBackConfirmationShown = false;
+        
+        // Handle browser back button
+        window.addEventListener('popstate', function(event) {
+            if (!isBackConfirmationShown) {
+                event.preventDefault();
+                showBackConfirmation();
+            }
+        });
+
+        // Handle Android back button
+        document.addEventListener('backbutton', function(event) {
+            event.preventDefault();
+            if (!isBackConfirmationShown) {
+                showBackConfirmation();
+            }
+        }, false);
+
+        function showBackConfirmation() {
+            if (isBackConfirmationShown) return;
+            isBackConfirmationShown = true;
+
+            // Create overlay
+            const overlay = document.createElement('div');
+            overlay.id = 'back-confirmation-overlay';
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 10000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-family: 'Nunito', sans-serif;
+            `;
+
+            // Create popup
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                background: white;
+                padding: 2rem;
+                border-radius: 15px;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                max-width: 300px;
+                width: 90%;
+            `;
+
+            popup.innerHTML = `
+                <h3 style="margin: 0 0 1rem 0; color: #333; font-size: 1.2rem;">Çıkmak İstiyor Musunuz?</h3>
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <button id="confirm-exit" style="
+                        background: #e74c3c;
+                        color: white;
+                        border: none;
+                        padding: 0.8rem 1.5rem;
+                        border-radius: 8px;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        font-family: 'Nunito', sans-serif;
+                    ">Çık</button>
+                    <button id="stay-here" style="
+                        background: #27ae60;
+                        color: white;
+                        border: none;
+                        padding: 0.8rem 1.5rem;
+                        border-radius: 8px;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        font-family: 'Nunito', sans-serif;
+                    ">Kal</button>
+                </div>
+            `;
+
+            overlay.appendChild(popup);
+            document.body.appendChild(overlay);
+
+            // Handle button clicks
+            document.getElementById('confirm-exit').addEventListener('click', function() {
+                document.body.removeChild(overlay);
+                isBackConfirmationShown = false;
+                // Actually exit the app/close the tab
+                window.close();
+                // If window.close() doesn't work, try to navigate away
+                setTimeout(() => {
+                    window.location.href = 'about:blank';
+                }, 100);
+            });
+
+            document.getElementById('stay-here').addEventListener('click', function() {
+                document.body.removeChild(overlay);
+                isBackConfirmationShown = false;
+                // Push a new state to prevent immediate back
+                history.pushState(null, null, location.href);
+            });
+        }
+
+        // Push initial state to handle back button
+        history.pushState(null, null, location.href);
         
         // Mobile-friendly admin access - 5 clicks on cafe name OR long press
         let clickCount = 0;
