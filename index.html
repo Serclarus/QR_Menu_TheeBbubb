@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=36">
+    <link rel="stylesheet" href="styles.css?v=37">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -106,74 +106,23 @@
             }
         });
 
-        // New Navigation System - Proper Page Logic
-        let currentPage = 'main'; // Track current page: 'main' or 'category'
+        // New Navigation System - Simple Button Check
         let isExitPopupShown = false;
-        let navigationInProgress = false;
         
-        // Update page state with proper logic
-        function updatePageState() {
-            const categoryContent = document.getElementById('category-content');
+        // Handle back button - Simple approach
+        function handleBackButton() {
             const backBtn = document.getElementById('back-btn');
             
-            if (categoryContent && categoryContent.style.display === 'block' && 
-                backBtn && backBtn.style.display !== 'none') {
-                currentPage = 'category';
+            // Check if "Menüye Dön" button is visible
+            if (backBtn && backBtn.style.display !== 'none' && backBtn.offsetParent !== null) {
+                // Button is visible - click it
+                backBtn.click();
             } else {
-                currentPage = 'main';
-            }
-        }
-        
-        // Handle back button for all devices
-        function handleBackButton() {
-            // Prevent multiple triggers
-            if (navigationInProgress) {
-                return;
-            }
-            
-            updatePageState();
-            
-            if (currentPage === 'main') {
-                // On main page - show exit confirmation
+                // Button is not visible - show exit popup
                 if (!isExitPopupShown) {
                     showExitConfirmation();
                 }
-            } else {
-                // In category - go back to main page
-                navigationInProgress = true;
-                goBackToMain();
-                // Reset navigation flag after a delay
-                setTimeout(() => {
-                    navigationInProgress = false;
-                }, 500);
             }
-        }
-        
-        // Go back to main page
-        function goBackToMain() {
-            const categoryContent = document.getElementById('category-content');
-            const backBtn = document.getElementById('back-btn');
-            const mainNav = document.querySelector('.main-nav');
-            const instagramSection = document.querySelector('.instagram-section');
-            
-            // Hide category content
-            if (categoryContent) categoryContent.style.display = 'none';
-            if (backBtn) backBtn.style.display = 'none';
-            
-            // Show main content
-            if (mainNav) mainNav.style.display = 'block';
-            if (instagramSection) instagramSection.style.display = 'flex';
-            
-            // Update state
-            currentPage = 'main';
-            
-            // Clear any existing popup
-            isExitPopupShown = false;
-            
-            // Update page state after navigation
-            setTimeout(() => {
-                updatePageState();
-            }, 100);
         }
         
         // Show exit confirmation popup
@@ -261,36 +210,16 @@
         window.addEventListener('popstate', function(event) {
             event.preventDefault();
             event.stopPropagation();
-            
-            // Add small delay to prevent rapid firing
-            setTimeout(() => {
-                handleBackButton();
-            }, 50);
-            
+            handleBackButton();
             return false;
         });
         
         document.addEventListener('backbutton', function(event) {
             event.preventDefault();
             event.stopPropagation();
-            
-            // Add small delay to prevent rapid firing
-            setTimeout(() => {
-                handleBackButton();
-            }, 50);
-            
+            handleBackButton();
             return false;
         }, false);
-        
-        // Prevent default back behavior
-        window.addEventListener('beforeunload', function(event) {
-            if (currentPage === 'category') {
-                event.preventDefault();
-                event.returnValue = '';
-                goBackToMain();
-                return false;
-            }
-        });
         
         // Override browser back button completely
         window.history.pushState(null, null, location.href);
@@ -323,9 +252,6 @@
                 });
             }
         });
-
-        // Initialize navigation system
-        updatePageState();
         
         // Mobile-friendly admin access - 5 clicks on cafe name OR long press
         let clickCount = 0;
