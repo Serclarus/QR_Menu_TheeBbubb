@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=31">
+    <link rel="stylesheet" href="styles.css?v=32">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -106,24 +106,23 @@
             }
         });
 
-        // Back gesture system with confirmation popup - only on main page
-        let isBackConfirmationShown = false;
-        let isNavigating = false;
-        let lastNavigationTime = 0;
+        // Back gesture system - completely rewritten
+        let backSystemEnabled = true;
+        let isOnMainPageFlag = true;
         
-        // Check if we're on main page (no category content visible)
-        function isOnMainPage() {
+        // Check if we're on main page
+        function checkMainPage() {
             const categoryContent = document.getElementById('category-content');
             const backBtn = document.getElementById('back-btn');
-            return categoryContent && categoryContent.style.display !== 'block' && 
-                   backBtn && backBtn.style.display === 'none';
+            const isMain = categoryContent && categoryContent.style.display !== 'block' && 
+                          backBtn && backBtn.style.display === 'none';
+            isOnMainPageFlag = isMain;
+            return isMain;
         }
         
-        // Navigate back to main page
+        // Navigate to main page (no popup)
         function goToMainPage() {
-            if (isNavigating) return;
-            isNavigating = true;
-            lastNavigationTime = Date.now();
+            backSystemEnabled = false;
             
             const categoryContent = document.getElementById('category-content');
             const backBtn = document.getElementById('back-btn');
@@ -135,23 +134,23 @@
             if (mainNav) mainNav.style.display = 'block';
             if (instagramSection) instagramSection.style.display = 'flex';
             
-            // Push new state to prevent back button issues
+            // Push new state
             history.pushState(null, null, location.href);
             
+            // Re-enable back system after navigation
             setTimeout(() => {
-                isNavigating = false;
-            }, 500);
+                backSystemEnabled = true;
+                isOnMainPageFlag = true;
+            }, 1000);
         }
         
         // Handle browser back button
         window.addEventListener('popstate', function(event) {
-            // Check if we just navigated (prevent popup after navigation)
-            if (isNavigating || (Date.now() - lastNavigationTime) < 1000) {
-                return;
-            }
+            if (!backSystemEnabled) return;
             
             event.preventDefault();
-            if (isOnMainPage()) {
+            
+            if (checkMainPage()) {
                 showBackConfirmation();
             } else {
                 goToMainPage();
@@ -160,13 +159,11 @@
 
         // Handle Android back button
         document.addEventListener('backbutton', function(event) {
-            // Check if we just navigated (prevent popup after navigation)
-            if (isNavigating || (Date.now() - lastNavigationTime) < 1000) {
-                return;
-            }
+            if (!backSystemEnabled) return;
             
             event.preventDefault();
-            if (isOnMainPage()) {
+            
+            if (checkMainPage()) {
                 showBackConfirmation();
             } else {
                 goToMainPage();
@@ -240,20 +237,29 @@
                 document.body.removeChild(overlay);
                 isBackConfirmationShown = false;
                 
-                // Try to close the tab/window
+                // Multiple methods to close the tab
                 try {
-                    // For mobile browsers, try to close the tab
+                    // Method 1: Try window.close()
                     if (window.close) {
                         window.close();
                     }
-                    // For some browsers, try to navigate back in history
+                    
+                    // Method 2: Try to navigate away
+                    window.location.href = 'about:blank';
+                    
+                    // Method 3: Try to close with opener
+                    if (window.opener) {
+                        window.opener = null;
+                        window.close();
+                    }
+                    
+                    // Method 4: Try to go back in history
                     if (window.history.length > 1) {
                         window.history.go(-window.history.length);
                     }
-                    // Last resort: try to close the window
-                    window.close();
+                    
                 } catch (e) {
-                    // If all else fails, show a message
+                    // If all methods fail, show message
                     alert('Lütfen tarayıcıyı manuel olarak kapatın.');
                 }
             });
