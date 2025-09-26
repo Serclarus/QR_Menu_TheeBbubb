@@ -530,25 +530,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('touchmove', function() {}, {passive: true});
 });
 
-// Handle browser back button
-window.addEventListener('popstate', (e) => {
-    if (e.state && e.state.category) {
-        showCategory(e.state.category);
-    } else {
-        showMainMenu();
-    }
-});
+// Handle browser back button - REMOVED to prevent conflicts with main back button system
 
-// Update URL when showing category
-function showCategoryWithHistory(categoryKey) {
-    history.pushState({ category: categoryKey }, '', `#${categoryKey}`);
-    showCategory(categoryKey);
-}
-
-// Check for hash on page load
-window.addEventListener('load', () => {
-    const hash = window.location.hash.substring(1);
-    if (hash && menuData[hash]) {
-        showCategory(hash);
-    }
-});
+// URL management removed to prevent conflicts with main back button system

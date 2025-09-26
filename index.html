@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=39">
+    <link rel="stylesheet" href="styles.css?v=40">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -113,13 +113,16 @@
         // Handle back button - New approach
         function handleBackButton() {
             const backBtn = document.getElementById('back-btn');
+            const categoryContent = document.getElementById('category-content');
             
-            // Check if "Menüye Dön" button is visible
-            if (backBtn && backBtn.style.display !== 'none' && backBtn.offsetParent !== null) {
-                // Button is visible - click it (same as Menüye Dön)
-                backBtn.click();
+            // Check if we're in a category (category content is visible)
+            if (categoryContent && categoryContent.style.display === 'block') {
+                // We're in a category - go back to main menu
+                console.log('In category - going to main menu');
+                showMainMenu();
             } else {
-                // Button is not visible - handle exit attempt
+                // We're on main menu - handle exit attempt
+                console.log('On main menu - handling exit attempt');
                 handleExitAttempt();
             }
         }
@@ -202,6 +205,34 @@
         function resetExitAttempts() {
             exitAttempts = 0;
             exitMessageShown = false;
+        }
+        
+        // Show main menu function
+        function showMainMenu() {
+            const mainNav = document.querySelector('.main-nav');
+            const backBtn = document.getElementById('back-btn');
+            const categoryContent = document.getElementById('category-content');
+            const instagramSection = document.querySelector('.instagram-section');
+            
+            // Show main navigation
+            if (mainNav) mainNav.style.display = 'block';
+            
+            // Hide back button
+            if (backBtn) backBtn.style.display = 'none';
+            
+            // Hide category content
+            if (categoryContent) {
+                categoryContent.style.display = 'none';
+                categoryContent.innerHTML = '';
+            }
+            
+            // Show Instagram button
+            if (instagramSection) {
+                instagramSection.classList.remove('hidden');
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
         }
         
         // Event listeners for all back button types
