@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=41">
+    <link rel="stylesheet" href="styles.css?v=43">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -109,6 +109,8 @@
         // Clean Back Button System - From Scratch
         let exitAttempts = 0;
         let exitMessageShown = false;
+        let isProcessingBack = false;
+        let lastBackPress = 0;
         
         // Check if we're on main page or in a category
         function isOnMainPage() {
@@ -118,21 +120,76 @@
         
         // Handle back button press
         function handleBackPress() {
+            const now = Date.now();
+            
+            // Prevent multiple rapid triggers
+            if (isProcessingBack || (now - lastBackPress) < 500) {
+                console.log('Back button ignored - too soon or already processing');
+                return;
+            }
+            
+            isProcessingBack = true;
+            lastBackPress = now;
+            
+            console.log('Back button pressed');
+            
             if (isOnMainPage()) {
                 // On main page - show exit confirmation
+                console.log('On main page - showing exit confirmation');
                 handleExitAttempt();
             } else {
                 // In category - go to main page
+                console.log('In category - going to main page');
                 goToMainPage();
             }
+            
+            // Reset processing flag after a delay
+            setTimeout(() => {
+                isProcessingBack = false;
+            }, 1000);
         }
         
-        // Go to main page (same as clicking "Menüye Dön" button)
+        // Go to main page (direct navigation)
         function goToMainPage() {
+            console.log('goToMainPage called');
+            const mainNav = document.querySelector('.main-nav');
             const backBtn = document.getElementById('back-btn');
-            if (backBtn) {
-                backBtn.click(); // Use existing button functionality
+            const categoryContent = document.getElementById('category-content');
+            const instagramSection = document.querySelector('.instagram-section');
+            
+            console.log('Elements found:', { mainNav, backBtn, categoryContent, instagramSection });
+            
+            // Show main navigation
+            if (mainNav) {
+                mainNav.style.display = 'block';
+                console.log('Main nav shown');
             }
+            
+            // Hide back button
+            if (backBtn) {
+                backBtn.style.display = 'none';
+                console.log('Back button hidden');
+            }
+            
+            // Hide category content
+            if (categoryContent) {
+                categoryContent.style.display = 'none';
+                categoryContent.innerHTML = '';
+                console.log('Category content hidden');
+            }
+            
+            // Show Instagram button
+            if (instagramSection) {
+                instagramSection.classList.remove('hidden');
+                console.log('Instagram section shown');
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Reset exit attempts when going to main page
+            resetExitAttempts();
+            console.log('goToMainPage completed');
         }
         
         // Handle exit attempts
@@ -215,23 +272,27 @@
             exitMessageShown = false;
         }
         
-        // Override all back button events
-        window.onpopstate = function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            handleBackPress();
+        // Override all back button events (only once)
+        if (!window.backButtonSetup) {
+            window.backButtonSetup = true;
+            
+            window.onpopstate = function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                handleBackPress();
+                window.history.pushState(null, null, location.href);
+            };
+            
+            // Prevent default browser back behavior
             window.history.pushState(null, null, location.href);
-        };
-        
-        // Prevent default browser back behavior
-        window.history.pushState(null, null, location.href);
-        
-        // Mobile back button support
-        document.addEventListener('backbutton', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            handleBackPress();
-        }, false);
+            
+            // Mobile back button support
+            document.addEventListener('backbutton', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                handleBackPress();
+            }, false);
+        }
         
         // iOS gesture support
         document.addEventListener('gesturestart', function(event) {
