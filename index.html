@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=46">
+    <link rel="stylesheet" href="styles.css?v=47">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -454,7 +454,8 @@
             const errorDiv = document.getElementById('admin-error');
             
             if (password === 'SecureAdmin2024!') {
-                // Successful login
+                // Successful login - set admin access token
+                sessionStorage.setItem('adminAccess', 'true');
                 hideAdminLogin();
                 window.location.href = 'admin.html';
             } else {

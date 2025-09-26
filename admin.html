@@ -241,6 +241,7 @@
                 <button onclick="showSection('categories')">Kategoriler</button>
                 <button onclick="showSection('menu-items')">Menü Öğeleri</button>
                 <button onclick="returnToMenu()" style="background: #27ae60;">🏠 Menüye Dön</button>
+                <button onclick="logoutAdmin()" style="background: #e74c3c;">🚪 Çıkış Yap</button>
             </div>
 
             <!-- Cafe Info Section -->
@@ -334,6 +335,46 @@
         </div>
     </div>
 
+    <script>
+        // Security Check - Must be authenticated to access admin panel
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user has admin access
+            const hasAdminAccess = sessionStorage.getItem('adminAccess') === 'true';
+            
+            if (!hasAdminAccess) {
+                // Redirect to main page if not authenticated
+                alert('Bu sayfaya erişim yetkiniz yok. Ana sayfaya yönlendiriliyorsunuz.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Set auto-logout after 30 minutes of inactivity
+            let inactivityTimer;
+            function resetInactivityTimer() {
+                clearTimeout(inactivityTimer);
+                inactivityTimer = setTimeout(() => {
+                    sessionStorage.removeItem('adminAccess');
+                    alert('Oturum süreniz doldu. Ana sayfaya yönlendiriliyorsunuz.');
+                    window.location.href = 'index.html';
+                }, 30 * 60 * 1000); // 30 minutes
+            }
+            
+            // Reset timer on any user activity
+            ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+                document.addEventListener(event, resetInactivityTimer, true);
+            });
+            
+            // Initialize timer
+            resetInactivityTimer();
+        });
+        
+        // Logout function
+        function logoutAdmin() {
+            sessionStorage.removeItem('adminAccess');
+            alert('Başarıyla çıkış yaptınız.');
+            window.location.href = 'index.html';
+        }
+    </script>
     <script src="admin.js"></script>
 </body>
 </html>
