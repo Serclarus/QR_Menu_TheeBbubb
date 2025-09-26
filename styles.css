@@ -392,7 +392,6 @@ body {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: high-quality;
     image-rendering: crisp-edges;
-    backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     -webkit-transform: translateZ(0);
     filter: contrast(1.2) brightness(1.1) saturate(1.1);
@@ -507,6 +506,7 @@ body {
         font-family: 'Nunito', sans-serif;
         font-size: 0.9rem;
     }
+}
 
 @media (max-width: 480px) {
     .header {
