@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=40">
+    <link rel="stylesheet" href="styles.css?v=41">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -106,24 +106,32 @@
             }
         });
 
-        // New Back Button System - No Popup, Menüye Dön Logic
+        // Clean Back Button System - From Scratch
         let exitAttempts = 0;
         let exitMessageShown = false;
         
-        // Handle back button - New approach
-        function handleBackButton() {
-            const backBtn = document.getElementById('back-btn');
+        // Check if we're on main page or in a category
+        function isOnMainPage() {
             const categoryContent = document.getElementById('category-content');
-            
-            // Check if we're in a category (category content is visible)
-            if (categoryContent && categoryContent.style.display === 'block') {
-                // We're in a category - go back to main menu
-                console.log('In category - going to main menu');
-                showMainMenu();
-            } else {
-                // We're on main menu - handle exit attempt
-                console.log('On main menu - handling exit attempt');
+            return !categoryContent || categoryContent.style.display === 'none' || categoryContent.style.display === '';
+        }
+        
+        // Handle back button press
+        function handleBackPress() {
+            if (isOnMainPage()) {
+                // On main page - show exit confirmation
                 handleExitAttempt();
+            } else {
+                // In category - go to main page
+                goToMainPage();
+            }
+        }
+        
+        // Go to main page (same as clicking "Menüye Dön" button)
+        function goToMainPage() {
+            const backBtn = document.getElementById('back-btn');
+            if (backBtn) {
+                backBtn.click(); // Use existing button functionality
             }
         }
         
@@ -143,62 +151,62 @@
             }
         }
         
-        // Show exit message
+        // Show exit confirmation message
         function showExitMessage() {
             if (exitMessageShown) return;
             exitMessageShown = true;
             
-            // Create message overlay
-            const overlay = document.createElement('div');
-            overlay.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.7);
-                z-index: 10000;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-family: 'Nunito', sans-serif;
-            `;
-            
-            // Create message
             const message = document.createElement('div');
+            message.id = 'exit-message';
             message.style.cssText = `
-                background: white;
-                padding: 2rem;
-                border-radius: 15px;
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 25px;
+                font-family: 'Nunito', sans-serif;
+                font-size: 14px;
+                font-weight: 600;
+                z-index: 10000;
                 text-align: center;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-                max-width: 300px;
-                width: 90%;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                animation: slideUp 0.3s ease-out;
             `;
             
-            message.innerHTML = `
-                <h3 style="margin: 0 0 1rem 0; color: #333; font-size: 1.2rem;">Çıkmak İçin Bir Kez Daha Geri Tuşuna Basın</h3>
-                <p style="margin: 0; color: #666; font-size: 0.9rem;">Siteden çıkmak için geri tuşuna bir kez daha basmanız gerekiyor.</p>
+            message.innerHTML = 'Çıkmak için bir kez daha geri tuşuna basın';
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideUp {
+                    from {
+                        transform: translateX(-50%) translateY(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(-50%) translateY(0);
+                        opacity: 1;
+                    }
+                }
             `;
+            document.head.appendChild(style);
             
-            overlay.appendChild(message);
-            document.body.appendChild(overlay);
+            document.body.appendChild(message);
             
-            // Auto close message after 3 seconds
             setTimeout(() => {
-                if (document.body.contains(overlay)) {
-                    document.body.removeChild(overlay);
+                if (document.body.contains(message)) {
+                    message.style.animation = 'slideUp 0.3s ease-out reverse';
+                    setTimeout(() => {
+                        if (document.body.contains(message)) {
+                            document.body.removeChild(message);
+                        }
+                    }, 300);
                     exitMessageShown = false;
+                    exitAttempts = 0; // Reset attempts
                 }
             }, 3000);
-            
-            // Close message on click
-            overlay.addEventListener('click', function() {
-                if (document.body.contains(overlay)) {
-                    document.body.removeChild(overlay);
-                    exitMessageShown = false;
-                }
-            });
         }
         
         // Reset exit attempts when navigating within site
@@ -207,61 +215,25 @@
             exitMessageShown = false;
         }
         
-        // Show main menu function
-        function showMainMenu() {
-            const mainNav = document.querySelector('.main-nav');
-            const backBtn = document.getElementById('back-btn');
-            const categoryContent = document.getElementById('category-content');
-            const instagramSection = document.querySelector('.instagram-section');
-            
-            // Show main navigation
-            if (mainNav) mainNav.style.display = 'block';
-            
-            // Hide back button
-            if (backBtn) backBtn.style.display = 'none';
-            
-            // Hide category content
-            if (categoryContent) {
-                categoryContent.style.display = 'none';
-                categoryContent.innerHTML = '';
-            }
-            
-            // Show Instagram button
-            if (instagramSection) {
-                instagramSection.classList.remove('hidden');
-            }
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-        }
-        
-        // Event listeners for all back button types
-        window.addEventListener('popstate', function(event) {
+        // Override all back button events
+        window.onpopstate = function(event) {
             event.preventDefault();
             event.stopPropagation();
-            handleBackButton();
-            return false;
-        });
+            handleBackPress();
+            window.history.pushState(null, null, location.href);
+        };
         
+        // Prevent default browser back behavior
+        window.history.pushState(null, null, location.href);
+        
+        // Mobile back button support
         document.addEventListener('backbutton', function(event) {
             event.preventDefault();
             event.stopPropagation();
-            handleBackButton();
-            return false;
+            handleBackPress();
         }, false);
         
-        // Override browser back button completely
-        window.history.pushState(null, null, location.href);
-        window.addEventListener('popstate', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            handleBackButton();
-            // Push state again to prevent actual navigation
-            window.history.pushState(null, null, location.href);
-            return false;
-        });
-        
-        // iOS back gesture support
+        // iOS gesture support
         document.addEventListener('gesturestart', function(event) {
             if (event.touches.length === 1) {
                 let startX = event.touches[0].clientX;
@@ -272,9 +244,8 @@
                         let currentX = event.touches[0].clientX;
                         let currentY = event.touches[0].clientY;
                         
-                        // Check if it's a right swipe (back gesture)
                         if (currentX > startX + 50 && Math.abs(currentY - startY) < 100) {
-                            handleBackButton();
+                            handleBackPress();
                             document.removeEventListener('gesturechange', gestureChange);
                         }
                     }
