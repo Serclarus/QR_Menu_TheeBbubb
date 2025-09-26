@@ -80,7 +80,6 @@ body {
     letter-spacing: 0.5px;
     text-transform: uppercase;
     -webkit-text-stroke: 0.5px #87CEEB;
-    cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -90,10 +89,7 @@ body {
     touch-action: manipulation;
 }
 
-.cafe-name:active {
-    transform: scale(0.98);
-    opacity: 0.8;
-}
+/* Removed click animation to hide admin access */
 
 .cafe-tagline {
     font-family: 'Nunito', sans-serif;
