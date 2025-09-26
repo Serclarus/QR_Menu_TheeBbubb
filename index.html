@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=43">
+    <link rel="stylesheet" href="styles.css?v=45">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -115,7 +115,9 @@
         // Check if we're on main page or in a category
         function isOnMainPage() {
             const categoryContent = document.getElementById('category-content');
-            return !categoryContent || categoryContent.style.display === 'none' || categoryContent.style.display === '';
+            const isMain = !categoryContent || categoryContent.style.display === 'none' || categoryContent.style.display === '';
+            console.log('isOnMainPage check:', { categoryContent, display: categoryContent?.style.display, isMain });
+            return isMain;
         }
         
         // Handle back button press
@@ -194,13 +196,16 @@
         
         // Handle exit attempts
         function handleExitAttempt() {
+            console.log('Exit attempt #' + (exitAttempts + 1));
             exitAttempts++;
             
             if (exitAttempts === 1) {
                 // First attempt - show message
+                console.log('Showing exit message');
                 showExitMessage();
             } else if (exitAttempts >= 2) {
                 // Second attempt - actually exit
+                console.log('Second exit attempt - exiting');
                 window.close();
                 setTimeout(() => {
                     window.location.href = 'about:blank';
@@ -210,30 +215,36 @@
         
         // Show exit confirmation message
         function showExitMessage() {
-            if (exitMessageShown) return;
+            console.log('showExitMessage called, exitMessageShown:', exitMessageShown);
+            if (exitMessageShown) {
+                console.log('Message already shown, returning');
+                return;
+            }
             exitMessageShown = true;
+            console.log('Creating exit message...');
             
             const message = document.createElement('div');
             message.id = 'exit-message';
             message.style.cssText = `
                 position: fixed;
-                bottom: 20px;
+                bottom: 30px;
                 left: 50%;
                 transform: translateX(-50%);
-                background: rgba(0, 0, 0, 0.8);
+                background: rgba(0, 0, 0, 0.7);
                 color: white;
-                padding: 12px 20px;
-                border-radius: 25px;
+                padding: 10px 18px;
+                border-radius: 20px;
                 font-family: 'Nunito', sans-serif;
-                font-size: 14px;
-                font-weight: 600;
+                font-size: 13px;
+                font-weight: 500;
                 z-index: 10000;
                 text-align: center;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                animation: slideUp 0.3s ease-out;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                animation: slideUp 0.4s ease-out;
+                opacity: 0.9;
             `;
             
-            message.innerHTML = 'Çıkmak için bir kez daha geri tuşuna basın';
+            message.innerHTML = 'Çıkmak için tekrar basın';
             
             const style = document.createElement('style');
             style.textContent = `
@@ -251,6 +262,7 @@
             document.head.appendChild(style);
             
             document.body.appendChild(message);
+            console.log('Exit message added to DOM');
             
             setTimeout(() => {
                 if (document.body.contains(message)) {
@@ -263,7 +275,7 @@
                     exitMessageShown = false;
                     exitAttempts = 0; // Reset attempts
                 }
-            }, 3000);
+            }, 2500);
         }
         
         // Reset exit attempts when navigating within site
