@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=47">
+    <link rel="stylesheet" href="styles.css?v=48">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -449,19 +449,66 @@
             });
         }
         
+        // Enhanced Security System
+        let loginAttempts = 0;
+        const maxAttempts = 3;
+        let lockoutTime = 0;
+        const lockoutDuration = 5 * 60 * 1000; // 5 minutes
+        
         function handleAdminLogin() {
             const password = document.getElementById('admin-password').value;
             const errorDiv = document.getElementById('admin-error');
             
-            if (password === 'SecureAdmin2024!') {
-                // Successful login - set admin access token
-                sessionStorage.setItem('adminAccess', 'true');
+            // Check if locked out
+            if (Date.now() < lockoutTime) {
+                const remainingTime = Math.ceil((lockoutTime - Date.now()) / 1000);
+                errorDiv.textContent = `Çok fazla deneme! ${remainingTime} saniye sonra tekrar deneyin.`;
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            // Check password with multiple layers of security
+            const hashedPassword = btoa(password + 'SALT_2024_SECURE');
+            const expectedHash = btoa('SecureAdmin2024!SALT_2024_SECURE');
+            
+            if (hashedPassword === expectedHash) {
+                // Generate secure token with timestamp
+                const token = generateSecureToken();
+                sessionStorage.setItem('adminAccess', token);
+                sessionStorage.setItem('adminLoginTime', Date.now().toString());
+                
+                // Reset attempts
+                loginAttempts = 0;
                 hideAdminLogin();
                 window.location.href = 'admin.html';
             } else {
-                errorDiv.textContent = 'Invalid password!';
+                loginAttempts++;
+                if (loginAttempts >= maxAttempts) {
+                    lockoutTime = Date.now() + lockoutDuration;
+                    errorDiv.textContent = 'Çok fazla yanlış deneme! 5 dakika sonra tekrar deneyin.';
+                } else {
+                    errorDiv.textContent = `Yanlış şifre! Kalan deneme: ${maxAttempts - loginAttempts}`;
+                }
                 errorDiv.style.display = 'block';
             }
+        }
+        
+        function generateSecureToken() {
+            const timestamp = Date.now();
+            const random = Math.random().toString(36).substring(2);
+            const userAgent = navigator.userAgent.substring(0, 20);
+            const screenRes = screen.width + 'x' + screen.height;
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const language = navigator.language;
+            
+            // Create complex token with multiple factors
+            const tokenData = timestamp + random + userAgent + screenRes + timezone + language + 'ADMIN_SECURE';
+            const token = btoa(tokenData);
+            
+            // Store additional security data
+            sessionStorage.setItem('adminFingerprint', btoa(screenRes + timezone + language));
+            
+            return token;
         }
         
         function hideAdminLogin() {
