@@ -340,36 +340,46 @@
     </div>
 
     <script>
-        // Enhanced Security Check - Multi-layer validation
+        // ULTRA SECURE Admin Panel Validation
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if user has valid admin access
+            // Multi-layer security validation
             const adminToken = sessionStorage.getItem('adminAccess');
             const loginTime = sessionStorage.getItem('adminLoginTime');
+            const sessionId = sessionStorage.getItem('adminSessionId');
+            const fingerprint = sessionStorage.getItem('adminFingerprint');
             
-            if (!adminToken || !loginTime) {
-                alert('Bu sayfaya erişim yetkiniz yok. Ana sayfaya yönlendiriliyorsunuz.');
+            // Check all required security tokens
+            if (!adminToken || !loginTime || !sessionId || !fingerprint) {
+                clearAllAdminData();
+                alert('Güvenlik ihlali tespit edildi! Ana sayfaya yönlendiriliyorsunuz.');
                 window.location.href = 'index.html';
                 return;
             }
             
-            // Validate token format and age
+            // Validate session age (reduced to 1 hour)
             const currentTime = Date.now();
             const sessionAge = currentTime - parseInt(loginTime);
-            const maxSessionAge = 2 * 60 * 60 * 1000; // 2 hours
+            const maxSessionAge = 60 * 60 * 1000; // 1 hour
             
             if (sessionAge > maxSessionAge) {
-                sessionStorage.removeItem('adminAccess');
-                sessionStorage.removeItem('adminLoginTime');
+                clearAllAdminData();
                 alert('Oturum süreniz doldu. Ana sayfaya yönlendiriliyorsunuz.');
                 window.location.href = 'index.html';
                 return;
             }
             
-            // Validate token integrity
-            if (!validateAdminToken(adminToken)) {
-                sessionStorage.removeItem('adminAccess');
-                sessionStorage.removeItem('adminLoginTime');
-                alert('Geçersiz oturum. Ana sayfaya yönlendiriliyorsunuz.');
+            // Ultra-secure token validation
+            if (!validateUltraSecureToken(adminToken, sessionId, fingerprint)) {
+                clearAllAdminData();
+                alert('Geçersiz güvenlik tokeni! Ana sayfaya yönlendiriliyorsunuz.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Additional security: Check for suspicious activity
+            if (detectSuspiciousActivity()) {
+                clearAllAdminData();
+                alert('Şüpheli aktivite tespit edildi! Ana sayfaya yönlendiriliyorsunuz.');
                 window.location.href = 'index.html';
                 return;
             }
@@ -394,36 +404,71 @@
             resetInactivityTimer();
         });
         
-        // Enhanced token validation
-        function validateAdminToken(token) {
+        // ULTRA SECURE token validation
+        function validateUltraSecureToken(token, sessionId, fingerprint) {
             try {
-                // Decode and validate token structure
-                const decoded = atob(token);
-                if (!decoded.includes('ADMIN_SECURE')) return false;
+                // Double decode the token
+                const decoded = atob(atob(token));
+                if (!decoded.includes('ULTRA_SECURE_ADMIN_2024')) return false;
                 
-                // Check if token is not too old (additional check)
+                // Validate session ID
+                if (!sessionId || !sessionId.includes('SESSION_ID')) return false;
+                
+                // Validate device fingerprint
+                if (!fingerprint || !fingerprint.includes('FINGERPRINT')) return false;
+                
+                // Check token age
                 const timestamp = parseInt(decoded.substring(0, 13));
                 const currentTime = Date.now();
                 const tokenAge = currentTime - timestamp;
                 
-                // Token must be less than 2 hours old
-                if (tokenAge > 2 * 60 * 60 * 1000) return false;
+                // Token must be less than 1 hour old
+                if (tokenAge > 60 * 60 * 1000) return false;
                 
-                // Validate user agent hasn't changed significantly
-                const tokenUserAgent = decoded.substring(13 + Math.random().toString(36).substring(2).length);
-                const currentUserAgent = navigator.userAgent.substring(0, 20);
-                
-                // Allow some variation in user agent (browser updates, etc.)
-                return tokenUserAgent.includes(currentUserAgent.substring(0, 10));
+                // Validate device fingerprint matches
+                const currentFingerprint = generateCurrentFingerprint();
+                return fingerprint === currentFingerprint;
             } catch (e) {
                 return false;
             }
         }
         
-        // Logout function
-        function logoutAdmin() {
+        function generateCurrentFingerprint() {
+            const screenRes = screen.width + 'x' + screen.height;
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const language = navigator.language;
+            const platform = navigator.platform;
+            const cookieEnabled = navigator.cookieEnabled;
+            const doNotTrack = navigator.doNotTrack;
+            const colorDepth = screen.colorDepth;
+            const pixelRatio = window.devicePixelRatio;
+            
+            return btoa(screenRes + timezone + language + platform + cookieEnabled + doNotTrack + colorDepth + pixelRatio + 'FINGERPRINT');
+        }
+        
+        function detectSuspiciousActivity() {
+            // Check for dev tools
+            if (window.outerHeight - window.innerHeight > 200) return true;
+            if (window.outerWidth - window.innerWidth > 200) return true;
+            
+            // Check for rapid navigation
+            const navigationCount = sessionStorage.getItem('navigationCount') || 0;
+            if (navigationCount > 10) return true;
+            
+            return false;
+        }
+        
+        function clearAllAdminData() {
             sessionStorage.removeItem('adminAccess');
             sessionStorage.removeItem('adminLoginTime');
+            sessionStorage.removeItem('adminSessionId');
+            sessionStorage.removeItem('adminFingerprint');
+            sessionStorage.removeItem('navigationCount');
+        }
+        
+        // Logout function
+        function logoutAdmin() {
+            clearAllAdminData();
             alert('Başarıyla çıkış yaptınız.');
             window.location.href = 'index.html';
         }
