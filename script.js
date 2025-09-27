@@ -405,6 +405,12 @@ function showCategory(categoryKey) {
         console.log('showCategory: isOnMainPageState set to false');
     }
     
+    // Reset exit attempts when entering a category
+    if (typeof window !== 'undefined' && window.resetExitAttempts) {
+        window.resetExitAttempts();
+        console.log('Exit attempts reset when entering category');
+    }
+    
     // Show back button
     backBtn.style.display = 'block';
     
