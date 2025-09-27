@@ -519,9 +519,8 @@
         function getAdminPassword() {
             // Multi-layer obfuscation with no plain text password in source
             const obfuscated = [
-                btoa('VGhlZTIwMjU='), // 'Thee2025' in base64
-                btoa('QmJ1YmIh'), // 'Bbubb!' in base64
-                btoa('X1NFUF8=') // '_SEP_' in base64
+                'VGhlZTIwMjU=', // 'Thee2025' in base64
+                'QmJ1YmIh' // 'Bbubb!' in base64
             ];
             
             try {
