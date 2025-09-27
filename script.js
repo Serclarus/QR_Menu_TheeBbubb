@@ -187,6 +187,52 @@ const defaultMenuData = {
             }
         ]
     },
+    'snacks': {
+        title: 'Atıştırmalıklar',
+        description: 'Hafif atıştırmalıklar ve aperitifler',
+        items: [
+            {
+                name: 'Patates Kızartması',
+                price: '45 ₺',
+                description: 'Taze patates ile hazırlanmış kızarmış patates'
+            },
+            {
+                name: 'Soğan Halkası',
+                price: '38 ₺',
+                description: 'Çıtır çıtır soğan halkaları'
+            },
+            {
+                name: 'Mozzarella Çubukları',
+                price: '52 ₺',
+                description: 'Çıtır ekmek kırıntısı ile kaplanmış mozzarella'
+            },
+            {
+                name: 'Çedar Peynirli Tost',
+                price: '48 ₺',
+                description: 'Çedar peyniri ile hazırlanmış sıcak tost'
+            },
+            {
+                name: 'Humus & Pita',
+                price: '42 ₺',
+                description: 'Ev yapımı humus ile taze pita ekmeği'
+            },
+            {
+                name: 'Zeytin Tabağı',
+                price: '35 ₺',
+                description: 'Çeşitli zeytinler ve peynirler'
+            },
+            {
+                name: 'Ceviz & Kuru Üzüm',
+                price: '28 ₺',
+                description: 'Karışık kuruyemiş ve kuru meyve'
+            },
+            {
+                name: 'Çikolatalı Kurabiye',
+                price: '32 ₺',
+                description: 'Taze pişmiş çikolatalı kurabiyeler'
+            }
+        ]
+    },
     'nargile': {
         title: 'Nargile',
         description: 'Geleneksel nargile deneyimi için özel aromalar',

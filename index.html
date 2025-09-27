@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=48">
+    <link rel="stylesheet" href="styles.css?v=49">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -48,7 +48,13 @@
                     </div>
                     <h3>Tatlılar</h3>
                 </div>
-                <div class="category-card wide" data-category="nargile">
+                <div class="category-card" data-category="snacks">
+                    <div class="category-icon">
+                        <img src="snacks_icon.png" alt="Atıştırmalıklar" style="width: 40px; height: 40px;">
+                    </div>
+                    <h3>Atıştırmalıklar</h3>
+                </div>
+                <div class="category-card" data-category="nargile">
                     <div class="category-icon">
                         <img src="hookah-icon.png" alt="Nargile" style="width: 40px; height: 40px;">
                     </div>
@@ -115,8 +121,22 @@
         // Check if we're on main page or in a category
         function isOnMainPage() {
             const categoryContent = document.getElementById('category-content');
-            const isMain = !categoryContent || categoryContent.style.display === 'none' || categoryContent.style.display === '';
-            console.log('isOnMainPage check:', { categoryContent, display: categoryContent?.style.display, isMain });
+            const mainNav = document.querySelector('.main-nav');
+            
+            // Check if category content is visible OR main nav is hidden
+            const isCategoryVisible = categoryContent && categoryContent.style.display === 'block';
+            const isMainNavHidden = mainNav && mainNav.style.display === 'none';
+            
+            const isMain = !isCategoryVisible && !isMainNavHidden;
+            console.log('isOnMainPage check:', { 
+                categoryContent, 
+                categoryDisplay: categoryContent?.style.display, 
+                mainNav,
+                mainNavDisplay: mainNav?.style.display,
+                isCategoryVisible,
+                isMainNavHidden,
+                isMain 
+            });
             return isMain;
         }
         
