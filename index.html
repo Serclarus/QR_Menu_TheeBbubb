@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kafe Menüsü - QR Kod Tarayın</title>
-    <link rel="stylesheet" href="styles.css?v=49">
+    <link rel="stylesheet" href="styles.css?v=50">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -117,24 +117,21 @@
         let exitMessageShown = false;
         let isProcessingBack = false;
         let lastBackPress = 0;
+        let isOnMainPageState = true; // Track current page state
         
         // Check if we're on main page or in a category
         function isOnMainPage() {
             const categoryContent = document.getElementById('category-content');
             const mainNav = document.querySelector('.main-nav');
             
-            // Check if category content is visible OR main nav is hidden
+            // Simple check: if category content is not visible, we're on main page
             const isCategoryVisible = categoryContent && categoryContent.style.display === 'block';
-            const isMainNavHidden = mainNav && mainNav.style.display === 'none';
+            const isMain = !isCategoryVisible;
             
-            const isMain = !isCategoryVisible && !isMainNavHidden;
             console.log('isOnMainPage check:', { 
                 categoryContent, 
                 categoryDisplay: categoryContent?.style.display, 
-                mainNav,
-                mainNavDisplay: mainNav?.style.display,
                 isCategoryVisible,
-                isMainNavHidden,
                 isMain 
             });
             return isMain;
@@ -153,9 +150,9 @@
             isProcessingBack = true;
             lastBackPress = now;
             
-            console.log('Back button pressed');
+            console.log('Back button pressed, isOnMainPageState:', isOnMainPageState);
             
-            if (isOnMainPage()) {
+            if (isOnMainPageState) {
                 // On main page - show exit confirmation
                 console.log('On main page - showing exit confirmation');
                 handleExitAttempt();
@@ -211,7 +208,10 @@
             
             // Reset exit attempts when going to main page
             resetExitAttempts();
-            console.log('goToMainPage completed');
+            
+            // Update state to main page
+            isOnMainPageState = true;
+            console.log('goToMainPage completed, isOnMainPageState set to true');
         }
         
         // Handle exit attempts

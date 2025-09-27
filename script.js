@@ -399,6 +399,12 @@ function showCategory(categoryKey) {
         instagramSection.classList.add('hidden');
     }
     
+    // Update global state to indicate we're in a category
+    if (typeof window !== 'undefined' && window.isOnMainPageState !== undefined) {
+        window.isOnMainPageState = false;
+        console.log('showCategory: isOnMainPageState set to false');
+    }
+    
     // Show back button
     backBtn.style.display = 'block';
     
@@ -439,6 +445,12 @@ function showMainMenu() {
     const instagramSection = document.querySelector('.instagram-section');
     if (instagramSection) {
         instagramSection.classList.remove('hidden');
+    }
+    
+    // Update global state to indicate we're on main page
+    if (typeof window !== 'undefined' && window.isOnMainPageState !== undefined) {
+        window.isOnMainPageState = true;
+        console.log('showMainMenu: isOnMainPageState set to true');
     }
     
     // Scroll to top
