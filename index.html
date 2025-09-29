@@ -646,14 +646,9 @@
                 return false;
             },
             
-            // Protocol 9: Time-based Access Control
+            // Protocol 9: Time-based Access Control - DISABLED (24/7 Access)
             checkTimeRestrictions: function() {
-                const now = new Date();
-                const hour = now.getHours();
-                
-                // Allow access only during business hours (6 AM - 11 PM)
-                if (hour < 6 || hour > 23) return false;
-                
+                // Time restrictions removed - allow access 24/7
                 return true;
             },
             
