@@ -4,6 +4,21 @@ let menuData = {};
 // Server communication functions with fallback to localStorage
 async function loadDataFromServer() {
     try {
+        // Check if we're running on a server (local development)
+        const isLocalServer = window.location.hostname === 'localhost' || 
+                             window.location.hostname === '127.0.0.1' ||
+                             window.location.hostname.includes('192.168.');
+        
+        if (!isLocalServer) {
+            // Online mode - use localStorage only
+            console.log('Online mode: Loading data from localStorage');
+            const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
+            const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
+            const categories = JSON.parse(localStorage.getItem('categories') || '{}');
+            return { menuData, cafeData, categories };
+        }
+        
+        // Local server mode - try server first, fallback to localStorage
         const response = await fetch('/api/menu-data');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

@@ -1,10 +1,24 @@
 // Admin Panel JavaScript
 const ADMIN_PASSWORD = 'admin123'; // Change this password
 
-// Server communication functions with authentication
+// Server communication functions with authentication and online fallback
 async function saveDataToServer(data) {
     try {
-        // Get admin token from session storage
+        // Check if we're running on a server (local development)
+        const isLocalServer = window.location.hostname === 'localhost' || 
+                             window.location.hostname === '127.0.0.1' ||
+                             window.location.hostname.includes('192.168.');
+        
+        if (!isLocalServer) {
+            // Online mode - use localStorage only
+            console.log('Online mode: Using localStorage for data storage');
+            localStorage.setItem('menuData', JSON.stringify(data.menuData || {}));
+            localStorage.setItem('cafeData', JSON.stringify(data.cafeData || {}));
+            localStorage.setItem('categories', JSON.stringify(data.categories || {}));
+            return true;
+        }
+        
+        // Local server mode - try server first, fallback to localStorage
         const adminToken = sessionStorage.getItem('adminSessionToken');
         if (!adminToken) {
             throw new Error('No admin session found');
@@ -56,6 +70,21 @@ async function saveDataToServer(data) {
 
 async function loadDataFromServer() {
     try {
+        // Check if we're running on a server (local development)
+        const isLocalServer = window.location.hostname === 'localhost' || 
+                             window.location.hostname === '127.0.0.1' ||
+                             window.location.hostname.includes('192.168.');
+        
+        if (!isLocalServer) {
+            // Online mode - use localStorage only
+            console.log('Online mode: Loading data from localStorage');
+            const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
+            const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
+            const categories = JSON.parse(localStorage.getItem('categories') || '{}');
+            return { menuData, cafeData, categories };
+        }
+        
+        // Local server mode - try server first, fallback to localStorage
         const response = await fetch('/api/menu-data');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
