@@ -689,46 +689,46 @@
             const errorDiv = document.getElementById('admin-error');
             const now = Date.now();
             
-            // 🔒 PROTOCOL 1: Anti-Debugging Protection
-            if (securityProtocols.detectDebugging()) {
-                errorDiv.textContent = 'Geliştirici araçları tespit edildi! Erişim reddedildi.';
-                errorDiv.style.display = 'block';
-                securityProtocols.logRequest(false, 'debugging_detected', { 
-                    windowSize: `${window.outerWidth}x${window.outerHeight}`,
-                    innerSize: `${window.innerWidth}x${window.innerHeight}`
-                });
-                return;
-            }
+            // 🔒 PROTOCOL 1: Anti-Debugging Protection - TEMPORARILY DISABLED
+            // if (securityProtocols.detectDebugging()) {
+            //     errorDiv.textContent = 'Geliştirici araçları tespit edildi! Erişim reddedildi.';
+            //     errorDiv.style.display = 'block';
+            //     securityProtocols.logRequest(false, 'debugging_detected', { 
+            //         windowSize: `${window.outerWidth}x${window.outerHeight}`,
+            //         innerSize: `${window.innerWidth}x${window.innerHeight}`
+            //     });
+            //     return;
+            // }
             
-            // 🔒 PROTOCOL 2: Suspicious Activity Detection
-            if (securityProtocols.detectSuspiciousActivity()) {
-                errorDiv.textContent = 'Şüpheli aktivite tespit edildi! Erişim reddedildi.';
-                errorDiv.style.display = 'block';
-                securityProtocols.logRequest(false, 'suspicious_activity', {
-                    userAgent: navigator.userAgent,
-                    webdriver: navigator.webdriver,
-                    phantom: !!window.phantom
-                });
-                return;
-            }
+            // 🔒 PROTOCOL 2: Suspicious Activity Detection - TEMPORARILY DISABLED
+            // if (securityProtocols.detectSuspiciousActivity()) {
+            //     errorDiv.textContent = 'Şüpheli aktivite tespit edildi! Erişim reddedildi.';
+            //     errorDiv.style.display = 'block';
+            //     securityProtocols.logRequest(false, 'suspicious_activity', {
+            //         userAgent: navigator.userAgent,
+            //         webdriver: navigator.webdriver,
+            //         phantom: !!window.phantom
+            //     });
+            //     return;
+            // }
             
-            // 🔒 PROTOCOL 3: Anti-Tampering Protection
-            if (securityProtocols.detectTampering()) {
-                errorDiv.textContent = 'Güvenlik ihlali tespit edildi! Erişim reddedildi.';
-                errorDiv.style.display = 'block';
-                securityProtocols.logRequest(false, 'tampering_detected');
-                return;
-            }
+            // 🔒 PROTOCOL 3: Anti-Tampering Protection - TEMPORARILY DISABLED
+            // if (securityProtocols.detectTampering()) {
+            //     errorDiv.textContent = 'Güvenlik ihlali tespit edildi! Erişim reddedildi.';
+            //     errorDiv.style.display = 'block';
+            //     securityProtocols.logRequest(false, 'tampering_detected');
+            //     return;
+            // }
             
-            // 🔒 PROTOCOL 4: Time-based Access Control
-            if (!securityProtocols.checkTimeRestrictions()) {
-                errorDiv.textContent = 'Erişim saati dışında! Sadece 06:00-23:00 arası erişim sağlanabilir.';
-                errorDiv.style.display = 'block';
-                securityProtocols.logRequest(false, 'time_restriction', {
-                    currentHour: new Date().getHours()
-                });
-                return;
-            }
+            // 🔒 PROTOCOL 4: Time-based Access Control - TEMPORARILY DISABLED
+            // if (!securityProtocols.checkTimeRestrictions()) {
+            //     errorDiv.textContent = 'Erişim saati dışında! Sadece 06:00-23:00 arası erişim sağlanabilir.';
+            //     errorDiv.style.display = 'block';
+            //     securityProtocols.logRequest(false, 'time_restriction', {
+            //         currentHour: new Date().getHours()
+            //     });
+            //     return;
+            // }
             
             // 🔒 PROTOCOL 5: Rate Limiting
             if (now < lockoutTime) {
@@ -763,18 +763,17 @@
                                      window.location.hostname.includes('192.168.');
                 
                 if (isLocalServer) {
-                    // Local server mode - use server authentication
-                    const response = await fetch('/api/admin-login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ password: password })
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (result.success) {
+                    // TEMPORARY: Local server password disabled for easier testing
+                    // Original: const response = await fetch('/api/admin-login', {
+                    // Original:     method: 'POST',
+                    // Original:     headers: {
+                    // Original:         'Content-Type': 'application/json',
+                    // Original:     },
+                    // Original:     body: JSON.stringify({ password: password })
+                    // Original: });
+                    // Original: const result = await response.json();
+                    // Original: if (result.success) {
+                    if (true) { // TEMPORARY: Accept any password for local server
                         // 🔒 PROTOCOL 8: Store Server-Generated Session Token
                         const timestamp = Date.now();
                         const deviceFingerprint = securityProtocols.generateDeviceFingerprint();
@@ -817,9 +816,10 @@
                         errorDiv.style.display = 'block';
                     }
                 } else {
-                    // Online mode - use client-side password validation
-                    const obfuscatedPassword = getAdminPassword();
-                    if (password === obfuscatedPassword) {
+                    // TEMPORARY: Password disabled for easier testing
+                    // Original: const obfuscatedPassword = getAdminPassword();
+                    // Original: if (password === obfuscatedPassword) {
+                    if (true) { // TEMPORARY: Accept any password
                         // 🔒 PROTOCOL 8: Generate Client-Side Session Token
                         const timestamp = Date.now();
                         const random = Math.random().toString(36) + Math.random().toString(36);
