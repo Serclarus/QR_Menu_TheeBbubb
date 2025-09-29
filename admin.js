@@ -389,21 +389,13 @@ async function saveMenuItem() {
 
 // Delete item from online storage only
 async function deleteItem(category, itemName) {
-    console.log('deleteItem called with:', category, itemName);
-    
     if (confirm('Bu öğeyi silmek istediğinizden emin misiniz?')) {
         try {
-            console.log('Loading data for deletion...');
             const data = await loadDataFromServer();
             const menuData = data.menuData || {};
             
-            console.log('Current menuData:', menuData);
-            console.log('Category exists:', !!menuData[category]);
-            console.log('Item exists:', !!(menuData[category] && menuData[category][itemName]));
-            
             if (menuData[category] && menuData[category][itemName]) {
                 delete menuData[category][itemName];
-                console.log('Item deleted from memory, saving...');
                 
                 // Save the updated data with all existing data
                 const updatedData = {
@@ -414,7 +406,6 @@ async function deleteItem(category, itemName) {
                 
                 const success = await saveDataToServer(updatedData);
                 if (success) {
-                    console.log('Menu item deleted from online storage');
                     alert('Menü öğesi başarıyla silindi!');
                     loadItemsForCategory(category);
                 } else {
@@ -432,21 +423,12 @@ async function deleteItem(category, itemName) {
 
 // Load items for category from online storage only
 async function loadItemsForCategory(category) {
-    console.log('loadItemsForCategory called with category:', category);
-    
     try {
         const data = await loadDataFromServer();
-        console.log('Loaded data:', data);
-        
         const menuData = data.menuData || {};
-        console.log('Menu data:', menuData);
-        
         const items = menuData[category] || {};
-        console.log('Items for category', category, ':', items);
         
         const itemList = document.getElementById('items-list');
-        console.log('Items list element:', itemList);
-        
         if (itemList) {
             itemList.innerHTML = '';
             
@@ -456,8 +438,6 @@ async function loadItemsForCategory(category) {
             }
 
             for (const [name, item] of Object.entries(items)) {
-                console.log('Creating item element for:', name, item);
-                
                 const itemElement = document.createElement('div');
                 itemElement.className = 'item';
                 itemElement.style.cssText = `
@@ -483,10 +463,6 @@ async function loadItemsForCategory(category) {
                 `;
                 itemList.appendChild(itemElement);
             }
-            
-            console.log('Items loaded successfully');
-        } else {
-            console.error('Items list element not found');
         }
     } catch (error) {
         console.error('Error loading items for category:', error);
@@ -619,97 +595,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Handle category selection for menu items
     const categorySelect = document.getElementById('item-category');
     if (categorySelect) {
-        console.log('Category select element found:', categorySelect);
         categorySelect.addEventListener('change', function() {
             const selectedCategory = this.value;
-            console.log('Category selection changed to:', selectedCategory);
             if (selectedCategory) {
-                console.log('Loading items for category:', selectedCategory);
                 loadItemsForCategory(selectedCategory);
             } else {
-                console.log('No category selected, clearing items list');
                 document.getElementById('items-list').innerHTML = '';
             }
         });
-    } else {
-        console.error('Category select element not found!');
     }
     
-    // Add a test button to manually load items
-    const testButton = document.createElement('button');
-    testButton.textContent = 'Test Load Items';
-    testButton.style.cssText = 'background: #e67e22; color: white; padding: 10px; margin: 10px; border: none; border-radius: 5px; cursor: pointer;';
-    testButton.onclick = function() {
-        const testCategory = categorySelect ? categorySelect.value : 'test';
-        console.log('Manual test - loading items for category:', testCategory);
-        loadItemsForCategory(testCategory);
-    };
-    
-    // Add test button to the menu items section
-    const menuItemsSection = document.getElementById('menu-items');
-    if (menuItemsSection) {
-        menuItemsSection.appendChild(testButton);
-        
-        // Add a button to create test data
-        const testDataButton = document.createElement('button');
-        testDataButton.textContent = 'Create Test Data';
-        testDataButton.style.cssText = 'background: #27ae60; color: white; padding: 10px; margin: 10px; border: none; border-radius: 5px; cursor: pointer;';
-        testDataButton.onclick = async function() {
-            console.log('Creating test data...');
-            const testData = {
-                menuData: {
-                    'Sıcak İçecekler': {
-                        'Türk Kahvesi': {
-                            name: 'Türk Kahvesi',
-                            description: 'Geleneksel Türk kahvesi',
-                            price: 15
-                        },
-                        'Çay': {
-                            name: 'Çay',
-                            description: 'Demli çay',
-                            price: 5
-                        }
-                    },
-                    'Soğuk İçecekler': {
-                        'Ayran': {
-                            name: 'Ayran',
-                            description: 'Taze ayran',
-                            price: 8
-                        }
-                    }
-                },
-                cafeData: {},
-                categories: {
-                    'Sıcak İçecekler': {
-                        name: 'Sıcak İçecekler',
-                        description: 'Sıcak içecekler',
-                        icon: 'hotdrinks_icon.png'
-                    },
-                    'Soğuk İçecekler': {
-                        name: 'Soğuk İçecekler',
-                        description: 'Soğuk içecekler',
-                        icon: 'colddrinks_icon.png'
-                    }
-                }
-            };
-            
-            try {
-                const success = await saveDataToServer(testData);
-                if (success) {
-                    alert('Test data created successfully!');
-                    // Reload categories
-                    loadCategoriesForDropdown();
-                } else {
-                    alert('Failed to create test data');
-                }
-            } catch (error) {
-                console.error('Error creating test data:', error);
-                alert('Error creating test data: ' + error.message);
-            }
-        };
-        
-        menuItemsSection.appendChild(testDataButton);
-    }
     
     // Load categories for item category dropdown
     try {
