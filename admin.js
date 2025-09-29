@@ -339,22 +339,20 @@ async function loadCategoryForEdit(categoryName) {
 
 // Save menu item to online storage only
 async function saveMenuItem() {
-    const category = document.getElementById('itemCategory').value;
-    const name = document.getElementById('itemName').value;
-    const description = document.getElementById('itemDescription').value;
-    const price = document.getElementById('itemPrice').value;
-    const image = document.getElementById('itemImage').value;
+    const category = document.getElementById('item-category').value;
+    const name = document.getElementById('item-name').value;
+    const description = document.getElementById('item-description').value;
+    const price = document.getElementById('item-price').value;
 
     if (!category || !name || !price) {
-        alert('Please fill in all required fields');
+        alert('Lütfen tüm gerekli alanları doldurun');
         return;
     }
 
     const itemData = {
         name: name,
         description: description,
-        price: parseFloat(price),
-        image: image
+        price: parseFloat(price.replace('₺', '').replace(',', '.').trim())
     };
 
     try {
@@ -370,18 +368,15 @@ async function saveMenuItem() {
         const success = await saveDataToServer({ menuData });
         if (success) {
             console.log('Menu item saved to online storage');
-            alert('Menu item saved successfully!');
-            document.getElementById('itemName').value = '';
-            document.getElementById('itemDescription').value = '';
-            document.getElementById('itemPrice').value = '';
-            document.getElementById('itemImage').value = '';
+            alert('Menü öğesi başarıyla kaydedildi!');
+            clearItemForm();
             loadItemsForCategory(category);
         } else {
             throw new Error('Failed to save menu item');
         }
     } catch (error) {
         console.error('Error saving menu item:', error);
-        alert('Error saving menu item: ' + error.message);
+        alert('Menü öğesi kaydedilirken hata: ' + error.message);
     }
 }
 
@@ -418,25 +413,36 @@ async function loadItemsForCategory(category) {
         const menuData = data.menuData || {};
         const items = menuData[category] || {};
         
-        const itemList = document.getElementById('itemList');
-        itemList.innerHTML = '';
+        const itemList = document.getElementById('items-list');
+        if (itemList) {
+            itemList.innerHTML = '';
 
-        for (const [name, item] of Object.entries(items)) {
-            const itemElement = document.createElement('div');
-            itemElement.className = 'item';
-            itemElement.innerHTML = `
-                <div class="item-info">
-                    <h3>${name}</h3>
-                    <p>${item.description || 'No description'}</p>
-                    <p><strong>Price:</strong> $${item.price}</p>
-                    <p><strong>Image:</strong> ${item.image || 'No image'}</p>
-                </div>
-                <div class="item-actions">
-                    <button onclick="editItem('${category}', '${name}')" class="btn btn-sm btn-primary">Edit</button>
-                    <button onclick="deleteItem('${category}', '${name}')" class="btn btn-sm btn-danger">Delete</button>
-                </div>
-            `;
-            itemList.appendChild(itemElement);
+            for (const [name, item] of Object.entries(items)) {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'item';
+                itemElement.style.cssText = `
+                    background: white;
+                    padding: 1rem;
+                    margin: 0.5rem 0;
+                    border-radius: 8px;
+                    border: 1px solid #ddd;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                `;
+                itemElement.innerHTML = `
+                    <div class="item-info">
+                        <h3 style="margin: 0 0 0.5rem 0; color: #2c3e50;">${name}</h3>
+                        <p style="margin: 0 0 0.5rem 0; color: #666;">${item.description || 'Açıklama yok'}</p>
+                        <p style="margin: 0; color: #e67e22; font-weight: bold;">₺${item.price}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button onclick="editItem('${category}', '${name}')" style="background: #3498db; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; margin-right: 0.5rem; cursor: pointer;">Düzenle</button>
+                        <button onclick="deleteItem('${category}', '${name}')" style="background: #e74c3c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Sil</button>
+                    </div>
+                `;
+                itemList.appendChild(itemElement);
+            }
         }
     } catch (error) {
         console.error('Error loading items for category:', error);
@@ -451,15 +457,63 @@ async function editItem(category, itemName) {
         const item = menuData[category] && menuData[category][itemName];
         
         if (item) {
-            document.getElementById('itemCategory').value = category;
-            document.getElementById('itemName').value = itemName;
-            document.getElementById('itemDescription').value = item.description || '';
-            document.getElementById('itemPrice').value = item.price || '';
-            document.getElementById('itemImage').value = item.image || '';
+            document.getElementById('item-category').value = category;
+            document.getElementById('item-name').value = itemName;
+            document.getElementById('item-description').value = item.description || '';
+            document.getElementById('item-price').value = item.price || '';
         }
     } catch (error) {
         console.error('Error loading item for edit:', error);
     }
+}
+
+// Navigation functions for admin panel
+function showSection(sectionId) {
+    // Hide all sections
+    const sections = document.querySelectorAll('.admin-section');
+    sections.forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Remove active class from all nav buttons
+    const navButtons = document.querySelectorAll('.admin-nav button');
+    navButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Show selected section
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.classList.add('active');
+    }
+    
+    // Add active class to clicked button
+    event.target.classList.add('active');
+    
+    // Load data for specific sections
+    if (sectionId === 'categories') {
+        loadCategories();
+    } else if (sectionId === 'menu-items') {
+        loadCategoriesForDropdown();
+    }
+}
+
+function returnToMenu() {
+    window.location.href = 'index.html';
+}
+
+function logoutAdmin() {
+    if (confirm('Are you sure you want to logout?')) {
+        sessionStorage.removeItem('adminSessionToken');
+        sessionStorage.removeItem('adminSecurityLevel');
+        window.location.href = 'index.html';
+    }
+}
+
+function clearItemForm() {
+    document.getElementById('item-name').value = '';
+    document.getElementById('item-description').value = '';
+    document.getElementById('item-price').value = '';
 }
 
 // Additional functions needed for admin panel functionality
@@ -475,6 +529,28 @@ function deleteCategory(categoryName) {
     }
 }
 
+// Load categories for dropdown in menu items section
+async function loadCategoriesForDropdown() {
+    const categorySelect = document.getElementById('item-category');
+    if (categorySelect) {
+        categorySelect.innerHTML = '<option value="">Kategori seçin...</option>';
+        
+        try {
+            const data = await loadDataFromServer();
+            const categories = data.categories || {};
+            
+            for (const [name, category] of Object.entries(categories)) {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                categorySelect.appendChild(option);
+            }
+        } catch (error) {
+            console.error('Error loading categories for dropdown:', error);
+        }
+    }
+}
+
 // Initialize admin panel
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('Admin panel initialized - Online mode only');
@@ -486,21 +562,43 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Set up event listeners
     document.getElementById('saveCafeBtn').addEventListener('click', saveCafeInfo);
     document.getElementById('saveCategoryBtn').addEventListener('click', saveCategoryInfo);
-    document.getElementById('saveItemBtn').addEventListener('click', saveMenuItem);
+    
+    // Handle menu items form submission
+    const itemForm = document.getElementById('item-form');
+    if (itemForm) {
+        itemForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveMenuItem();
+        });
+    }
+    
+    // Handle category selection for menu items
+    const categorySelect = document.getElementById('item-category');
+    if (categorySelect) {
+        categorySelect.addEventListener('change', function() {
+            const selectedCategory = this.value;
+            if (selectedCategory) {
+                loadItemsForCategory(selectedCategory);
+            } else {
+                document.getElementById('items-list').innerHTML = '';
+            }
+        });
+    }
     
     // Load categories for item category dropdown
-    const categorySelect = document.getElementById('itemCategory');
-    categorySelect.innerHTML = '<option value="">Select a category</option>';
-    
     try {
         const data = await loadDataFromServer();
         const categories = data.categories || {};
         
-        for (const [name, category] of Object.entries(categories)) {
-            const option = document.createElement('option');
-            option.value = name;
-            option.textContent = name;
-            categorySelect.appendChild(option);
+        if (categorySelect) {
+            categorySelect.innerHTML = '<option value="">Kategori seçin...</option>';
+            
+            for (const [name, category] of Object.entries(categories)) {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                categorySelect.appendChild(option);
+            }
         }
     } catch (error) {
         console.error('Error loading categories for dropdown:', error);
