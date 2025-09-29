@@ -1,5 +1,6 @@
 // Admin Panel JavaScript - Cloud Storage Integration
-const ADMIN_PASSWORD = 'admin123'; // Change this password
+// SECURITY DISABLED FOR DEVELOPMENT - All authentication and session management commented out
+// const ADMIN_PASSWORD = 'admin123'; // Change this password - COMMENTED OUT FOR DEVELOPMENT
 
 // Online data storage functions
 async function saveToCloudStorage(data) {
@@ -481,7 +482,7 @@ function returnToMenu() {
 
 function logoutAdmin() {
     if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
-        sessionStorage.removeItem('adminSessionToken');
+        // sessionStorage.removeItem('adminSessionToken'); // COMMENTED OUT FOR DEVELOPMENT
         window.location.href = 'index.html';
     }
 }
