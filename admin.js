@@ -635,6 +635,82 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error('Category select element not found!');
     }
     
+    // Add a test button to manually load items
+    const testButton = document.createElement('button');
+    testButton.textContent = 'Test Load Items';
+    testButton.style.cssText = 'background: #e67e22; color: white; padding: 10px; margin: 10px; border: none; border-radius: 5px; cursor: pointer;';
+    testButton.onclick = function() {
+        const testCategory = categorySelect ? categorySelect.value : 'test';
+        console.log('Manual test - loading items for category:', testCategory);
+        loadItemsForCategory(testCategory);
+    };
+    
+    // Add test button to the menu items section
+    const menuItemsSection = document.getElementById('menu-items');
+    if (menuItemsSection) {
+        menuItemsSection.appendChild(testButton);
+        
+        // Add a button to create test data
+        const testDataButton = document.createElement('button');
+        testDataButton.textContent = 'Create Test Data';
+        testDataButton.style.cssText = 'background: #27ae60; color: white; padding: 10px; margin: 10px; border: none; border-radius: 5px; cursor: pointer;';
+        testDataButton.onclick = async function() {
+            console.log('Creating test data...');
+            const testData = {
+                menuData: {
+                    'Sıcak İçecekler': {
+                        'Türk Kahvesi': {
+                            name: 'Türk Kahvesi',
+                            description: 'Geleneksel Türk kahvesi',
+                            price: 15
+                        },
+                        'Çay': {
+                            name: 'Çay',
+                            description: 'Demli çay',
+                            price: 5
+                        }
+                    },
+                    'Soğuk İçecekler': {
+                        'Ayran': {
+                            name: 'Ayran',
+                            description: 'Taze ayran',
+                            price: 8
+                        }
+                    }
+                },
+                cafeData: {},
+                categories: {
+                    'Sıcak İçecekler': {
+                        name: 'Sıcak İçecekler',
+                        description: 'Sıcak içecekler',
+                        icon: 'hotdrinks_icon.png'
+                    },
+                    'Soğuk İçecekler': {
+                        name: 'Soğuk İçecekler',
+                        description: 'Soğuk içecekler',
+                        icon: 'colddrinks_icon.png'
+                    }
+                }
+            };
+            
+            try {
+                const success = await saveDataToServer(testData);
+                if (success) {
+                    alert('Test data created successfully!');
+                    // Reload categories
+                    loadCategoriesForDropdown();
+                } else {
+                    alert('Failed to create test data');
+                }
+            } catch (error) {
+                console.error('Error creating test data:', error);
+                alert('Error creating test data: ' + error.message);
+            }
+        };
+        
+        menuItemsSection.appendChild(testDataButton);
+    }
+    
     // Load categories for item category dropdown
     try {
         const data = await loadDataFromServer();
