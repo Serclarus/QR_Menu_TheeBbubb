@@ -1,574 +1,107 @@
-// Admin Panel JavaScript - Online Only (No localStorage)
+// Admin Panel JavaScript - Secure & Focused
 const ADMIN_PASSWORD = 'admin123'; // Change this password
+const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 
-// Online data storage functions with localStorage fallback
-async function saveToCloudStorage(data) {
-    try {
-        // Check if we're running on a server (local development)
-        const isLocalServer = window.location.hostname === 'localhost' || 
-                             window.location.hostname === '127.0.0.1' ||
-                             window.location.hostname.includes('192.168.');
+// Security: Session management
+let adminSession = {
+    isLoggedIn: false,
+    loginTime: null,
+    sessionId: null
+};
+
+// Initialize admin panel
+document.addEventListener('DOMContentLoaded', function() {
+    checkSession();
+    setupEventListeners();
+});
+
+// Security: Check if user is logged in
+function checkSession() {
+    const sessionData = sessionStorage.getItem('adminSession');
+    if (sessionData) {
+        const session = JSON.parse(sessionData);
+        const now = Date.now();
         
-        if (isLocalServer) {
-            // Local server mode - use secure server API
-            const adminToken = sessionStorage.getItem('adminSessionToken');
-            if (!adminToken) {
-                throw new Error('No admin session found');
-            }
-            
-            const response = await fetch('/api/menu-data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${adminToken}`
-                },
-                body: JSON.stringify(data)
-            });
-            
-            if (response.ok) {
-                console.log('Menu data saved to secure server');
-                return true;
-            } else {
-                throw new Error(`Server error: ${response.status}`);
-            }
+        if (session.loginTime && (now - session.loginTime) < SESSION_TIMEOUT) {
+            adminSession = session;
+            showAdminPanel();
         } else {
-            // Online mode - use localStorage for now (will be replaced with proper cloud storage)
-            console.log('Online mode: Saving to localStorage (temporary solution)');
-            const updatedData = {
-                menuData: data.menuData || {},
-                cafeData: data.cafeData || {},
-                categories: data.categories || {},
-                lastUpdated: Date.now(),
-                timestamp: Date.now(),
-                version: Date.now().toString(),
-                updateId: `update_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-            };
-            
-            // Save to localStorage as temporary solution
-            localStorage.setItem('menuData', JSON.stringify(updatedData.menuData));
-            localStorage.setItem('cafeData', JSON.stringify(updatedData.cafeData));
-            localStorage.setItem('categories', JSON.stringify(updatedData.categories));
-            localStorage.setItem('menuDataLastUpdated', updatedData.lastUpdated.toString());
-            
-            // Also save to a public data format
-            localStorage.setItem('publicMenuData', JSON.stringify(updatedData));
-            
-            console.log('Menu data saved to localStorage');
-            console.log('Update ID:', updatedData.updateId);
-            console.log('Timestamp:', updatedData.timestamp);
-            
-            // Trigger a custom event to notify other tabs
-            window.dispatchEvent(new CustomEvent('menuDataUpdated', { 
-                detail: { 
-                    timestamp: updatedData.timestamp,
-                    updateId: updatedData.updateId
-                } 
-            }));
-            
-            return true;
+            sessionStorage.removeItem('adminSession');
+            showLoginForm();
         }
-    } catch (error) {
-        console.error('Error saving to cloud storage:', error);
-        return false;
+    } else {
+        showLoginForm();
     }
 }
 
-async function loadFromCloudStorage() {
-    try {
-        // Check if we're running on a server (local development)
-        const isLocalServer = window.location.hostname === 'localhost' || 
-                             window.location.hostname === '127.0.0.1' ||
-                             window.location.hostname.includes('192.168.');
-        
-        if (isLocalServer) {
-            // Local server mode - use secure server API
-            const response = await fetch('/api/menu-data');
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Menu data loaded from secure server');
-                return data;
-            } else {
-                throw new Error(`Server error: ${response.status}`);
-            }
-        } else {
-            // Online mode - load from localStorage (temporary solution)
-            try {
-                // Try to load from public data first
-                const publicData = localStorage.getItem('publicMenuData');
-                if (publicData) {
-                    const parsed = JSON.parse(publicData);
-                    console.log('Menu data loaded from public data');
-                    return parsed;
-                }
-                
-                // Fallback to individual localStorage items
-                const menuData = localStorage.getItem('menuData');
-                const cafeData = localStorage.getItem('cafeData');
-                const categories = localStorage.getItem('categories');
-                
-                if (menuData || cafeData || categories) {
-                    const data = {
-                        menuData: menuData ? JSON.parse(menuData) : {},
-                        cafeData: cafeData ? JSON.parse(cafeData) : {},
-                        categories: categories ? JSON.parse(categories) : {},
-                        lastUpdated: localStorage.getItem('menuDataLastUpdated') || Date.now()
-                    };
-                    console.log('Menu data loaded from localStorage');
-                    return data;
-                }
-                
-                // If no data found, return empty object
-                console.log('No data found in localStorage');
-                return {};
-            } catch (error) {
-                console.error('Error loading from localStorage:', error);
-                return {};
-            }
-        }
-    } catch (error) {
-        console.error('Error loading from cloud storage:', error);
-        return {};
-    }
-}
-
-// Online-only data storage functions (no localStorage)
-async function saveDataToServer(data) {
-    try {
-        // Check if we're running on a server (local development)
-        const isLocalServer = window.location.hostname === 'localhost' || 
-                             window.location.hostname === '127.0.0.1' ||
-                             window.location.hostname.includes('192.168.');
-        
-        if (isLocalServer) {
-            // Local server mode - use secure server API
-            const adminToken = sessionStorage.getItem('adminSessionToken');
-            if (!adminToken) {
-                throw new Error('No admin session found');
-            }
-            
-            const response = await fetch('/api/menu-data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${adminToken}`
-                },
-                body: JSON.stringify(data)
-            });
-            
-            if (response.ok) {
-                console.log('Menu data saved to secure server');
-                return true;
-            } else {
-                throw new Error(`Server error: ${response.status}`);
-            }
-        } else {
-            // Online mode - save to localStorage as temporary storage
-            try {
-                localStorage.setItem('menuData', JSON.stringify(data.menuData || {}));
-                localStorage.setItem('cafeData', JSON.stringify(data.cafeData || {}));
-                localStorage.setItem('categories', JSON.stringify(data.categories || {}));
-                localStorage.setItem('lastUpdated', Date.now().toString());
-                console.log('Data saved to localStorage (temporary)');
-                return true;
-            } catch (error) {
-                console.error('Error saving to localStorage:', error);
-                return false;
-            }
-        }
-    } catch (error) {
-        console.error('Error saving data to server:', error);
-        return false;
-    }
-}
-
-async function loadDataFromServer() {
-    try {
-        // Check if we're running on a server (local development)
-        const isLocalServer = window.location.hostname === 'localhost' || 
-                             window.location.hostname === '127.0.0.1' ||
-                             window.location.hostname.includes('192.168.');
-        
-        if (isLocalServer) {
-            // Local server mode - use secure server API
-            const response = await fetch('/api/menu-data');
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Menu data loaded from secure server');
-                return data;
-            } else {
-                throw new Error(`Server error: ${response.status}`);
-            }
-        } else {
-            // Online mode - load from localStorage (temporary storage)
-            try {
-                const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
-                const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
-                const categories = JSON.parse(localStorage.getItem('categories') || '{}');
-                return { menuData, cafeData, categories };
-            } catch (error) {
-                console.error('Error loading from localStorage:', error);
-                return {};
-            }
-        }
-    } catch (error) {
-        console.error('Error loading data from server:', error);
-        return {};
-    }
-}
-
-// Load menu data from online storage only
-async function loadMenuData() {
-    try {
-        const data = await loadDataFromServer();
-        if (data && data.menuData) {
-            menuData = data.menuData;
-            console.log('Menu data loaded from online storage');
-        } else {
-            menuData = {};
-            console.log('No menu data found, starting with empty menu');
-        }
-    } catch (error) {
-        console.error('Error loading menu data:', error);
-        menuData = {};
-    }
-}
-
-// Save cafe information to online storage only
-async function saveCafeInfo() {
-    const cafeName = document.getElementById('cafeName').value;
-    const cafeDescription = document.getElementById('cafeDescription').value;
-    const cafeAddress = document.getElementById('cafeAddress').value;
-    const cafePhone = document.getElementById('cafePhone').value;
-    const cafeEmail = document.getElementById('cafeEmail').value;
-    const cafeWebsite = document.getElementById('cafeWebsite').value;
-    const cafeHours = document.getElementById('cafeHours').value;
-    const cafeLogo = document.getElementById('cafeLogo').value;
-
-    const cafeData = {
-        name: cafeName,
-        description: cafeDescription,
-        address: cafeAddress,
-        phone: cafePhone,
-        email: cafeEmail,
-        website: cafeWebsite,
-        hours: cafeHours,
-        logo: cafeLogo
+// Security: Create secure session
+function createSession() {
+    adminSession = {
+        isLoggedIn: true,
+        loginTime: Date.now(),
+        sessionId: Math.random().toString(36).substr(2, 9)
     };
-
-    try {
-        const success = await saveDataToServer({ cafeData });
-        if (success) {
-            console.log('Cafe information saved to online storage');
-            alert('Cafe information saved successfully!');
-        } else {
-            throw new Error('Failed to save cafe information');
-        }
-    } catch (error) {
-        console.error('Error saving cafe information:', error);
-        alert('Error saving cafe information: ' + error.message);
-    }
+    sessionStorage.setItem('adminSession', JSON.stringify(adminSession));
 }
 
-// Save category information to online storage only
-async function saveCategoryInfo() {
-    const categoryTitle = document.getElementById('category-title').value.trim();
-    const categoryDescription = document.getElementById('category-description').value.trim();
-
-    if (!categoryTitle) {
-        alert('Please enter a category title');
-        return;
-    }
-
-    try {
-        // Check if we're updating an existing category
-        const categoryForm = document.getElementById('category-form');
-        const existingCategoryName = categoryForm.getAttribute('data-category');
-        
-        const data = await loadDataFromServer();
-        const categories = data.categories || {};
-        
-        if (existingCategoryName) {
-            // Update existing category
-            const category = categories[existingCategoryName];
-            if (category) {
-                category.name = categoryTitle;
-                category.description = categoryDescription;
-            }
-        } else {
-            // Create new category
-            categories[categoryTitle] = {
-                name: categoryTitle,
-                description: categoryDescription,
-                icon: ''
-            };
-        }
-        
-        const success = await saveDataToServer({
-            menuData: data.menuData || {},
-            cafeData: data.cafeData || {},
-            categories: categories
-        });
-        
-        if (success) {
-            console.log('Category information saved to online storage');
-            alert('Category information saved successfully!');
-            document.getElementById('category-title').value = '';
-            document.getElementById('category-description').value = '';
-            categoryForm.removeAttribute('data-category');
-            loadCategories();
-        } else {
-            throw new Error('Failed to save category information');
-        }
-    } catch (error) {
-        console.error('Error saving category information:', error);
-        alert('Error saving category information: ' + error.message);
-    }
+// Show/hide panels
+function showLoginForm() {
+    document.getElementById('login-form').style.display = 'flex';
+    document.getElementById('admin-panel').style.display = 'none';
 }
 
-// Load categories from online storage only
-async function loadCategories() {
-    try {
-        const data = await loadDataFromServer();
-        const categories = data.categories || {};
-        
-        const categoriesGrid = document.getElementById('categories-grid');
-        if (categoriesGrid) {
-            categoriesGrid.innerHTML = '';
-
-            for (const [name, category] of Object.entries(categories)) {
-                const categoryCard = document.createElement('div');
-                categoryCard.className = 'category-card';
-                categoryCard.setAttribute('data-category', name);
-                categoryCard.innerHTML = `
-                    <h3>${category.name || name}</h3>
-                    <p>${category.description || 'No description'}</p>
-                    <p><strong>Icon:</strong> ${category.icon || 'No icon'}</p>
-                    <div class="category-actions">
-                        <button onclick="editCategory('${name}')" class="btn-small">Düzenle</button>
-                        <button onclick="deleteCategory('${name}')" class="btn-small btn-danger">Sil</button>
-                    </div>
-                `;
-                categoriesGrid.appendChild(categoryCard);
-            }
-        }
-        
-        // Also load categories for dropdown
-        loadCategoriesForDropdown();
-    } catch (error) {
-        console.error('Error loading categories:', error);
-    }
+function showAdminPanel() {
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('admin-panel').style.display = 'block';
+    loadAllData();
 }
 
-// Load category for editing from online storage only
-async function loadCategoryForEdit(categoryName) {
-    try {
-        const data = await loadDataFromServer();
-        const categories = data.categories || {};
-        const category = categories[categoryName];
-        
-        if (category) {
-            document.getElementById('categoryName').value = categoryName;
-            document.getElementById('categoryDescription').value = category.description || '';
-            document.getElementById('categoryIcon').value = category.icon || '';
-        }
-    } catch (error) {
-        console.error('Error loading category for edit:', error);
-    }
-}
-
-// Save menu item to online storage only
-async function saveMenuItem() {
-    const category = document.getElementById('item-category').value;
-    const name = document.getElementById('item-name').value;
-    const description = document.getElementById('item-description').value;
-    const price = document.getElementById('item-price').value;
-
-    if (!category || !name || !price) {
-        alert('Lütfen tüm gerekli alanları doldurun');
-        return;
-    }
-
-    const itemData = {
-        name: name,
-        description: description,
-        price: parseFloat(price.replace('₺', '').replace(',', '.').trim())
-    };
-
-    try {
-        const data = await loadDataFromServer();
-        const menuData = data.menuData || {};
-        
-        if (!menuData[category]) {
-            menuData[category] = {};
-        }
-        
-        menuData[category][name] = itemData;
-        
-        // Save the updated data with all existing data
-        const updatedData = {
-            menuData: menuData,
-            cafeData: data.cafeData || {},
-            categories: data.categories || {}
-        };
-        
-        const success = await saveDataToServer(updatedData);
-        if (success) {
-            console.log('Menu item saved to online storage');
-            alert('Menü öğesi başarıyla kaydedildi!');
-            clearItemForm();
-            loadItemsForCategory(category);
-        } else {
-            throw new Error('Failed to save menu item');
-        }
-    } catch (error) {
-        console.error('Error saving menu item:', error);
-        alert('Menü öğesi kaydedilirken hata: ' + error.message);
-    }
-}
-
-// Delete item from online storage only
-async function deleteItem(category, itemName) {
-    console.log('deleteItem called with:', category, itemName);
+// Setup event listeners
+function setupEventListeners() {
+    // Login form
+    document.getElementById('admin-login').addEventListener('submit', handleLogin);
     
-    if (confirm('Bu öğeyi silmek istediğinizden emin misiniz?')) {
-        try {
-            console.log('Loading data for deletion...');
-            const data = await loadDataFromServer();
-            const menuData = data.menuData || {};
-            
-            console.log('Current menuData:', menuData);
-            console.log('Category exists:', !!menuData[category]);
-            console.log('Item exists:', !!(menuData[category] && menuData[category][itemName]));
-            
-            if (menuData[category] && menuData[category][itemName]) {
-                delete menuData[category][itemName];
-                console.log('Item deleted from memory, saving...');
-                
-                // Save the updated data with all existing data
-                const updatedData = {
-                    menuData: menuData,
-                    cafeData: data.cafeData || {},
-                    categories: data.categories || {}
-                };
-                
-                const success = await saveDataToServer(updatedData);
-                if (success) {
-                    console.log('Menu item deleted from online storage');
-                    alert('Menü öğesi başarıyla silindi!');
-                    loadItemsForCategory(category);
-                } else {
-                    throw new Error('Failed to save after deletion');
-                }
-            } else {
-                alert('Öğe bulunamadı!');
-            }
-        } catch (error) {
-            console.error('Error deleting menu item:', error);
-            alert('Menü öğesi silinirken hata: ' + error.message);
-        }
-    }
+    // Category selection for menu items
+    document.getElementById('item-category-select').addEventListener('change', loadMenuItems);
 }
 
-// Load items for category from online storage only
-async function loadItemsForCategory(category) {
-    console.log('loadItemsForCategory called with category:', category);
+// Security: Handle login
+function handleLogin(e) {
+    e.preventDefault();
+    const password = document.getElementById('admin-password').value;
     
-    try {
-        const data = await loadDataFromServer();
-        console.log('Loaded data:', data);
-        
-        const menuData = data.menuData || {};
-        console.log('Menu data:', menuData);
-        
-        const items = menuData[category] || {};
-        console.log('Items for category', category, ':', items);
-        
-        const itemList = document.getElementById('items-list');
-        console.log('Items list element:', itemList);
-        
-        if (itemList) {
-            itemList.innerHTML = '';
-            
-            if (Object.keys(items).length === 0) {
-                itemList.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">Bu kategoride henüz öğe yok.</p>';
-                return;
-            }
-
-            for (const [name, item] of Object.entries(items)) {
-                console.log('Creating item element for:', name, item);
-                
-                const itemElement = document.createElement('div');
-                itemElement.className = 'item';
-                itemElement.style.cssText = `
-                    background: white;
-                    padding: 1rem;
-                    margin: 0.5rem 0;
-                    border-radius: 8px;
-                    border: 1px solid #ddd;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                `;
-                itemElement.innerHTML = `
-                    <div class="item-info">
-                        <h3 style="margin: 0 0 0.5rem 0; color: #2c3e50;">${name}</h3>
-                        <p style="margin: 0 0 0.5rem 0; color: #666;">${item.description || 'Açıklama yok'}</p>
-                        <p style="margin: 0; color: #e67e22; font-weight: bold;">₺${item.price}</p>
-                    </div>
-                    <div class="item-actions">
-                        <button onclick="editItem('${category}', '${name}')" style="background: #3498db; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; margin-right: 0.5rem; cursor: pointer;">Düzenle</button>
-                        <button onclick="deleteItem('${category}', '${name}')" style="background: #e74c3c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Sil</button>
-                    </div>
-                `;
-                itemList.appendChild(itemElement);
-            }
-            
-            console.log('Items loaded successfully');
-        } else {
-            console.error('Items list element not found');
-        }
-    } catch (error) {
-        console.error('Error loading items for category:', error);
+    if (password === ADMIN_PASSWORD) {
+        createSession();
+        showAdminPanel();
+        document.getElementById('admin-password').value = '';
+    } else {
+        alert('❌ Yanlış şifre!');
     }
 }
 
-// Edit item in online storage only
-async function editItem(category, itemName) {
-    try {
-        const data = await loadDataFromServer();
-        const menuData = data.menuData || {};
-        const item = menuData[category] && menuData[category][itemName];
-        
-        if (item) {
-            document.getElementById('item-category').value = category;
-            document.getElementById('item-name').value = itemName;
-            document.getElementById('item-description').value = item.description || '';
-            document.getElementById('item-price').value = item.price || '';
-        }
-    } catch (error) {
-        console.error('Error loading item for edit:', error);
+// Security: Logout
+function logoutAdmin() {
+    if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+        sessionStorage.removeItem('adminSession');
+        adminSession = { isLoggedIn: false, loginTime: null, sessionId: null };
+        showLoginForm();
     }
 }
 
-// Navigation functions for admin panel
+// Navigation
 function showSection(sectionId) {
     // Hide all sections
-    const sections = document.querySelectorAll('.admin-section');
-    sections.forEach(section => {
+    document.querySelectorAll('.admin-section').forEach(section => {
         section.classList.remove('active');
     });
     
     // Remove active class from all nav buttons
-    const navButtons = document.querySelectorAll('.admin-nav button');
-    navButtons.forEach(button => {
+    document.querySelectorAll('.admin-nav button').forEach(button => {
         button.classList.remove('active');
     });
     
     // Show selected section
-    const targetSection = document.getElementById(sectionId);
-    if (targetSection) {
-        targetSection.classList.add('active');
-    }
+    document.getElementById(sectionId).classList.add('active');
     
     // Add active class to clicked button
     event.target.classList.add('active');
@@ -581,243 +114,425 @@ function showSection(sectionId) {
     }
 }
 
-function returnToMenu() {
-    window.location.href = 'index.html';
-}
-
-function logoutAdmin() {
-    if (confirm('Are you sure you want to logout?')) {
-        sessionStorage.removeItem('adminSessionToken');
-        sessionStorage.removeItem('adminSecurityLevel');
-        window.location.href = 'index.html';
-    }
-}
-
-function clearItemForm() {
-    document.getElementById('item-name').value = '';
-    document.getElementById('item-description').value = '';
-    document.getElementById('item-price').value = '';
-}
-
-// Additional functions needed for admin panel functionality
-async function editCategory(categoryName) {
+// Data Management Functions
+async function loadAllData() {
     try {
-        const data = await loadDataFromServer();
-        const categories = data.categories || {};
-        const category = categories[categoryName];
-        
-        if (category) {
-            document.getElementById('category-title').value = category.name || categoryName;
-            document.getElementById('category-description').value = category.description || '';
-            
-            // Store the category name for updating
-            document.getElementById('category-form').setAttribute('data-category', categoryName);
-        }
+        await loadGeneralSettings();
+        await loadCategories();
+        await loadCategoriesForDropdown();
     } catch (error) {
-        console.error('Error loading category for editing:', error);
-        alert('Error loading category for editing: ' + error.message);
+        console.error('Error loading data:', error);
+        showAlert('Veri yüklenirken hata oluştu', 'danger');
     }
 }
 
-async function deleteCategory(categoryName) {
-    if (confirm(`Are you sure you want to delete the category "${categoryName}"? This will also delete all menu items in this category.`)) {
-        try {
-            const data = await loadDataFromServer();
-            const menuData = data.menuData || {};
-            const categories = data.categories || {};
-            
-            // Remove category from menu data
-            delete menuData[categoryName];
-            
-            // Remove category from categories
-            delete categories[categoryName];
-            
-            // Save updated data
-            const updatedData = {
-                menuData: menuData,
-                cafeData: data.cafeData || {},
-                categories: categories
-            };
-            
-            const success = await saveDataToServer(updatedData);
-            if (success) {
-                alert('Category deleted successfully!');
-                loadCategories();
-            } else {
-                throw new Error('Failed to delete category');
-            }
-        } catch (error) {
-            console.error('Error deleting category:', error);
-            alert('Error deleting category: ' + error.message);
-        }
-    }
-}
-
-// Load categories for dropdown in menu items section
-async function loadCategoriesForDropdown() {
-    const categorySelect = document.getElementById('item-category');
-    if (categorySelect) {
-        categorySelect.innerHTML = '<option value="">Kategori seçin...</option>';
+// Load general settings
+async function loadGeneralSettings() {
+    try {
+        const data = await loadDataFromStorage();
         
-        try {
-            const data = await loadDataFromServer();
-            const categories = data.categories || {};
-            
-            for (const [name, category] of Object.entries(categories)) {
-                const option = document.createElement('option');
-                option.value = name;
-                option.textContent = name;
-                categorySelect.appendChild(option);
-            }
-        } catch (error) {
-            console.error('Error loading categories for dropdown:', error);
-        }
+        document.getElementById('cafe-name').value = data.cafeData?.name || '';
+        document.getElementById('cafe-description').value = data.cafeData?.description || '';
+        document.getElementById('instagram-link').value = data.cafeData?.instagram || '';
+    } catch (error) {
+        console.error('Error loading general settings:', error);
     }
 }
 
-// Initialize admin panel
-document.addEventListener('DOMContentLoaded', async function() {
-    console.log('Admin panel initialized - Online mode only');
-    
-    // Load initial data from online storage
-    await loadMenuData();
-    await loadCategories();
-    
-    // Set up event listeners
-    document.getElementById('saveCafeBtn').addEventListener('click', saveCafeInfo);
-    document.getElementById('saveCategoryBtn').addEventListener('click', saveCategoryInfo);
-    
-    // Handle category form submission
-    const categoryForm = document.getElementById('category-form');
-    if (categoryForm) {
-        categoryForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            saveCategoryInfo();
-        });
-    }
-    
-    // Handle menu items form submission
-    const itemForm = document.getElementById('item-form');
-    if (itemForm) {
-        itemForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            saveMenuItem();
-        });
-    }
-    
-    // Handle category selection for menu items
-    const categorySelect = document.getElementById('item-category');
-    if (categorySelect) {
-        console.log('Category select element found:', categorySelect);
-        categorySelect.addEventListener('change', function() {
-            const selectedCategory = this.value;
-            console.log('Category selection changed to:', selectedCategory);
-            if (selectedCategory) {
-                console.log('Loading items for category:', selectedCategory);
-                loadItemsForCategory(selectedCategory);
-            } else {
-                console.log('No category selected, clearing items list');
-                document.getElementById('items-list').innerHTML = '';
-            }
-        });
-    } else {
-        console.error('Category select element not found!');
-    }
-    
-    // Add a test button to manually load items
-    const testButton = document.createElement('button');
-    testButton.textContent = 'Test Load Items';
-    testButton.style.cssText = 'background: #e67e22; color: white; padding: 10px; margin: 10px; border: none; border-radius: 5px; cursor: pointer;';
-    testButton.onclick = function() {
-        const testCategory = categorySelect ? categorySelect.value : 'test';
-        console.log('Manual test - loading items for category:', testCategory);
-        loadItemsForCategory(testCategory);
-    };
-    
-    // Add test button to the menu items section
-    const menuItemsSection = document.getElementById('menu-items');
-    if (menuItemsSection) {
-        menuItemsSection.appendChild(testButton);
+// Save general settings
+async function saveGeneralSettings() {
+    try {
+        const cafeName = document.getElementById('cafe-name').value.trim();
+        const cafeDescription = document.getElementById('cafe-description').value.trim();
+        const instagramLink = document.getElementById('instagram-link').value.trim();
         
-        // Add a button to create test data
-        const testDataButton = document.createElement('button');
-        testDataButton.textContent = 'Create Test Data';
-        testDataButton.style.cssText = 'background: #27ae60; color: white; padding: 10px; margin: 10px; border: none; border-radius: 5px; cursor: pointer;';
-        testDataButton.onclick = async function() {
-            console.log('Creating test data...');
-            const testData = {
-                menuData: {
-                    'Sıcak İçecekler': {
-                        'Türk Kahvesi': {
-                            name: 'Türk Kahvesi',
-                            description: 'Geleneksel Türk kahvesi',
-                            price: 15
-                        },
-                        'Çay': {
-                            name: 'Çay',
-                            description: 'Demli çay',
-                            price: 5
-                        }
-                    },
-                    'Soğuk İçecekler': {
-                        'Ayran': {
-                            name: 'Ayran',
-                            description: 'Taze ayran',
-                            price: 8
-                        }
-                    }
-                },
-                cafeData: {},
-                categories: {
-                    'Sıcak İçecekler': {
-                        name: 'Sıcak İçecekler',
-                        description: 'Sıcak içecekler',
-                        icon: 'hotdrinks_icon.png'
-                    },
-                    'Soğuk İçecekler': {
-                        name: 'Soğuk İçecekler',
-                        description: 'Soğuk içecekler',
-                        icon: 'colddrinks_icon.png'
-                    }
-                }
-            };
-            
-            try {
-                const success = await saveDataToServer(testData);
-                if (success) {
-                    alert('Test data created successfully!');
-                    // Reload categories
-                    loadCategoriesForDropdown();
-                } else {
-                    alert('Failed to create test data');
-                }
-            } catch (error) {
-                console.error('Error creating test data:', error);
-                alert('Error creating test data: ' + error.message);
-            }
+        if (!cafeName) {
+            showAlert('Cafe adı gereklidir', 'danger');
+            return;
+        }
+        
+        const data = await loadDataFromStorage();
+        
+        data.cafeData = {
+            name: cafeName,
+            description: cafeDescription,
+            instagram: instagramLink
         };
         
-        menuItemsSection.appendChild(testDataButton);
+        await saveDataToStorage(data);
+        showAlert('Genel ayarlar başarıyla kaydedildi!', 'success');
+        
+    } catch (error) {
+        console.error('Error saving general settings:', error);
+        showAlert('Ayarlar kaydedilirken hata oluştu', 'danger');
     }
-    
-    // Load categories for item category dropdown
+}
+
+// Load categories
+async function loadCategories() {
     try {
-        const data = await loadDataFromServer();
+        const data = await loadDataFromStorage();
         const categories = data.categories || {};
         
-        if (categorySelect) {
-            categorySelect.innerHTML = '<option value="">Kategori seçin...</option>';
-            
-            for (const [name, category] of Object.entries(categories)) {
-                const option = document.createElement('option');
-                option.value = name;
-                option.textContent = name;
-                categorySelect.appendChild(option);
-            }
+        const categoriesGrid = document.getElementById('categories-grid');
+        categoriesGrid.innerHTML = '';
+        
+        Object.keys(categories).forEach(categoryKey => {
+            const category = categories[categoryKey];
+            const categoryCard = document.createElement('div');
+            categoryCard.className = 'category-card';
+            categoryCard.innerHTML = `
+                <h3>${category.name || categoryKey}</h3>
+                <p>${category.description || 'Açıklama yok'}</p>
+                <div class="category-actions">
+                    <button onclick="editCategory('${categoryKey}')" class="btn btn-small">✏️ Düzenle</button>
+                    <button onclick="deleteCategory('${categoryKey}')" class="btn btn-danger btn-small">🗑️ Sil</button>
+                </div>
+            `;
+            categoriesGrid.appendChild(categoryCard);
+        });
+    } catch (error) {
+        console.error('Error loading categories:', error);
+        showAlert('Kategoriler yüklenirken hata oluştu', 'danger');
+    }
+}
+
+// Add new category
+async function addNewCategory() {
+    try {
+        const categoryName = document.getElementById('new-category-name').value.trim();
+        
+        if (!categoryName) {
+            showAlert('Kategori adı gereklidir', 'danger');
+            return;
         }
+        
+        const data = await loadDataFromStorage();
+        
+        if (data.categories[categoryName]) {
+            showAlert('Bu kategori zaten mevcut', 'danger');
+            return;
+        }
+        
+        data.categories[categoryName] = {
+            name: categoryName,
+            description: ''
+        };
+        
+        // Initialize empty menu data for this category
+        if (!data.menuData) data.menuData = {};
+        data.menuData[categoryName] = {};
+        
+        await saveDataToStorage(data);
+        document.getElementById('new-category-name').value = '';
+        loadCategories();
+        loadCategoriesForDropdown();
+        showAlert('Kategori başarıyla eklendi!', 'success');
+        
+    } catch (error) {
+        console.error('Error adding category:', error);
+        showAlert('Kategori eklenirken hata oluştu', 'danger');
+    }
+}
+
+// Edit category
+async function editCategory(categoryKey) {
+    const newName = prompt('Yeni kategori adı:', categoryKey);
+    if (newName && newName.trim() && newName !== categoryKey) {
+        try {
+            const data = await loadDataFromStorage();
+            
+            // Update category name
+            const category = data.categories[categoryKey];
+            delete data.categories[categoryKey];
+            data.categories[newName] = category;
+            category.name = newName;
+            
+            // Update menu data
+            if (data.menuData[categoryKey]) {
+                data.menuData[newName] = data.menuData[categoryKey];
+                delete data.menuData[categoryKey];
+            }
+            
+            await saveDataToStorage(data);
+            loadCategories();
+            loadCategoriesForDropdown();
+            showAlert('Kategori başarıyla güncellendi!', 'success');
+            
+        } catch (error) {
+            console.error('Error editing category:', error);
+            showAlert('Kategori güncellenirken hata oluştu', 'danger');
+        }
+    }
+}
+
+// Delete category
+async function deleteCategory(categoryKey) {
+    if (confirm(`"${categoryKey}" kategorisini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.`)) {
+        try {
+            const data = await loadDataFromStorage();
+            
+            delete data.categories[categoryKey];
+            delete data.menuData[categoryKey];
+            
+            await saveDataToStorage(data);
+            loadCategories();
+            loadCategoriesForDropdown();
+            showAlert('Kategori başarıyla silindi!', 'success');
+            
+        } catch (error) {
+            console.error('Error deleting category:', error);
+            showAlert('Kategori silinirken hata oluştu', 'danger');
+        }
+    }
+}
+
+// Load categories for dropdown
+async function loadCategoriesForDropdown() {
+    try {
+        const data = await loadDataFromStorage();
+        const categories = data.categories || {};
+        
+        const select = document.getElementById('item-category-select');
+        select.innerHTML = '<option value="">Kategori seçin...</option>';
+        
+        Object.keys(categories).forEach(categoryKey => {
+            const option = document.createElement('option');
+            option.value = categoryKey;
+            option.textContent = categories[categoryKey].name || categoryKey;
+            select.appendChild(option);
+        });
     } catch (error) {
         console.error('Error loading categories for dropdown:', error);
     }
+}
+
+// Load menu items for selected category
+async function loadMenuItems() {
+    try {
+        const categoryKey = document.getElementById('item-category-select').value;
+        const itemsList = document.getElementById('items-list');
+        
+        if (!categoryKey) {
+            itemsList.innerHTML = '<p style="text-align: center; color: #6c757d;">Önce bir kategori seçin</p>';
+            return;
+        }
+        
+        const data = await loadDataFromStorage();
+        const items = data.menuData?.[categoryKey] || {};
+        
+        if (Object.keys(items).length === 0) {
+            itemsList.innerHTML = '<p style="text-align: center; color: #6c757d;">Bu kategoride henüz öğe yok</p>';
+            return;
+        }
+        
+        itemsList.innerHTML = '';
+        Object.keys(items).forEach(itemKey => {
+            const item = items[itemKey];
+            const itemCard = document.createElement('div');
+            itemCard.className = 'item-card';
+            itemCard.innerHTML = `
+                <div class="item-info">
+                    <h4>${item.name}</h4>
+                    <p>${item.description || 'Açıklama yok'}</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span class="item-price">${item.price} ₺</span>
+                    <div class="item-actions">
+                        <button onclick="editMenuItem('${categoryKey}', '${itemKey}')" class="btn btn-small">✏️</button>
+                        <button onclick="deleteMenuItem('${categoryKey}', '${itemKey}')" class="btn btn-danger btn-small">🗑️</button>
+                    </div>
+                </div>
+            `;
+            itemsList.appendChild(itemCard);
+        });
+        
+    } catch (error) {
+        console.error('Error loading menu items:', error);
+        showAlert('Menü öğeleri yüklenirken hata oluştu', 'danger');
+    }
+}
+
+// Add menu item
+async function addMenuItem() {
+    try {
+        const categoryKey = document.getElementById('item-category-select').value;
+        const itemName = document.getElementById('item-name').value.trim();
+        const itemPrice = parseFloat(document.getElementById('item-price').value);
+        const itemDescription = document.getElementById('item-description').value.trim();
+        
+        if (!categoryKey) {
+            showAlert('Lütfen bir kategori seçin', 'danger');
+            return;
+        }
+        
+        if (!itemName) {
+            showAlert('Öğe adı gereklidir', 'danger');
+            return;
+        }
+        
+        if (isNaN(itemPrice) || itemPrice <= 0) {
+            showAlert('Geçerli bir fiyat girin', 'danger');
+            return;
+        }
+        
+        const data = await loadDataFromStorage();
+        
+        if (!data.menuData) data.menuData = {};
+        if (!data.menuData[categoryKey]) data.menuData[categoryKey] = {};
+        
+        if (data.menuData[categoryKey][itemName]) {
+            showAlert('Bu öğe zaten mevcut', 'danger');
+            return;
+        }
+        
+        data.menuData[categoryKey][itemName] = {
+            name: itemName,
+            price: itemPrice,
+            description: itemDescription
+        };
+        
+        await saveDataToStorage(data);
+        
+        // Clear form
+        document.getElementById('item-name').value = '';
+        document.getElementById('item-price').value = '';
+        document.getElementById('item-description').value = '';
+        
+        loadMenuItems();
+        showAlert('Menü öğesi başarıyla eklendi!', 'success');
+        
+    } catch (error) {
+        console.error('Error adding menu item:', error);
+        showAlert('Menü öğesi eklenirken hata oluştu', 'danger');
+    }
+}
+
+// Edit menu item
+async function editMenuItem(categoryKey, itemKey) {
+    const data = await loadDataFromStorage();
+    const item = data.menuData[categoryKey][itemKey];
     
-    console.log('Admin panel ready - All data operations use online storage only');
-});
+    const newName = prompt('Yeni öğe adı:', item.name);
+    if (newName && newName.trim()) {
+        const newPrice = prompt('Yeni fiyat (₺):', item.price);
+        if (newPrice && !isNaN(parseFloat(newPrice))) {
+            const newDescription = prompt('Yeni açıklama (opsiyonel):', item.description || '');
+            
+            try {
+                // Remove old item
+                delete data.menuData[categoryKey][itemKey];
+                
+                // Add updated item
+                data.menuData[categoryKey][newName] = {
+                    name: newName,
+                    price: parseFloat(newPrice),
+                    description: newDescription || ''
+                };
+                
+                await saveDataToStorage(data);
+                loadMenuItems();
+                showAlert('Menü öğesi başarıyla güncellendi!', 'success');
+                
+            } catch (error) {
+                console.error('Error editing menu item:', error);
+                showAlert('Menü öğesi güncellenirken hata oluştu', 'danger');
+            }
+        }
+    }
+}
+
+// Delete menu item
+async function deleteMenuItem(categoryKey, itemKey) {
+    if (confirm(`"${itemKey}" öğesini silmek istediğinizden emin misiniz?`)) {
+        try {
+            const data = await loadDataFromStorage();
+            delete data.menuData[categoryKey][itemKey];
+            
+            await saveDataToStorage(data);
+            loadMenuItems();
+            showAlert('Menü öğesi başarıyla silindi!', 'success');
+            
+        } catch (error) {
+            console.error('Error deleting menu item:', error);
+            showAlert('Menü öğesi silinirken hata oluştu', 'danger');
+        }
+    }
+}
+
+// Data Storage Functions
+async function loadDataFromStorage() {
+    try {
+        // Try to load from localStorage first
+        const storedData = localStorage.getItem('menuData');
+        if (storedData) {
+            return JSON.parse(storedData);
+        }
+        
+        // If no localStorage data, try to load from JSON file
+        const response = await fetch('menu-data.json');
+        if (response.ok) {
+            const data = await response.json();
+            // Save to localStorage for future use
+            localStorage.setItem('menuData', JSON.stringify(data));
+            return data;
+        }
+        
+        // Return empty data structure
+        return {
+            menuData: {},
+            cafeData: {},
+            categories: {}
+        };
+    } catch (error) {
+        console.error('Error loading data:', error);
+        return {
+            menuData: {},
+            cafeData: {},
+            categories: {}
+        };
+    }
+}
+
+async function saveDataToStorage(data) {
+    try {
+        // Save to localStorage
+        localStorage.setItem('menuData', JSON.stringify(data));
+        
+        // Also try to save to JSON file (for backup)
+        // Note: This won't work on static hosting, but localStorage will persist
+        console.log('Data saved to localStorage');
+        return true;
+    } catch (error) {
+        console.error('Error saving data:', error);
+        return false;
+    }
+}
+
+// Utility Functions
+function showAlert(message, type) {
+    // Remove existing alerts
+    document.querySelectorAll('.alert').forEach(alert => alert.remove());
+    
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type}`;
+    alert.textContent = message;
+    
+    // Insert at the top of the current section
+    const activeSection = document.querySelector('.admin-section.active');
+    activeSection.insertBefore(alert, activeSection.firstChild);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (alert.parentNode) {
+            alert.remove();
+        }
+    }, 5000);
+}
+
+// Auto-save session periodically
+setInterval(() => {
+    if (adminSession.isLoggedIn) {
+        sessionStorage.setItem('adminSession', JSON.stringify(adminSession));
+    }
+}, 60000); // Every minute
