@@ -35,78 +35,63 @@
       }
     },
     "Ana Yemekler": {
-      "Köfte": {
-        "name": "Köfte",
-        "description": "Ev yapımı köfte",
+      "Döner": {
+        "name": "Döner",
+        "description": "Tavuk döner",
         "price": 25
       },
-      "Tavuk Şinitzel": {
-        "name": "Tavuk Şinitzel",
-        "description": "Kızarmış tavuk şinitzel",
-        "price": 22
-      },
-      "Balık": {
-        "name": "Balık",
-        "description": "Taze balık",
-        "price": 30
+      "Lahmacun": {
+        "name": "Lahmacun",
+        "description": "İnce hamur lahmacun",
+        "price": 18
       }
     },
     "Tatlılar": {
       "Baklava": {
         "name": "Baklava",
         "description": "Geleneksel baklava",
-        "price": 18
+        "price": 20
       },
-      "Sütlaç": {
-        "name": "Sütlaç",
-        "description": "Ev yapımı sütlaç",
-        "price": 12
+      "Künefe": {
+        "name": "Künefe",
+        "description": "Sıcak künefe",
+        "price": 22
       }
     },
     "Atıştırmalıklar": {
       "Patates Kızartması": {
         "name": "Patates Kızartması",
-        "description": "Taze patates kızartması",
-        "price": 8
+        "description": "Kızarmış patates",
+        "price": 12
       },
-      "Çerez Tabağı": {
-        "name": "Çerez Tabağı",
-        "description": "Karışık çerez tabağı",
+      "Çiğ Köfte": {
+        "name": "Çiğ Köfte",
+        "description": "Acılı çiğ köfte",
         "price": 15
-      },
-      "Cips": {
-        "name": "Cips",
-        "description": "Tuzlu cips",
-        "price": 6
       }
     },
     "Nargile": {
       "Elma Nargile": {
         "name": "Elma Nargile",
         "description": "Elma aromalı nargile",
-        "price": 25
+        "price": 30
       },
       "Çilek Nargile": {
         "name": "Çilek Nargile",
         "description": "Çilek aromalı nargile",
-        "price": 25
-      },
-      "Mint Nargile": {
-        "name": "Mint Nargile",
-        "description": "Nane aromalı nargile",
-        "price": 25
+        "price": 30
       }
     }
   },
   "cafeData": {
     "name": "Thee Bbubb Cafe",
-    "description": "Geleneksel Türk mutfağı",
-    "address": "İstanbul, Türkiye",
-    "phone": "+90 212 123 45 67",
+    "description": "Sıcak ve samimi atmosferde lezzetli yemekler",
+    "address": "Merkez Mahallesi, Cafe Sokak No:1",
+    "phone": "+90 555 123 4567",
     "email": "info@theebbubb.com",
     "website": "www.theebbubb.com",
-    "hours": "09:00 - 22:00",
-    "logo": ""
+    "hours": "Her gün 08:00 - 24:00",
+    "logo": "logo.png"
   },
   "categories": {
     "Sıcak İçecekler": {
@@ -122,12 +107,12 @@
     "Ana Yemekler": {
       "name": "Ana Yemekler",
       "description": "Ana yemekler",
-      "icon": "main_icon.png"
+      "icon": "maindishes_icon.png"
     },
     "Tatlılar": {
       "name": "Tatlılar",
       "description": "Tatlılar",
-      "icon": "dessert_icon.png"
+      "icon": "desserts_icon.png"
     },
     "Atıştırmalıklar": {
       "name": "Atıştırmalıklar",
@@ -137,9 +122,11 @@
     "Nargile": {
       "name": "Nargile",
       "description": "Nargile",
-      "icon": "hookah-icon.png"
+      "icon": "hookah_icon.png"
     }
   },
-  "timestamp": 1703000000000,
-  "version": "1.0"
+  "lastUpdated": 1704067200000,
+  "timestamp": 1704067200000,
+  "version": "1.0.0",
+  "updateId": "initial_data"
 }

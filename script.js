@@ -117,18 +117,16 @@ async function loadDataFromServer() {
                              window.location.hostname.includes('192.168.');
         
         if (!isLocalServer) {
-            // Online mode - try cloud storage first, fallback to localStorage
+            // Online mode - load from cloud storage only
             console.log('Online mode: Loading data from cloud storage');
             const cloudData = await loadFromCloudStorage();
             if (cloudData && Object.keys(cloudData).length > 0) {
                 return cloudData;
             }
             
-            // Fallback to localStorage
-            const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
-            const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
-            const categories = JSON.parse(localStorage.getItem('categories') || '{}');
-            return { menuData, cafeData, categories };
+            // No fallback - return empty data if cloud storage fails
+            console.log('No cloud storage data found');
+            return {};
         }
         
         // Local server mode - try server first, fallback to localStorage
@@ -141,17 +139,9 @@ async function loadDataFromServer() {
         return data;
     } catch (error) {
         console.error('Error loading data from server:', error);
-        // Fallback to localStorage
-        console.log('Falling back to localStorage');
-        try {
-            const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
-            const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
-            const categories = JSON.parse(localStorage.getItem('categories') || '{}');
-            return { menuData, cafeData, categories };
-        } catch (localError) {
-            console.error('Error loading from localStorage:', localError);
-            return {};
-        }
+        // No fallback - return empty data if server fails
+        console.log('No server data available');
+        return {};
     }
 }
 
