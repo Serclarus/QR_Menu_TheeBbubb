@@ -506,31 +506,44 @@ async function editItem(category, itemName) {
 
 // Navigation functions for admin panel
 function showSection(sectionId) {
+    console.log('showSection called with:', sectionId);
+    
     // Hide all sections
     const sections = document.querySelectorAll('.admin-section');
+    console.log('Found sections:', sections.length);
     sections.forEach(section => {
         section.classList.remove('active');
     });
     
     // Remove active class from all nav buttons
     const navButtons = document.querySelectorAll('.admin-nav button');
+    console.log('Found nav buttons:', navButtons.length);
     navButtons.forEach(button => {
         button.classList.remove('active');
     });
     
     // Show selected section
     const targetSection = document.getElementById(sectionId);
+    console.log('Target section:', targetSection);
     if (targetSection) {
         targetSection.classList.add('active');
+        console.log('Section activated:', sectionId);
+    } else {
+        console.error('Section not found:', sectionId);
     }
     
     // Add active class to clicked button
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+        console.log('Button activated');
+    }
     
     // Load data for specific sections
     if (sectionId === 'categories') {
+        console.log('Loading categories...');
         loadCategories();
     } else if (sectionId === 'menu-items') {
+        console.log('Loading categories for dropdown...');
         loadCategoriesForDropdown();
     }
 }
@@ -591,6 +604,12 @@ async function loadCategoriesForDropdown() {
 // Initialize admin panel
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('Admin panel initialized - Online mode only');
+    console.log('DOM loaded, starting initialization...');
+    
+    // Test if functions are available
+    console.log('showSection function available:', typeof showSection);
+    console.log('returnToMenu function available:', typeof returnToMenu);
+    console.log('logoutAdmin function available:', typeof logoutAdmin);
     
     // Check if we have any data, if not create some test data
     const existingData = await loadDataFromServer();
@@ -697,4 +716,18 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     
     console.log('Admin panel ready - All data operations use online storage only');
+    
+    // Test navigation buttons
+    const navButtons = document.querySelectorAll('.admin-nav button');
+    console.log('Navigation buttons found:', navButtons.length);
+    navButtons.forEach((button, index) => {
+        console.log(`Button ${index}:`, button.textContent, button.onclick);
+    });
+    
+    // Test sections
+    const sections = document.querySelectorAll('.admin-section');
+    console.log('Sections found:', sections.length);
+    sections.forEach((section, index) => {
+        console.log(`Section ${index}:`, section.id);
+    });
 });
