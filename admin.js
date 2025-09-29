@@ -1,38 +1,57 @@
 // Admin Panel JavaScript
 const ADMIN_PASSWORD = 'admin123'; // Change this password
 
-// Cloud storage functions for real-time menu updates
+// Secure cloud storage functions for real-time menu updates
 async function saveToCloudStorage(data) {
     try {
-        // Try to fetch and update the menu-data.json file
-        const response = await fetch('menu-data.json');
-        let existingData = {};
+        // Check if we're running on a server (local development)
+        const isLocalServer = window.location.hostname === 'localhost' || 
+                             window.location.hostname === '127.0.0.1' ||
+                             window.location.hostname.includes('192.168.');
         
-        if (response.ok) {
-            existingData = await response.json();
+        if (isLocalServer) {
+            // Local server mode - use secure server API
+            const adminToken = sessionStorage.getItem('adminSessionToken');
+            if (!adminToken) {
+                throw new Error('No admin session found');
+            }
+            
+            const response = await fetch('/api/menu-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${adminToken}`
+                },
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+                console.log('Menu data saved to secure server');
+                return true;
+            } else {
+                throw new Error(`Server error: ${response.status}`);
+            }
+        } else {
+            // Online mode - use localStorage as fallback (not secure for production)
+            console.warn('Online mode: Using localStorage (not secure for production)');
+            const updatedData = {
+                menuData: data.menuData || {},
+                cafeData: data.cafeData || {},
+                categories: data.categories || {},
+                lastUpdated: Date.now()
+            };
+            
+            localStorage.setItem('cloudMenuData', JSON.stringify(updatedData));
+            localStorage.setItem('menuDataLastUpdated', Date.now().toString());
+            
+            // Trigger a custom event to notify other tabs
+            window.dispatchEvent(new CustomEvent('menuDataUpdated', { 
+                detail: { timestamp: Date.now() } 
+            }));
+            
+            console.log('Menu data saved to localStorage (fallback)');
+            return true;
         }
-        
-        // Update the data
-        const updatedData = {
-            ...existingData,
-            menuData: data.menuData || {},
-            cafeData: data.cafeData || {},
-            categories: data.categories || {},
-            lastUpdated: Date.now()
-        };
-        
-        // For now, we'll use localStorage as the "cloud" storage
-        // In a real implementation, you'd upload this to a cloud service
-        localStorage.setItem('cloudMenuData', JSON.stringify(updatedData));
-        localStorage.setItem('menuDataLastUpdated', Date.now().toString());
-        
-        // Trigger a custom event to notify other tabs
-        window.dispatchEvent(new CustomEvent('menuDataUpdated', { 
-            detail: { timestamp: Date.now() } 
-        }));
-        
-        console.log('Menu data saved to cloud storage');
-        return true;
     } catch (error) {
         console.error('Error saving to cloud storage:', error);
         return false;
@@ -41,24 +60,31 @@ async function saveToCloudStorage(data) {
 
 async function loadFromCloudStorage() {
     try {
-        // Try to load from the JSON file first
-        const response = await fetch('menu-data.json');
-        if (response.ok) {
-            const data = await response.json();
-            if (data && Object.keys(data).length > 0) {
-                console.log('Menu data loaded from JSON file');
-                return data;
-            }
-        }
+        // Check if we're running on a server (local development)
+        const isLocalServer = window.location.hostname === 'localhost' || 
+                             window.location.hostname === '127.0.0.1' ||
+                             window.location.hostname.includes('192.168.');
         
-        // Fallback to localStorage
-        const cloudData = localStorage.getItem('cloudMenuData');
-        if (cloudData) {
-            const parsed = JSON.parse(cloudData);
-            console.log('Menu data loaded from localStorage cloud storage');
-            return parsed;
+        if (isLocalServer) {
+            // Local server mode - use secure server API
+            const response = await fetch('/api/menu-data');
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Menu data loaded from secure server');
+                return data;
+            } else {
+                throw new Error(`Server error: ${response.status}`);
+            }
+        } else {
+            // Online mode - use localStorage fallback
+            const cloudData = localStorage.getItem('cloudMenuData');
+            if (cloudData) {
+                const parsed = JSON.parse(cloudData);
+                console.log('Menu data loaded from localStorage (fallback)');
+                return parsed;
+            }
+            return {};
         }
-        return {};
     } catch (error) {
         console.error('Error loading from cloud storage:', error);
         return {};

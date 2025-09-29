@@ -1,0 +1,12 @@
+# Ignore sensitive data files
+menu-data.json
+
+# Ignore node modules
+node_modules/
+
+# Ignore logs
+*.log
+
+# Ignore OS files
+.DS_Store
+Thumbs.db

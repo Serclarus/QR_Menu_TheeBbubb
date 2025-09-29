@@ -90,7 +90,15 @@ const server = http.createServer((req, res) => {
     
     // Handle API endpoints with authentication
     if (pathname === '/api/menu-data' && req.method === 'GET') {
-        // GET requests are allowed for public menu display
+        // GET requests are allowed for public menu display (read-only)
+        const data = readData();
+        res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        res.end(JSON.stringify(data));
+        return;
+    }
+    
+    // Public menu data endpoint (read-only for customers)
+    if (pathname === '/api/public-menu' && req.method === 'GET') {
         const data = readData();
         res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
         res.end(JSON.stringify(data));
@@ -198,6 +206,15 @@ const server = http.createServer((req, res) => {
     if (req.method === 'OPTIONS') {
         res.writeHead(200);
         res.end();
+        return;
+    }
+
+    // Security: Block direct access to sensitive files
+    if (filePath.includes('menu-data.json') || 
+        filePath.includes('.env') || 
+        filePath.includes('config.json')) {
+        res.writeHead(403, { 'Content-Type': 'text/html' });
+        res.end('<h1>403 - Access Forbidden</h1><p>This file is protected and cannot be accessed directly.</p>');
         return;
     }
 
