@@ -484,8 +484,10 @@ async function loadCafeData() {
 // Function to format price with ₺ symbol (right side)
 function formatPrice(price) {
     if (!price) return '';
+    // Convert to string first
+    let priceStr = String(price);
     // Remove any existing ₺ symbols first
-    let cleanPrice = price.replace(/₺/g, '').trim();
+    let cleanPrice = priceStr.replace(/₺/g, '').trim();
     // If it's a number, add ₺ symbol on the right
     if (!isNaN(cleanPrice) && cleanPrice !== '') {
         return cleanPrice + ' ₺';
