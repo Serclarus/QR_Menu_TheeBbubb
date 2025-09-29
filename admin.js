@@ -391,9 +391,6 @@ async function saveMenuItem() {
 async function deleteItem(category, itemName) {
     console.log('deleteItem called with:', category, itemName);
     
-    // Test if function is being called
-    alert('Delete function called for: ' + itemName);
-    
     if (confirm('Bu öğeyi silmek istediğinizden emin misiniz?')) {
         try {
             console.log('Loading data for deletion...');
@@ -435,16 +432,32 @@ async function deleteItem(category, itemName) {
 
 // Load items for category from online storage only
 async function loadItemsForCategory(category) {
+    console.log('loadItemsForCategory called with category:', category);
+    
     try {
         const data = await loadDataFromServer();
+        console.log('Loaded data:', data);
+        
         const menuData = data.menuData || {};
+        console.log('Menu data:', menuData);
+        
         const items = menuData[category] || {};
+        console.log('Items for category', category, ':', items);
         
         const itemList = document.getElementById('items-list');
+        console.log('Items list element:', itemList);
+        
         if (itemList) {
             itemList.innerHTML = '';
+            
+            if (Object.keys(items).length === 0) {
+                itemList.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">Bu kategoride henüz öğe yok.</p>';
+                return;
+            }
 
             for (const [name, item] of Object.entries(items)) {
+                console.log('Creating item element for:', name, item);
+                
                 const itemElement = document.createElement('div');
                 itemElement.className = 'item';
                 itemElement.style.cssText = `
@@ -470,6 +483,10 @@ async function loadItemsForCategory(category) {
                 `;
                 itemList.appendChild(itemElement);
             }
+            
+            console.log('Items loaded successfully');
+        } else {
+            console.error('Items list element not found');
         }
     } catch (error) {
         console.error('Error loading items for category:', error);
@@ -602,14 +619,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Handle category selection for menu items
     const categorySelect = document.getElementById('item-category');
     if (categorySelect) {
+        console.log('Category select element found:', categorySelect);
         categorySelect.addEventListener('change', function() {
             const selectedCategory = this.value;
+            console.log('Category selection changed to:', selectedCategory);
             if (selectedCategory) {
+                console.log('Loading items for category:', selectedCategory);
                 loadItemsForCategory(selectedCategory);
             } else {
+                console.log('No category selected, clearing items list');
                 document.getElementById('items-list').innerHTML = '';
             }
         });
+    } else {
+        console.error('Category select element not found!');
     }
     
     // Load categories for item category dropdown
