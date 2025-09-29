@@ -1,7 +1,86 @@
 // Load menu data from server or use default
 let menuData = {};
 
-// Server communication functions with fallback to localStorage
+// Cloud storage functions for real-time menu updates
+async function loadFromCloudStorage() {
+    try {
+        // Try to load from the JSON file first
+        const response = await fetch('menu-data.json');
+        if (response.ok) {
+            const data = await response.json();
+            if (data && Object.keys(data).length > 0) {
+                console.log('Menu data loaded from JSON file');
+                return data;
+            }
+        }
+        
+        // Fallback to localStorage
+        const cloudData = localStorage.getItem('cloudMenuData');
+        if (cloudData) {
+            const parsed = JSON.parse(cloudData);
+            console.log('Menu data loaded from localStorage cloud storage');
+            return parsed;
+        }
+        return {};
+    } catch (error) {
+        console.error('Error loading from cloud storage:', error);
+        return {};
+    }
+}
+
+// Auto-refresh functionality for real-time updates
+let lastUpdateTime = 0;
+let refreshInterval;
+
+function startAutoRefresh() {
+    // Check for updates every 5 seconds
+    refreshInterval = setInterval(async () => {
+        try {
+            // Check the JSON file for updates
+            const response = await fetch('menu-data.json');
+            if (response.ok) {
+                const data = await response.json();
+                if (data.lastUpdated && data.lastUpdated > lastUpdateTime) {
+                    console.log('Menu data updated from JSON file, refreshing...');
+                    lastUpdateTime = data.lastUpdated;
+                    await loadMenuData();
+                    await loadCafeData();
+                    await loadCategoryTitles();
+                    // Refresh the current view if we're in a category
+                    const currentCategory = document.querySelector('.category-card.selected')?.getAttribute('data-category');
+                    if (currentCategory) {
+                        showCategory(currentCategory);
+                    }
+                }
+            }
+            
+            // Also check localStorage for updates
+            const lastUpdated = localStorage.getItem('menuDataLastUpdated');
+            if (lastUpdated && parseInt(lastUpdated) > lastUpdateTime) {
+                console.log('Menu data updated from localStorage, refreshing...');
+                lastUpdateTime = parseInt(lastUpdated);
+                await loadMenuData();
+                await loadCafeData();
+                await loadCategoryTitles();
+                // Refresh the current view if we're in a category
+                const currentCategory = document.querySelector('.category-card.selected')?.getAttribute('data-category');
+                if (currentCategory) {
+                    showCategory(currentCategory);
+                }
+            }
+        } catch (error) {
+            console.error('Error checking for updates:', error);
+        }
+    }, 5000);
+}
+
+function stopAutoRefresh() {
+    if (refreshInterval) {
+        clearInterval(refreshInterval);
+    }
+}
+
+// Server communication functions with cloud storage and auto-refresh
 async function loadDataFromServer() {
     try {
         // Check if we're running on a server (local development)
@@ -10,8 +89,14 @@ async function loadDataFromServer() {
                              window.location.hostname.includes('192.168.');
         
         if (!isLocalServer) {
-            // Online mode - use localStorage only
-            console.log('Online mode: Loading data from localStorage');
+            // Online mode - try cloud storage first, fallback to localStorage
+            console.log('Online mode: Loading data from cloud storage');
+            const cloudData = await loadFromCloudStorage();
+            if (cloudData && Object.keys(cloudData).length > 0) {
+                return cloudData;
+            }
+            
+            // Fallback to localStorage
             const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
             const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
             const categories = JSON.parse(localStorage.getItem('categories') || '{}');
@@ -581,6 +666,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadMenuData();
     await loadCafeData();
     await loadCategoryTitles();
+    
+    // Start auto-refresh for real-time updates (only in online mode)
+    const isLocalServer = window.location.hostname === 'localhost' || 
+                         window.location.hostname === '127.0.0.1' ||
+                         window.location.hostname.includes('192.168.');
+    
+    if (!isLocalServer) {
+        startAutoRefresh();
+        console.log('Auto-refresh started for real-time menu updates');
+    }
     
     // Add loading animation
     document.body.style.opacity = '0';

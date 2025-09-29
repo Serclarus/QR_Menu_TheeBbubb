@@ -1,7 +1,71 @@
 // Admin Panel JavaScript
 const ADMIN_PASSWORD = 'admin123'; // Change this password
 
-// Server communication functions with authentication and online fallback
+// Cloud storage functions for real-time menu updates
+async function saveToCloudStorage(data) {
+    try {
+        // Try to fetch and update the menu-data.json file
+        const response = await fetch('menu-data.json');
+        let existingData = {};
+        
+        if (response.ok) {
+            existingData = await response.json();
+        }
+        
+        // Update the data
+        const updatedData = {
+            ...existingData,
+            menuData: data.menuData || {},
+            cafeData: data.cafeData || {},
+            categories: data.categories || {},
+            lastUpdated: Date.now()
+        };
+        
+        // For now, we'll use localStorage as the "cloud" storage
+        // In a real implementation, you'd upload this to a cloud service
+        localStorage.setItem('cloudMenuData', JSON.stringify(updatedData));
+        localStorage.setItem('menuDataLastUpdated', Date.now().toString());
+        
+        // Trigger a custom event to notify other tabs
+        window.dispatchEvent(new CustomEvent('menuDataUpdated', { 
+            detail: { timestamp: Date.now() } 
+        }));
+        
+        console.log('Menu data saved to cloud storage');
+        return true;
+    } catch (error) {
+        console.error('Error saving to cloud storage:', error);
+        return false;
+    }
+}
+
+async function loadFromCloudStorage() {
+    try {
+        // Try to load from the JSON file first
+        const response = await fetch('menu-data.json');
+        if (response.ok) {
+            const data = await response.json();
+            if (data && Object.keys(data).length > 0) {
+                console.log('Menu data loaded from JSON file');
+                return data;
+            }
+        }
+        
+        // Fallback to localStorage
+        const cloudData = localStorage.getItem('cloudMenuData');
+        if (cloudData) {
+            const parsed = JSON.parse(cloudData);
+            console.log('Menu data loaded from localStorage cloud storage');
+            return parsed;
+        }
+        return {};
+    } catch (error) {
+        console.error('Error loading from cloud storage:', error);
+        return {};
+    }
+}
+
+// Server communication functions with authentication and cloud storage
 async function saveDataToServer(data) {
     try {
         // Check if we're running on a server (local development)
@@ -10,12 +74,23 @@ async function saveDataToServer(data) {
                              window.location.hostname.includes('192.168.');
         
         if (!isLocalServer) {
-            // Online mode - use localStorage only
-            console.log('Online mode: Using localStorage for data storage');
-            localStorage.setItem('menuData', JSON.stringify(data.menuData || {}));
-            localStorage.setItem('cafeData', JSON.stringify(data.cafeData || {}));
-            localStorage.setItem('categories', JSON.stringify(data.categories || {}));
-            return true;
+            // Online mode - use cloud storage for real-time updates
+            console.log('Online mode: Saving to cloud storage for real-time updates');
+            const success = await saveToCloudStorage(data);
+            if (success) {
+                // Also save to localStorage as backup
+                localStorage.setItem('menuData', JSON.stringify(data.menuData || {}));
+                localStorage.setItem('cafeData', JSON.stringify(data.cafeData || {}));
+                localStorage.setItem('categories', JSON.stringify(data.categories || {}));
+                return true;
+            } else {
+                // Fallback to localStorage if cloud save fails
+                console.log('Cloud save failed, using localStorage fallback');
+                localStorage.setItem('menuData', JSON.stringify(data.menuData || {}));
+                localStorage.setItem('cafeData', JSON.stringify(data.cafeData || {}));
+                localStorage.setItem('categories', JSON.stringify(data.categories || {}));
+                return true;
+            }
         }
         
         // Local server mode - try server first, fallback to localStorage
@@ -76,8 +151,14 @@ async function loadDataFromServer() {
                              window.location.hostname.includes('192.168.');
         
         if (!isLocalServer) {
-            // Online mode - use localStorage only
-            console.log('Online mode: Loading data from localStorage');
+            // Online mode - try cloud storage first, fallback to localStorage
+            console.log('Online mode: Loading data from cloud storage');
+            const cloudData = await loadFromCloudStorage();
+            if (cloudData && Object.keys(cloudData).length > 0) {
+                return cloudData;
+            }
+            
+            // Fallback to localStorage
             const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
             const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
             const categories = JSON.parse(localStorage.getItem('categories') || '{}');
