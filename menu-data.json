@@ -62,6 +62,40 @@
         "description": "Ev yapımı sütlaç",
         "price": 12
       }
+    },
+    "Atıştırmalıklar": {
+      "Patates Kızartması": {
+        "name": "Patates Kızartması",
+        "description": "Taze patates kızartması",
+        "price": 8
+      },
+      "Çerez Tabağı": {
+        "name": "Çerez Tabağı",
+        "description": "Karışık çerez tabağı",
+        "price": 15
+      },
+      "Cips": {
+        "name": "Cips",
+        "description": "Tuzlu cips",
+        "price": 6
+      }
+    },
+    "Nargile": {
+      "Elma Nargile": {
+        "name": "Elma Nargile",
+        "description": "Elma aromalı nargile",
+        "price": 25
+      },
+      "Çilek Nargile": {
+        "name": "Çilek Nargile",
+        "description": "Çilek aromalı nargile",
+        "price": 25
+      },
+      "Mint Nargile": {
+        "name": "Mint Nargile",
+        "description": "Nane aromalı nargile",
+        "price": 25
+      }
     }
   },
   "cafeData": {
@@ -94,6 +128,16 @@
       "name": "Tatlılar",
       "description": "Tatlılar",
       "icon": "dessert_icon.png"
+    },
+    "Atıştırmalıklar": {
+      "name": "Atıştırmalıklar",
+      "description": "Atıştırmalıklar",
+      "icon": "snacks_icon.png"
+    },
+    "Nargile": {
+      "name": "Nargile",
+      "description": "Nargile",
+      "icon": "hookah-icon.png"
     }
   },
   "timestamp": 1703000000000,
