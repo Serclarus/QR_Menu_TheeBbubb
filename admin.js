@@ -19,13 +19,36 @@ async function saveToCloudStorage(data) {
 
 async function loadFromCloudStorage() {
     try {
+        // First try to load from localStorage
         const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
         const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
         const categories = JSON.parse(localStorage.getItem('categories') || '{}');
-        return { menuData, cafeData, categories };
+        
+        // If we have data in localStorage, use it
+        if (Object.keys(menuData).length > 0 || Object.keys(categories).length > 0) {
+            console.log('Data loaded from localStorage');
+            return { menuData, cafeData, categories };
+        }
+        
+        // If no localStorage data, try to load from JSON file
+        console.log('No localStorage data, trying to load from menu-data.json');
+        const response = await fetch('menu-data.json');
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Data loaded from menu-data.json');
+            // Save to localStorage for future use
+            localStorage.setItem('menuData', JSON.stringify(data.menuData || {}));
+            localStorage.setItem('cafeData', JSON.stringify(data.cafeData || {}));
+            localStorage.setItem('categories', JSON.stringify(data.categories || {}));
+            return data;
+        }
+        
+        // If no data found anywhere, return empty structure
+        console.log('No data found, returning empty structure');
+        return { menuData: {}, cafeData: {}, categories: {} };
     } catch (error) {
         console.error('Error loading from cloud storage:', error);
-        return {};
+        return { menuData: {}, cafeData: {}, categories: {} };
     }
 }
 
@@ -273,9 +296,15 @@ async function loadCategoriesForDropdown() {
 // Load items for category
 async function loadItemsForCategory(category) {
     try {
+        console.log('Loading items for category:', category);
         const data = await loadDataFromServer();
+        console.log('Loaded data:', data);
+        
         const menuData = data.menuData || {};
+        console.log('Menu data:', menuData);
+        
         const items = menuData[category] || {};
+        console.log('Items for category', category, ':', items);
         
         const itemList = document.getElementById('items-list');
         if (itemList) {
@@ -288,6 +317,7 @@ async function loadItemsForCategory(category) {
             
             Object.keys(items).forEach(itemKey => {
                 const item = items[itemKey];
+                console.log('Creating item card for:', itemKey, item);
                 const itemCard = document.createElement('div');
                 itemCard.className = 'item-card';
                 itemCard.innerHTML = `
