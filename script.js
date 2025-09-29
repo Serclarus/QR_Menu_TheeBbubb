@@ -20,49 +20,22 @@ async function loadFromCloudStorage() {
                 throw new Error(`Server error: ${response.status}`);
             }
         } else {
-            // Online mode - try to load from shared cloud storage
+            // Online mode - load from public JSON file only
             try {
-                // First try to load from public JSON file
-                try {
-                    const response = await fetch('menu-data.json');
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data && Object.keys(data).length > 0) {
-                            console.log('Menu data loaded from public JSON file');
-                            return data;
-                        }
+                const response = await fetch('menu-data.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && Object.keys(data).length > 0) {
+                        console.log('Menu data loaded from public JSON file');
+                        return data;
                     }
-                } catch (error) {
-                    console.log('Public JSON file not accessible, trying localStorage');
                 }
                 
-                // Try to load from global data (cross-device sync)
-                const globalData = localStorage.getItem('globalMenuData');
-                if (globalData) {
-                    const parsed = JSON.parse(globalData);
-                    console.log('Menu data loaded from global cloud storage');
-                    return parsed;
-                }
-                
-                // Try to load from public data in localStorage
-                const publicData = localStorage.getItem('publicMenuData');
-                if (publicData) {
-                    const parsed = JSON.parse(publicData);
-                    console.log('Menu data loaded from public cloud storage');
-                    return parsed;
-                }
-                
-                // Fallback to regular cloud data
-                const cloudData = localStorage.getItem('cloudMenuData');
-                if (cloudData) {
-                    const parsed = JSON.parse(cloudData);
-                    console.log('Menu data loaded from localStorage cloud storage');
-                    return parsed;
-                }
-                
+                // If no data in JSON file, return empty object
+                console.log('No data found in public JSON file');
                 return {};
             } catch (error) {
-                console.error('Error loading from cloud storage:', error);
+                console.error('Error loading from public JSON file:', error);
                 return {};
             }
         }
@@ -104,37 +77,14 @@ function startAutoRefresh() {
                     }
                 }
             } else {
-                // Online mode - check for cross-device updates
+                // Online mode - check public JSON file for updates
                 try {
-                    // First check the public JSON file for updates
-                    try {
-                        const response = await fetch('menu-data.json');
-                        if (response.ok) {
-                            const data = await response.json();
-                            if (data.lastUpdated && data.lastUpdated > lastUpdateTime) {
-                                console.log('Menu data updated from public JSON file, refreshing...');
-                                lastUpdateTime = data.lastUpdated;
-                                await loadMenuData();
-                                await loadCafeData();
-                                await loadCategoryTitles();
-                                // Refresh the current view if we're in a category
-                                const currentCategory = document.querySelector('.category-card.selected')?.getAttribute('data-category');
-                                if (currentCategory) {
-                                    showCategory(currentCategory);
-                                }
-                            }
-                        }
-                    } catch (error) {
-                        console.log('Public JSON file not accessible, checking localStorage');
-                    }
-                    
-                    // Check global data for updates (cross-device sync)
-                    const globalData = localStorage.getItem('globalMenuData');
-                    if (globalData) {
-                        const parsed = JSON.parse(globalData);
-                        if (parsed.globalTimestamp && parsed.globalTimestamp > lastUpdateTime) {
-                            console.log('Menu data updated from global cloud storage, refreshing...');
-                            lastUpdateTime = parsed.globalTimestamp;
+                    const response = await fetch('menu-data.json');
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.lastUpdated && data.lastUpdated > lastUpdateTime) {
+                            console.log('Menu data updated from public JSON file, refreshing...');
+                            lastUpdateTime = data.lastUpdated;
                             await loadMenuData();
                             await loadCafeData();
                             await loadCategoryTitles();
@@ -143,39 +93,6 @@ function startAutoRefresh() {
                             if (currentCategory) {
                                 showCategory(currentCategory);
                             }
-                        }
-                    }
-                    
-                    // Check public data for updates
-                    const publicData = localStorage.getItem('publicMenuData');
-                    if (publicData) {
-                        const parsed = JSON.parse(publicData);
-                        if (parsed.timestamp && parsed.timestamp > lastUpdateTime) {
-                            console.log('Menu data updated from public cloud storage, refreshing...');
-                            lastUpdateTime = parsed.timestamp;
-                            await loadMenuData();
-                            await loadCafeData();
-                            await loadCategoryTitles();
-                            // Refresh the current view if we're in a category
-                            const currentCategory = document.querySelector('.category-card.selected')?.getAttribute('data-category');
-                            if (currentCategory) {
-                                showCategory(currentCategory);
-                            }
-                        }
-                    }
-                    
-                    // Also check regular localStorage for updates
-                    const lastUpdated = localStorage.getItem('menuDataLastUpdated');
-                    if (lastUpdated && parseInt(lastUpdated) > lastUpdateTime) {
-                        console.log('Menu data updated from localStorage, refreshing...');
-                        lastUpdateTime = parseInt(lastUpdated);
-                        await loadMenuData();
-                        await loadCafeData();
-                        await loadCategoryTitles();
-                        // Refresh the current view if we're in a category
-                        const currentCategory = document.querySelector('.category-card.selected')?.getAttribute('data-category');
-                        if (currentCategory) {
-                            showCategory(currentCategory);
                         }
                     }
                 } catch (error) {
