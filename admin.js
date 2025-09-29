@@ -1,6 +1,84 @@
 // Admin Panel JavaScript
 const ADMIN_PASSWORD = 'admin123'; // Change this password
 
+// Server communication functions with authentication
+async function saveDataToServer(data) {
+    try {
+        // Get admin token from session storage
+        const adminToken = sessionStorage.getItem('adminSessionToken');
+        if (!adminToken) {
+            throw new Error('No admin session found');
+        }
+        
+        const response = await fetch('/api/menu-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${adminToken}`
+            },
+            body: JSON.stringify(data)
+        });
+        
+        if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error('Admin session expired. Please login again.');
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        if (result.success) {
+            console.log('Data saved to server successfully');
+            // Also save to localStorage as backup
+            localStorage.setItem('menuData', JSON.stringify(data.menuData || {}));
+            localStorage.setItem('cafeData', JSON.stringify(data.cafeData || {}));
+            localStorage.setItem('categories', JSON.stringify(data.categories || {}));
+            return true;
+        } else {
+            console.error('Failed to save data to server:', result.error);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error saving data to server:', error);
+        // Fallback to localStorage
+        console.log('Falling back to localStorage');
+        try {
+            localStorage.setItem('menuData', JSON.stringify(data.menuData || {}));
+            localStorage.setItem('cafeData', JSON.stringify(data.cafeData || {}));
+            localStorage.setItem('categories', JSON.stringify(data.categories || {}));
+            return true;
+        } catch (localError) {
+            console.error('Error saving to localStorage:', localError);
+            return false;
+        }
+    }
+}
+
+async function loadDataFromServer() {
+    try {
+        const response = await fetch('/api/menu-data');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('Data loaded from server:', data);
+        return data;
+    } catch (error) {
+        console.error('Error loading data from server:', error);
+        // Fallback to localStorage
+        console.log('Falling back to localStorage');
+        try {
+            const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
+            const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
+            const categories = JSON.parse(localStorage.getItem('categories') || '{}');
+            return { menuData, cafeData, categories };
+        } catch (localError) {
+            console.error('Error loading from localStorage:', localError);
+            return {};
+        }
+    }
+}
+
 // Function to format price with ₺ symbol (right side)
 function formatPrice(price) {
     if (!price) return '';
@@ -170,43 +248,51 @@ function showSection(sectionId) {
     }
 }
 
-function loadMenuData() {
-    // Load cafe info
-    const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
-    if (cafeData.description) {
-        document.getElementById('cafe-description').value = cafeData.description;
-    }
-    if (cafeData.image) {
-        document.getElementById('cafe-image').value = cafeData.image;
-        const preview = document.getElementById('image-preview');
-        preview.src = cafeData.image;
-        preview.style.display = 'block';
-    }
-    if (cafeData.instagramUrl) {
-        document.getElementById('instagram-url').value = cafeData.instagramUrl;
-    }
-    
-    // Load categories
-    const categories = JSON.parse(localStorage.getItem('categories') || '{}');
-    Object.keys(categories).forEach(categoryKey => {
-        const category = categories[categoryKey];
-        // Update category form if this category is selected
-        const selectedCard = document.querySelector(`[data-category="${categoryKey}"]`);
-        if (selectedCard && selectedCard.classList.contains('selected')) {
-            document.getElementById('category-title').value = category.title;
-            document.getElementById('category-description').value = category.description;
+async function loadMenuData() {
+    try {
+        // Load data from server
+        const serverData = await loadDataFromServer();
+        
+        // Load cafe info
+        const cafeData = serverData.cafeData || {};
+        if (cafeData.description) {
+            document.getElementById('cafe-description').value = cafeData.description;
         }
-    });
-    
-    // Load menu items
-    const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
-    if (Object.keys(menuData).length === 0) {
-        // Load default data if no saved data exists
-        loadDefaultData();
+        if (cafeData.image) {
+            document.getElementById('cafe-image').value = cafeData.image;
+            const preview = document.getElementById('image-preview');
+            preview.src = cafeData.image;
+            preview.style.display = 'block';
+        }
+        if (cafeData.instagramUrl) {
+            document.getElementById('instagram-url').value = cafeData.instagramUrl;
+        }
+        
+        // Load categories
+        const categories = serverData.categories || {};
+        Object.keys(categories).forEach(categoryKey => {
+            const category = categories[categoryKey];
+            // Update category form if this category is selected
+            const selectedCard = document.querySelector(`[data-category="${categoryKey}"]`);
+            if (selectedCard && selectedCard.classList.contains('selected')) {
+                document.getElementById('category-title').value = category.title;
+                document.getElementById('category-description').value = category.description;
+            }
+        });
+        
+        // Load menu items
+        const menuData = serverData.menuData || {};
+        if (Object.keys(menuData).length === 0) {
+            // Load default data if no saved data exists
+            loadDefaultData();
+        }
+    } catch (error) {
+        console.error('Error loading menu data:', error);
+        showMessage('Veri yüklenirken hata oluştu!', 'error');
     }
 }
 
-function loadDefaultData() {
+async function loadDefaultData() {
     // Default menu data (same as in script.js)
     const defaultMenuData = {
         'hot-drinks': {
@@ -281,32 +367,51 @@ function loadDefaultData() {
         }
     };
     
-    localStorage.setItem('menuData', JSON.stringify(defaultMenuData));
-    localStorage.setItem('categories', JSON.stringify(defaultMenuData));
+    const defaultData = {
+        menuData: defaultMenuData,
+        categories: defaultMenuData,
+        cafeData: {}
+    };
+    
+    await saveDataToServer(defaultData);
 }
 
-function saveCafeInfo() {
+async function saveCafeInfo() {
     const cafeData = {
         description: document.getElementById('cafe-description').value,
         image: document.getElementById('cafe-image').value,
         instagramUrl: document.getElementById('instagram-url').value
     };
     
-    localStorage.setItem('cafeData', JSON.stringify(cafeData));
-    showMessage('Cafe bilgileri kaydedildi!', 'success');
-}
-
-function loadCategoryForEdit(categoryKey) {
-    const categories = JSON.parse(localStorage.getItem('categories') || '{}');
-    const category = categories[categoryKey];
+    // Get existing data from server
+    const serverData = await loadDataFromServer();
+    serverData.cafeData = cafeData;
     
-    if (category) {
-        document.getElementById('category-title').value = category.title;
-        document.getElementById('category-description').value = category.description;
+    const success = await saveDataToServer(serverData);
+    if (success) {
+        showMessage('Cafe bilgileri kaydedildi!', 'success');
+    } else {
+        showMessage('Cafe bilgileri kaydedilemedi!', 'error');
     }
 }
 
-function saveCategoryInfo() {
+async function loadCategoryForEdit(categoryKey) {
+    try {
+        const serverData = await loadDataFromServer();
+        const categories = serverData.categories || {};
+        const category = categories[categoryKey];
+        
+        if (category) {
+            document.getElementById('category-title').value = category.title;
+            document.getElementById('category-description').value = category.description;
+        }
+    } catch (error) {
+        console.error('Error loading category for edit:', error);
+        showMessage('Kategori bilgileri yüklenirken hata oluştu!', 'error');
+    }
+}
+
+async function saveCategoryInfo() {
     const selectedCard = document.querySelector('.category-card.selected');
     if (!selectedCard) {
         showMessage('Lütfen bir kategori seçin!', 'error');
@@ -317,9 +422,10 @@ function saveCategoryInfo() {
     const title = document.getElementById('category-title').value;
     const description = document.getElementById('category-description').value;
     
-    // Get existing data to preserve what's not being changed
-    const categories = JSON.parse(localStorage.getItem('categories') || '{}');
-    const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
+    // Get existing data from server
+    const serverData = await loadDataFromServer();
+    const categories = serverData.categories || {};
+    const menuData = serverData.menuData || {};
     
     // Update only if title is provided
     if (title.trim()) {
@@ -351,38 +457,49 @@ function saveCategoryInfo() {
         }
     }
     
-    // Save the updated data
-    localStorage.setItem('categories', JSON.stringify(categories));
-    localStorage.setItem('menuData', JSON.stringify(menuData));
+    // Update server data
+    serverData.categories = categories;
+    serverData.menuData = menuData;
     
-    showMessage('Kategori güncellendi!', 'success');
+    const success = await saveDataToServer(serverData);
+    if (success) {
+        showMessage('Kategori güncellendi!', 'success');
+    } else {
+        showMessage('Kategori güncellenemedi!', 'error');
+    }
 }
 
-function loadItemsForCategory(categoryKey) {
+async function loadItemsForCategory(categoryKey) {
     if (!categoryKey) return;
     
-    const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
-    const category = menuData[categoryKey];
-    
-    if (!category || !category.items) return;
-    
-    itemsList.innerHTML = '';
-    
-    category.items.forEach((item, index) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'item-list';
-        itemDiv.innerHTML = `
-            <h4>${item.name}</h4>
-            <p>${item.description}</p>
-            <p class="price">${formatPrice(item.price)}</p>
-            <button class="btn btn-danger" onclick="deleteItem('${categoryKey}', ${index})">Sil</button>
-            <button class="btn btn-secondary" onclick="editItem('${categoryKey}', ${index})">Düzenle</button>
-        `;
-        itemsList.appendChild(itemDiv);
-    });
+    try {
+        const serverData = await loadDataFromServer();
+        const menuData = serverData.menuData || {};
+        const category = menuData[categoryKey];
+        
+        if (!category || !category.items) return;
+        
+        itemsList.innerHTML = '';
+        
+        category.items.forEach((item, index) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'item-list';
+            itemDiv.innerHTML = `
+                <h4>${item.name}</h4>
+                <p>${item.description}</p>
+                <p class="price">${formatPrice(item.price)}</p>
+                <button class="btn btn-danger" onclick="deleteItem('${categoryKey}', ${index})">Sil</button>
+                <button class="btn btn-secondary" onclick="editItem('${categoryKey}', ${index})">Düzenle</button>
+            `;
+            itemsList.appendChild(itemDiv);
+        });
+    } catch (error) {
+        console.error('Error loading items for category:', error);
+        showMessage('Kategori öğeleri yüklenirken hata oluştu!', 'error');
+    }
 }
 
-function saveMenuItem() {
+async function saveMenuItem() {
     const categoryKey = document.getElementById('item-category').value;
     const name = document.getElementById('item-name').value;
     let price = document.getElementById('item-price').value;
@@ -401,7 +518,9 @@ function saveMenuItem() {
         return;
     }
     
-    const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
+    // Get existing data from server
+    const serverData = await loadDataFromServer();
+    const menuData = serverData.menuData || {};
     
     if (!menuData[categoryKey]) {
         menuData[categoryKey] = { title: '', description: '', items: [] };
@@ -418,46 +537,74 @@ function saveMenuItem() {
         // Update existing item
         const index = parseInt(document.getElementById('item-form').getAttribute('data-index'));
         menuData[categoryKey].items[index] = { name, price, description };
-        showMessage('Menü öğesi güncellendi!', 'success');
     } else {
         // Add new item
         menuData[categoryKey].items.push({ name, price, description });
-        showMessage('Menü öğesi eklendi!', 'success');
     }
     
-    localStorage.setItem('menuData', JSON.stringify(menuData));
-    clearItemForm();
-    loadItemsForCategory(categoryKey);
-}
-
-function deleteItem(categoryKey, index) {
-    if (confirm('Bu öğeyi silmek istediğinizden emin misiniz?')) {
-        const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
-        menuData[categoryKey].items.splice(index, 1);
-        localStorage.setItem('menuData', JSON.stringify(menuData));
-        
-        showMessage('Öğe silindi!', 'success');
+    // Update server data
+    serverData.menuData = menuData;
+    
+    const success = await saveDataToServer(serverData);
+    if (success) {
+        if (isEditMode) {
+            showMessage('Menü öğesi güncellendi!', 'success');
+        } else {
+            showMessage('Menü öğesi eklendi!', 'success');
+        }
+        clearItemForm();
         loadItemsForCategory(categoryKey);
+    } else {
+        showMessage('Menü öğesi kaydedilemedi!', 'error');
     }
 }
 
-function editItem(categoryKey, index) {
-    const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
-    const item = menuData[categoryKey].items[index];
-    
-    document.getElementById('item-category').value = categoryKey;
-    document.getElementById('item-name').value = item.name;
-    document.getElementById('item-price').value = item.price;
-    document.getElementById('item-description').value = item.description;
-    
-    // Store edit mode
-    document.getElementById('item-form').setAttribute('data-edit-mode', 'true');
-    document.getElementById('item-form').setAttribute('data-category', categoryKey);
-    document.getElementById('item-form').setAttribute('data-index', index);
-    
-    // Change submit button text
-    const submitBtn = document.querySelector('#item-form button[type="submit"]');
-    submitBtn.textContent = 'Güncelle';
+async function deleteItem(categoryKey, index) {
+    if (confirm('Bu öğeyi silmek istediğinizden emin misiniz?')) {
+        // Get existing data from server
+        const serverData = await loadDataFromServer();
+        const menuData = serverData.menuData || {};
+        
+        if (menuData[categoryKey] && menuData[categoryKey].items) {
+            menuData[categoryKey].items.splice(index, 1);
+            
+            // Update server data
+            serverData.menuData = menuData;
+            
+            const success = await saveDataToServer(serverData);
+            if (success) {
+                showMessage('Öğe silindi!', 'success');
+                loadItemsForCategory(categoryKey);
+            } else {
+                showMessage('Öğe silinemedi!', 'error');
+            }
+        }
+    }
+}
+
+async function editItem(categoryKey, index) {
+    try {
+        const serverData = await loadDataFromServer();
+        const menuData = serverData.menuData || {};
+        const item = menuData[categoryKey].items[index];
+        
+        document.getElementById('item-category').value = categoryKey;
+        document.getElementById('item-name').value = item.name;
+        document.getElementById('item-price').value = item.price;
+        document.getElementById('item-description').value = item.description;
+        
+        // Store edit mode
+        document.getElementById('item-form').setAttribute('data-edit-mode', 'true');
+        document.getElementById('item-form').setAttribute('data-category', categoryKey);
+        document.getElementById('item-form').setAttribute('data-index', index);
+        
+        // Change submit button text
+        const submitBtn = document.querySelector('#item-form button[type="submit"]');
+        submitBtn.textContent = 'Güncelle';
+    } catch (error) {
+        console.error('Error loading item for edit:', error);
+        showMessage('Öğe bilgileri yüklenirken hata oluştu!', 'error');
+    }
 }
 
 function clearItemForm() {

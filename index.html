@@ -689,7 +689,7 @@
             console.log('Admin attempt:', logData);
         }
         
-        function handleAdminLogin() {
+        async function handleAdminLogin() {
             const password = document.getElementById('admin-password').value;
             const errorDiv = document.getElementById('admin-error');
             const now = Date.now();
@@ -760,54 +760,67 @@
             
             lastAttemptTime = now;
             
-            // 🔒 PROTOCOL 7: Advanced Password Validation with Obfuscation
-            const obfuscatedPassword = getAdminPassword();
-            if (password === obfuscatedPassword) {
-                // 🔒 PROTOCOL 8: Generate Ultra-Secure Session Token
-                const timestamp = Date.now();
-                const random = Math.random().toString(36) + Math.random().toString(36);
-                const checksum = btoa(timestamp + random).slice(0, 8);
-                const sessionToken = btoa(timestamp + '_' + random + '_' + checksum);
-                
-                // 🔒 PROTOCOL 9: Device Fingerprinting for Session
-                const deviceFingerprint = securityProtocols.generateDeviceFingerprint();
-                
-                // Set session data with maximum security
-                sessionStorage.setItem('adminLoggedIn', 'true');
-                sessionStorage.setItem('adminLoginTime', timestamp.toString());
-                sessionStorage.setItem('adminSessionToken', sessionToken);
-                sessionStorage.setItem('adminSecurityLevel', 'ultra_high');
-                sessionStorage.setItem('adminDeviceFingerprint', deviceFingerprint);
-                sessionStorage.setItem('adminLoginIP', 'local'); // Would be real IP in production
-                
-                // Reset attempts
-                loginAttempts = 0;
-                
-                securityProtocols.logRequest(true, 'success', {
-                    deviceFingerprint: deviceFingerprint,
-                    sessionToken: sessionToken.slice(0, 10) + '...',
-                    securityLevel: 'ultra_high'
+            // 🔒 PROTOCOL 7: Server-Side Password Validation
+            try {
+                const response = await fetch('/api/admin-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ password: password })
                 });
                 
-                hideAdminLogin();
-                window.location.href = 'admin.html';
-            } else {
-                loginAttempts++;
-                if (loginAttempts >= maxAttempts) {
-                    lockoutTime = now + lockoutDuration;
-                    errorDiv.textContent = 'Çok fazla yanlış deneme! 15 dakika sonra tekrar deneyin.';
-                    securityProtocols.logRequest(false, 'max_attempts', {
-                        attempts: loginAttempts,
-                        lockoutDuration: lockoutDuration
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 🔒 PROTOCOL 8: Store Server-Generated Session Token
+                    const timestamp = Date.now();
+                    const deviceFingerprint = securityProtocols.generateDeviceFingerprint();
+                    
+                    // Set session data with server token
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    sessionStorage.setItem('adminLoginTime', timestamp.toString());
+                    sessionStorage.setItem('adminSessionToken', result.token);
+                    sessionStorage.setItem('adminSecurityLevel', 'ultra_high');
+                    sessionStorage.setItem('adminDeviceFingerprint', deviceFingerprint);
+                    sessionStorage.setItem('adminLoginIP', 'local');
+                    
+                    // Reset attempts
+                    loginAttempts = 0;
+                    
+                    securityProtocols.logRequest(true, 'success', {
+                        deviceFingerprint: deviceFingerprint,
+                        sessionToken: result.token.slice(0, 10) + '...',
+                        securityLevel: 'ultra_high'
                     });
+                    
+                    hideAdminLogin();
+                    window.location.href = 'admin.html';
                 } else {
-                    errorDiv.textContent = `Yanlış şifre! Kalan deneme: ${maxAttempts - loginAttempts}`;
-                    securityProtocols.logRequest(false, 'wrong_password', {
-                        attempts: loginAttempts,
-                        remainingAttempts: maxAttempts - loginAttempts
-                    });
+                    loginAttempts++;
+                    if (loginAttempts >= maxAttempts) {
+                        lockoutTime = now + lockoutDuration;
+                        errorDiv.textContent = 'Çok fazla yanlış deneme! 15 dakika sonra tekrar deneyin.';
+                        securityProtocols.logRequest(false, 'max_attempts', {
+                            attempts: loginAttempts,
+                            lockoutDuration: lockoutDuration
+                        });
+                    } else {
+                        errorDiv.textContent = `Yanlış şifre! Kalan deneme: ${maxAttempts - loginAttempts}`;
+                        securityProtocols.logRequest(false, 'wrong_password', {
+                            attempts: loginAttempts,
+                            remainingAttempts: maxAttempts - loginAttempts
+                        });
+                    }
+                    errorDiv.style.display = 'block';
                 }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorDiv.textContent = 'Sunucu bağlantı hatası! Lütfen tekrar deneyin.';
                 errorDiv.style.display = 'block';
+                securityProtocols.logRequest(false, 'server_error', {
+                    error: error.message
+                });
             }
         }
         

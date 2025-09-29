@@ -1,5 +1,31 @@
-// Load menu data from localStorage or use default
+// Load menu data from server or use default
 let menuData = {};
+
+// Server communication functions with fallback to localStorage
+async function loadDataFromServer() {
+    try {
+        const response = await fetch('/api/menu-data');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('Data loaded from server:', data);
+        return data;
+    } catch (error) {
+        console.error('Error loading data from server:', error);
+        // Fallback to localStorage
+        console.log('Falling back to localStorage');
+        try {
+            const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
+            const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
+            const categories = JSON.parse(localStorage.getItem('categories') || '{}');
+            return { menuData, cafeData, categories };
+        } catch (localError) {
+            console.error('Error loading from localStorage:', localError);
+            return {};
+        }
+    }
+}
 
 // Default menu data (fallback)
 const defaultMenuData = {
@@ -282,39 +308,48 @@ const defaultMenuData = {
 };
 
 // Function to load menu data
-function loadMenuData() {
-    const savedData = localStorage.getItem('menuData');
-    if (savedData) {
-        menuData = JSON.parse(savedData);
-    } else {
+async function loadMenuData() {
+    try {
+        const serverData = await loadDataFromServer();
+        if (serverData.menuData && Object.keys(serverData.menuData).length > 0) {
+            menuData = serverData.menuData;
+        } else {
+            menuData = defaultMenuData;
+        }
+    } catch (error) {
+        console.error('Error loading menu data:', error);
         menuData = defaultMenuData;
-        localStorage.setItem('menuData', JSON.stringify(menuData));
     }
 }
 
 // Function to load cafe data
-function loadCafeData() {
-    const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
-    
-    if (cafeData.description) {
-        const cafeDescriptionElement = document.querySelector('.cafe-description');
-        if (cafeDescriptionElement) {
-            cafeDescriptionElement.textContent = cafeData.description;
+async function loadCafeData() {
+    try {
+        const serverData = await loadDataFromServer();
+        const cafeData = serverData.cafeData || {};
+        
+        if (cafeData.description) {
+            const cafeDescriptionElement = document.querySelector('.cafe-description');
+            if (cafeDescriptionElement) {
+                cafeDescriptionElement.textContent = cafeData.description;
+            }
         }
-    }
-    
-    if (cafeData.instagramUrl) {
-        const instagramLink = document.getElementById('instagram-link');
-        if (instagramLink) {
-            instagramLink.href = cafeData.instagramUrl;
+        
+        if (cafeData.instagramUrl) {
+            const instagramLink = document.getElementById('instagram-link');
+            if (instagramLink) {
+                instagramLink.href = cafeData.instagramUrl;
+            }
         }
-    }
-    
-    if (cafeData.image) {
-        const cafeImageElement = document.querySelector('.cafe-image img');
-        if (cafeImageElement) {
-            cafeImageElement.src = cafeData.image;
+        
+        if (cafeData.image) {
+            const cafeImageElement = document.querySelector('.cafe-image img');
+            if (cafeImageElement) {
+                cafeImageElement.src = cafeData.image;
+            }
         }
+    } catch (error) {
+        console.error('Error loading cafe data:', error);
     }
 }
 
@@ -336,47 +371,23 @@ function formatPrice(price) {
     return price;
 }
 
-// Function to convert all existing prices to new format
-function convertPricesToNewFormat() {
-    const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
-    let needsUpdate = false;
-    
-    console.log('Converting prices...', menuData);
-    
-    Object.keys(menuData).forEach(categoryKey => {
-        const category = menuData[categoryKey];
-        if (category.items) {
-            category.items.forEach(item => {
-                console.log('Checking item:', item.name, 'price:', item.price);
-                if (item.price && item.price.includes('₺') && !item.price.includes(' ₺')) {
-                    console.log('Converting price from', item.price, 'to', item.price.replace(/₺/g, '').trim() + ' ₺');
-                    // Convert from "₺35" to "35 ₺"
-                    item.price = item.price.replace(/₺/g, '').trim() + ' ₺';
-                    needsUpdate = true;
-                }
-            });
-        }
-    });
-    
-    if (needsUpdate) {
-        localStorage.setItem('menuData', JSON.stringify(menuData));
-        console.log('Converted existing prices to new format');
-    } else {
-        console.log('No prices needed conversion');
-    }
-}
 
 // Function to load category titles
-function loadCategoryTitles() {
-    const categories = JSON.parse(localStorage.getItem('categories') || '{}');
-    
-    Object.keys(categories).forEach(categoryKey => {
-        const category = categories[categoryKey];
-        const categoryCard = document.querySelector(`[data-category="${categoryKey}"] h3`);
-        if (categoryCard && category.title) {
-            categoryCard.textContent = category.title;
-        }
-    });
+async function loadCategoryTitles() {
+    try {
+        const serverData = await loadDataFromServer();
+        const categories = serverData.categories || {};
+        
+        Object.keys(categories).forEach(categoryKey => {
+            const category = categories[categoryKey];
+            const categoryCard = document.querySelector(`[data-category="${categoryKey}"] h3`);
+            if (categoryCard && category.title) {
+                categoryCard.textContent = category.title;
+            }
+        });
+    } catch (error) {
+        console.error('Error loading category titles:', error);
+    }
 }
 
 // DOM elements
@@ -550,18 +561,11 @@ document.addEventListener('scroll', () => {
 }, { passive: true });
 
 // Initialize the app
-document.addEventListener('DOMContentLoaded', () => {
-    // Force clear old data and reload with new format
-    console.log('Clearing old menu data and reloading...');
-    localStorage.removeItem('menuData');
-    
-    // Convert existing prices to new format first
-    convertPricesToNewFormat();
-    
-    // Load data from localStorage
-    loadMenuData();
-    loadCafeData();
-    loadCategoryTitles();
+document.addEventListener('DOMContentLoaded', async () => {
+    // Load data from server
+    await loadMenuData();
+    await loadCafeData();
+    await loadCategoryTitles();
     
     // Add loading animation
     document.body.style.opacity = '0';
