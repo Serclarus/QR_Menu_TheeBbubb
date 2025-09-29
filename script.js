@@ -20,21 +20,19 @@ async function loadFromCloudStorage() {
                 throw new Error(`Server error: ${response.status}`);
             }
         } else {
-            // Online mode - load from localStorage (temporary solution)
+            // Online mode - load from cloud storage (menu-data.json)
             try {
-                // Try to load from public data first
-                const publicData = localStorage.getItem('publicMenuData');
-                if (publicData) {
-                    const parsed = JSON.parse(publicData);
-                    console.log('Menu data loaded from public data');
-                    return parsed;
+                const response = await fetch('menu-data.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Menu data loaded from cloud storage');
+                    return data;
+                } else {
+                    console.log('No cloud storage data found');
+                    return {};
                 }
-                
-                // No fallback - use cloud storage only
-                console.log('No cloud storage data found');
-                return {};
             } catch (error) {
-                console.error('Error loading from localStorage:', error);
+                console.error('Error loading from cloud storage:', error);
                 return {};
             }
         }
