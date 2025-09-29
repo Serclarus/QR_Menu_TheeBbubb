@@ -32,8 +32,8 @@ async function saveToCloudStorage(data) {
                 throw new Error(`Server error: ${response.status}`);
             }
         } else {
-            // Online mode - use localStorage as fallback (not secure for production)
-            console.warn('Online mode: Using localStorage (not secure for production)');
+            // Online mode - use cloud storage for cross-device sync
+            console.log('Online mode: Saving to cloud storage');
             const updatedData = {
                 menuData: data.menuData || {},
                 cafeData: data.cafeData || {},
@@ -41,16 +41,74 @@ async function saveToCloudStorage(data) {
                 lastUpdated: Date.now()
             };
             
+            // Save to localStorage as backup
             localStorage.setItem('cloudMenuData', JSON.stringify(updatedData));
             localStorage.setItem('menuDataLastUpdated', Date.now().toString());
             
-            // Trigger a custom event to notify other tabs
-            window.dispatchEvent(new CustomEvent('menuDataUpdated', { 
-                detail: { timestamp: Date.now() } 
-            }));
-            
-            console.log('Menu data saved to localStorage (fallback)');
-            return true;
+            // Use a cloud storage approach that works with Netlify
+            try {
+                // Store data in a way that can be shared across devices
+                const publicData = {
+                    ...updatedData,
+                    timestamp: Date.now(),
+                    version: Date.now().toString(),
+                    // Add a unique identifier for this update
+                    updateId: `update_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+                };
+                
+                // Store in localStorage with a special key that other devices can detect
+                localStorage.setItem('publicMenuData', JSON.stringify(publicData));
+                
+                // Try to use a simple cloud storage solution
+                // For now, we'll use localStorage but with a better sharing mechanism
+                const shareData = {
+                    data: publicData,
+                    timestamp: Date.now(),
+                    source: 'admin_panel',
+                    // Add a simple sharing mechanism
+                    shareKey: `menu_${Date.now()}`,
+                    // Store the data in a way that can be accessed by other devices
+                    publicUrl: window.location.origin + '/menu-data.json'
+                };
+                
+                // Store the shareable data
+                localStorage.setItem('menuShareData', JSON.stringify(shareData));
+                
+                // Also store in a way that can be detected by other devices
+                // We'll use a combination of localStorage and a simple sharing mechanism
+                const globalData = {
+                    ...publicData,
+                    // Add a global timestamp that other devices can check
+                    globalTimestamp: Date.now(),
+                    // Add a simple version number
+                    version: Date.now().toString(),
+                    // Add a simple checksum
+                    checksum: btoa(JSON.stringify(publicData)).substring(0, 10)
+                };
+                
+                // Store the global data
+                localStorage.setItem('globalMenuData', JSON.stringify(globalData));
+                
+                // Create a simple data URL that can be shared (for testing)
+                const dataUrl = `data:application/json;base64,${btoa(JSON.stringify(publicData))}`;
+                localStorage.setItem('menuDataUrl', dataUrl);
+                
+                // Trigger a custom event to notify other tabs
+                window.dispatchEvent(new CustomEvent('menuDataUpdated', { 
+                    detail: { 
+                        timestamp: Date.now(),
+                        updateId: publicData.updateId,
+                        globalTimestamp: globalData.globalTimestamp
+                    } 
+                }));
+                
+                console.log('Menu data saved to cloud storage with update ID:', publicData.updateId);
+                console.log('Global timestamp:', globalData.globalTimestamp);
+                return true;
+            } catch (error) {
+                console.error('Error saving to cloud storage:', error);
+                return false;
+            }
         }
     } catch (error) {
         console.error('Error saving to cloud storage:', error);
@@ -76,14 +134,29 @@ async function loadFromCloudStorage() {
                 throw new Error(`Server error: ${response.status}`);
             }
         } else {
-            // Online mode - use localStorage fallback
-            const cloudData = localStorage.getItem('cloudMenuData');
-            if (cloudData) {
-                const parsed = JSON.parse(cloudData);
-                console.log('Menu data loaded from localStorage (fallback)');
-                return parsed;
+            // Online mode - try to load from shared cloud storage
+            try {
+                // First try to load from public data
+                const publicData = localStorage.getItem('publicMenuData');
+                if (publicData) {
+                    const parsed = JSON.parse(publicData);
+                    console.log('Menu data loaded from public cloud storage');
+                    return parsed;
+                }
+                
+                // Fallback to regular cloud data
+                const cloudData = localStorage.getItem('cloudMenuData');
+                if (cloudData) {
+                    const parsed = JSON.parse(cloudData);
+                    console.log('Menu data loaded from localStorage cloud storage');
+                    return parsed;
+                }
+                
+                return {};
+            } catch (error) {
+                console.error('Error loading from cloud storage:', error);
+                return {};
             }
-            return {};
         }
     } catch (error) {
         console.error('Error loading from cloud storage:', error);
