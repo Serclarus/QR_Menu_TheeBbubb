@@ -365,7 +365,14 @@ async function saveMenuItem() {
         
         menuData[category][name] = itemData;
         
-        const success = await saveDataToServer({ menuData });
+        // Save the updated data with all existing data
+        const updatedData = {
+            menuData: menuData,
+            cafeData: data.cafeData || {},
+            categories: data.categories || {}
+        };
+        
+        const success = await saveDataToServer(updatedData);
         if (success) {
             console.log('Menu item saved to online storage');
             alert('Menü öğesi başarıyla kaydedildi!');
@@ -382,26 +389,46 @@ async function saveMenuItem() {
 
 // Delete item from online storage only
 async function deleteItem(category, itemName) {
-    if (confirm('Are you sure you want to delete this item?')) {
+    console.log('deleteItem called with:', category, itemName);
+    
+    // Test if function is being called
+    alert('Delete function called for: ' + itemName);
+    
+    if (confirm('Bu öğeyi silmek istediğinizden emin misiniz?')) {
         try {
+            console.log('Loading data for deletion...');
             const data = await loadDataFromServer();
             const menuData = data.menuData || {};
             
+            console.log('Current menuData:', menuData);
+            console.log('Category exists:', !!menuData[category]);
+            console.log('Item exists:', !!(menuData[category] && menuData[category][itemName]));
+            
             if (menuData[category] && menuData[category][itemName]) {
                 delete menuData[category][itemName];
+                console.log('Item deleted from memory, saving...');
                 
-                const success = await saveDataToServer({ menuData });
+                // Save the updated data with all existing data
+                const updatedData = {
+                    menuData: menuData,
+                    cafeData: data.cafeData || {},
+                    categories: data.categories || {}
+                };
+                
+                const success = await saveDataToServer(updatedData);
                 if (success) {
                     console.log('Menu item deleted from online storage');
-                    alert('Menu item deleted successfully!');
+                    alert('Menü öğesi başarıyla silindi!');
                     loadItemsForCategory(category);
                 } else {
-                    throw new Error('Failed to delete menu item');
+                    throw new Error('Failed to save after deletion');
                 }
+            } else {
+                alert('Öğe bulunamadı!');
             }
         } catch (error) {
             console.error('Error deleting menu item:', error);
-            alert('Error deleting menu item: ' + error.message);
+            alert('Menü öğesi silinirken hata: ' + error.message);
         }
     }
 }
