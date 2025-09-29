@@ -1,7 +1,7 @@
 // Admin Panel JavaScript - Online Only (No localStorage)
 const ADMIN_PASSWORD = 'admin123'; // Change this password
 
-// Online-only data storage functions (no localStorage)
+// Online data storage functions with localStorage fallback
 async function saveToCloudStorage(data) {
     try {
         // Check if we're running on a server (local development)
@@ -32,8 +32,8 @@ async function saveToCloudStorage(data) {
                 throw new Error(`Server error: ${response.status}`);
             }
         } else {
-            // Online mode - save directly to public JSON file
-            console.log('Online mode: Saving to public JSON file');
+            // Online mode - use localStorage for now (will be replaced with proper cloud storage)
+            console.log('Online mode: Saving to localStorage (temporary solution)');
             const updatedData = {
                 menuData: data.menuData || {},
                 cafeData: data.cafeData || {},
@@ -44,39 +44,28 @@ async function saveToCloudStorage(data) {
                 updateId: `update_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
             };
             
-            // Save to public JSON file that all devices can access
-            try {
-                // Create a blob with the updated data
-                const blob = new Blob([JSON.stringify(updatedData, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                
-                // Store the data in a way that can be accessed by other devices
-                // We'll use a combination of the public JSON file and a data URL
-                const publicData = {
-                    ...updatedData,
-                    dataUrl: url,
-                    publicUrl: window.location.origin + '/menu-data.json'
-                };
-                
-                // Store in a way that other devices can detect
-                // We'll use a simple approach with the public JSON file
-                console.log('Menu data saved to public JSON file');
-                console.log('Update ID:', updatedData.updateId);
-                console.log('Timestamp:', updatedData.timestamp);
-                
-                // Trigger a custom event to notify other tabs
-                window.dispatchEvent(new CustomEvent('menuDataUpdated', { 
-                    detail: { 
-                        timestamp: updatedData.timestamp,
-                        updateId: updatedData.updateId
-                    } 
-                }));
-                
-                return true;
-            } catch (error) {
-                console.error('Error saving to public JSON file:', error);
-                return false;
-            }
+            // Save to localStorage as temporary solution
+            localStorage.setItem('menuData', JSON.stringify(updatedData.menuData));
+            localStorage.setItem('cafeData', JSON.stringify(updatedData.cafeData));
+            localStorage.setItem('categories', JSON.stringify(updatedData.categories));
+            localStorage.setItem('menuDataLastUpdated', updatedData.lastUpdated.toString());
+            
+            // Also save to a public data format
+            localStorage.setItem('publicMenuData', JSON.stringify(updatedData));
+            
+            console.log('Menu data saved to localStorage');
+            console.log('Update ID:', updatedData.updateId);
+            console.log('Timestamp:', updatedData.timestamp);
+            
+            // Trigger a custom event to notify other tabs
+            window.dispatchEvent(new CustomEvent('menuDataUpdated', { 
+                detail: { 
+                    timestamp: updatedData.timestamp,
+                    updateId: updatedData.updateId
+                } 
+            }));
+            
+            return true;
         }
     } catch (error) {
         console.error('Error saving to cloud storage:', error);
@@ -102,22 +91,37 @@ async function loadFromCloudStorage() {
                 throw new Error(`Server error: ${response.status}`);
             }
         } else {
-            // Online mode - load from public JSON file only
+            // Online mode - load from localStorage (temporary solution)
             try {
-                const response = await fetch('menu-data.json');
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && Object.keys(data).length > 0) {
-                        console.log('Menu data loaded from public JSON file');
-                        return data;
-                    }
+                // Try to load from public data first
+                const publicData = localStorage.getItem('publicMenuData');
+                if (publicData) {
+                    const parsed = JSON.parse(publicData);
+                    console.log('Menu data loaded from public data');
+                    return parsed;
                 }
                 
-                // If no data in JSON file, return empty object
-                console.log('No data found in public JSON file');
+                // Fallback to individual localStorage items
+                const menuData = localStorage.getItem('menuData');
+                const cafeData = localStorage.getItem('cafeData');
+                const categories = localStorage.getItem('categories');
+                
+                if (menuData || cafeData || categories) {
+                    const data = {
+                        menuData: menuData ? JSON.parse(menuData) : {},
+                        cafeData: cafeData ? JSON.parse(cafeData) : {},
+                        categories: categories ? JSON.parse(categories) : {},
+                        lastUpdated: localStorage.getItem('menuDataLastUpdated') || Date.now()
+                    };
+                    console.log('Menu data loaded from localStorage');
+                    return data;
+                }
+                
+                // If no data found, return empty object
+                console.log('No data found in localStorage');
                 return {};
             } catch (error) {
-                console.error('Error loading from public JSON file:', error);
+                console.error('Error loading from localStorage:', error);
                 return {};
             }
         }
@@ -455,6 +459,19 @@ async function editItem(category, itemName) {
         }
     } catch (error) {
         console.error('Error loading item for edit:', error);
+    }
+}
+
+// Additional functions needed for admin panel functionality
+function editCategory(categoryName) {
+    loadCategoryForEdit(categoryName);
+}
+
+function deleteCategory(categoryName) {
+    if (confirm('Are you sure you want to delete this category?')) {
+        // Implementation for deleting category
+        console.log('Delete category:', categoryName);
+        // TODO: Implement category deletion
     }
 }
 

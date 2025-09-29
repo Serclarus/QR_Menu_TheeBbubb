@@ -20,22 +20,37 @@ async function loadFromCloudStorage() {
                 throw new Error(`Server error: ${response.status}`);
             }
         } else {
-            // Online mode - load from public JSON file only
+            // Online mode - load from localStorage (temporary solution)
             try {
-                const response = await fetch('menu-data.json');
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && Object.keys(data).length > 0) {
-                        console.log('Menu data loaded from public JSON file');
-                        return data;
-                    }
+                // Try to load from public data first
+                const publicData = localStorage.getItem('publicMenuData');
+                if (publicData) {
+                    const parsed = JSON.parse(publicData);
+                    console.log('Menu data loaded from public data');
+                    return parsed;
                 }
                 
-                // If no data in JSON file, return empty object
-                console.log('No data found in public JSON file');
+                // Fallback to individual localStorage items
+                const menuData = localStorage.getItem('menuData');
+                const cafeData = localStorage.getItem('cafeData');
+                const categories = localStorage.getItem('categories');
+                
+                if (menuData || cafeData || categories) {
+                    const data = {
+                        menuData: menuData ? JSON.parse(menuData) : {},
+                        cafeData: cafeData ? JSON.parse(cafeData) : {},
+                        categories: categories ? JSON.parse(categories) : {},
+                        lastUpdated: localStorage.getItem('menuDataLastUpdated') || Date.now()
+                    };
+                    console.log('Menu data loaded from localStorage');
+                    return data;
+                }
+                
+                // If no data found, return empty object
+                console.log('No data found in localStorage');
                 return {};
             } catch (error) {
-                console.error('Error loading from public JSON file:', error);
+                console.error('Error loading from localStorage:', error);
                 return {};
             }
         }
@@ -77,14 +92,15 @@ function startAutoRefresh() {
                     }
                 }
             } else {
-                // Online mode - check public JSON file for updates
+                // Online mode - check localStorage for updates
                 try {
-                    const response = await fetch('menu-data.json');
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data.lastUpdated && data.lastUpdated > lastUpdateTime) {
-                            console.log('Menu data updated from public JSON file, refreshing...');
-                            lastUpdateTime = data.lastUpdated;
+                    // Check public data for updates
+                    const publicData = localStorage.getItem('publicMenuData');
+                    if (publicData) {
+                        const parsed = JSON.parse(publicData);
+                        if (parsed.timestamp && parsed.timestamp > lastUpdateTime) {
+                            console.log('Menu data updated from public data, refreshing...');
+                            lastUpdateTime = parsed.timestamp;
                             await loadMenuData();
                             await loadCafeData();
                             await loadCategoryTitles();
@@ -93,6 +109,21 @@ function startAutoRefresh() {
                             if (currentCategory) {
                                 showCategory(currentCategory);
                             }
+                        }
+                    }
+                    
+                    // Also check regular localStorage for updates
+                    const lastUpdated = localStorage.getItem('menuDataLastUpdated');
+                    if (lastUpdated && parseInt(lastUpdated) > lastUpdateTime) {
+                        console.log('Menu data updated from localStorage, refreshing...');
+                        lastUpdateTime = parseInt(lastUpdated);
+                        await loadMenuData();
+                        await loadCafeData();
+                        await loadCategoryTitles();
+                        // Refresh the current view if we're in a category
+                        const currentCategory = document.querySelector('.category-card.selected')?.getAttribute('data-category');
+                        if (currentCategory) {
+                            showCategory(currentCategory);
                         }
                     }
                 } catch (error) {
