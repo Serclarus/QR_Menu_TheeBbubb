@@ -162,8 +162,17 @@ async function saveDataToServer(data) {
                 throw new Error(`Server error: ${response.status}`);
             }
         } else {
-            // Online mode - save directly to public JSON file
-            return await saveToCloudStorage(data);
+            // Online mode - save to localStorage
+            try {
+                localStorage.setItem('menuData', JSON.stringify(data.menuData || {}));
+                localStorage.setItem('cafeData', JSON.stringify(data.cafeData || {}));
+                localStorage.setItem('categories', JSON.stringify(data.categories || {}));
+                console.log('Data saved to localStorage');
+                return true;
+            } catch (error) {
+                console.error('Error saving to localStorage:', error);
+                return false;
+            }
         }
     } catch (error) {
         console.error('Error saving data to server:', error);
@@ -189,8 +198,16 @@ async function loadDataFromServer() {
                 throw new Error(`Server error: ${response.status}`);
             }
         } else {
-            // Online mode - load from public JSON file only
-            return await loadFromCloudStorage();
+            // Online mode - load from localStorage
+            try {
+                const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
+                const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
+                const categories = JSON.parse(localStorage.getItem('categories') || '{}');
+                return { menuData, cafeData, categories };
+            } catch (error) {
+                console.error('Error loading from localStorage:', error);
+                return {};
+            }
         }
     } catch (error) {
         console.error('Error loading data from server:', error);
@@ -574,6 +591,60 @@ async function loadCategoriesForDropdown() {
 // Initialize admin panel
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('Admin panel initialized - Online mode only');
+    
+    // Check if we have any data, if not create some test data
+    const existingData = await loadDataFromServer();
+    if (!existingData.menuData || Object.keys(existingData.menuData).length === 0) {
+        console.log('No menu data found, creating test data...');
+        const testData = {
+            menuData: {
+                'Sıcak İçecekler': {
+                    'Türk Kahvesi': {
+                        name: 'Türk Kahvesi',
+                        description: 'Geleneksel Türk kahvesi',
+                        price: 15
+                    },
+                    'Çay': {
+                        name: 'Çay',
+                        description: 'Demli çay',
+                        price: 5
+                    }
+                },
+                'Soğuk İçecekler': {
+                    'Ayran': {
+                        name: 'Ayran',
+                        description: 'Taze ayran',
+                        price: 8
+                    }
+                }
+            },
+            cafeData: {
+                name: 'Thee Bbubb Cafe',
+                description: 'Geleneksel Türk mutfağı',
+                address: 'İstanbul, Türkiye',
+                phone: '+90 212 123 45 67',
+                email: 'info@theebbubb.com',
+                website: 'www.theebbubb.com',
+                hours: '09:00 - 22:00',
+                logo: ''
+            },
+            categories: {
+                'Sıcak İçecekler': {
+                    name: 'Sıcak İçecekler',
+                    description: 'Sıcak içecekler',
+                    icon: 'hotdrinks_icon.png'
+                },
+                'Soğuk İçecekler': {
+                    name: 'Soğuk İçecekler',
+                    description: 'Soğuk içecekler',
+                    icon: 'colddrinks_icon.png'
+                }
+            }
+        };
+        
+        await saveDataToServer(testData);
+        console.log('Test data created');
+    }
     
     // Load initial data from online storage
     await loadMenuData();
