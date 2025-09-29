@@ -1,6 +1,101 @@
 {
-  "menuData": {},
-  "cafeData": {},
-  "categories": {},
-  "lastUpdated": 0
+  "menuData": {
+    "Sıcak İçecekler": {
+      "Türk Kahvesi": {
+        "name": "Türk Kahvesi",
+        "description": "Geleneksel Türk kahvesi",
+        "price": 15
+      },
+      "Çay": {
+        "name": "Çay",
+        "description": "Demli çay",
+        "price": 5
+      },
+      "Sıcak Çikolata": {
+        "name": "Sıcak Çikolata",
+        "description": "Kremalı sıcak çikolata",
+        "price": 12
+      }
+    },
+    "Soğuk İçecekler": {
+      "Ayran": {
+        "name": "Ayran",
+        "description": "Taze ayran",
+        "price": 8
+      },
+      "Limonata": {
+        "name": "Limonata",
+        "description": "Taze limonata",
+        "price": 10
+      },
+      "Kola": {
+        "name": "Kola",
+        "description": "Soğuk kola",
+        "price": 6
+      }
+    },
+    "Ana Yemekler": {
+      "Köfte": {
+        "name": "Köfte",
+        "description": "Ev yapımı köfte",
+        "price": 25
+      },
+      "Tavuk Şinitzel": {
+        "name": "Tavuk Şinitzel",
+        "description": "Kızarmış tavuk şinitzel",
+        "price": 22
+      },
+      "Balık": {
+        "name": "Balık",
+        "description": "Taze balık",
+        "price": 30
+      }
+    },
+    "Tatlılar": {
+      "Baklava": {
+        "name": "Baklava",
+        "description": "Geleneksel baklava",
+        "price": 18
+      },
+      "Sütlaç": {
+        "name": "Sütlaç",
+        "description": "Ev yapımı sütlaç",
+        "price": 12
+      }
+    }
+  },
+  "cafeData": {
+    "name": "Thee Bbubb Cafe",
+    "description": "Geleneksel Türk mutfağı",
+    "address": "İstanbul, Türkiye",
+    "phone": "+90 212 123 45 67",
+    "email": "info@theebbubb.com",
+    "website": "www.theebbubb.com",
+    "hours": "09:00 - 22:00",
+    "logo": ""
+  },
+  "categories": {
+    "Sıcak İçecekler": {
+      "name": "Sıcak İçecekler",
+      "description": "Sıcak içecekler",
+      "icon": "hotdrinks_icon.png"
+    },
+    "Soğuk İçecekler": {
+      "name": "Soğuk İçecekler",
+      "description": "Soğuk içecekler",
+      "icon": "colddrinks_icon.png"
+    },
+    "Ana Yemekler": {
+      "name": "Ana Yemekler",
+      "description": "Ana yemekler",
+      "icon": "main_icon.png"
+    },
+    "Tatlılar": {
+      "name": "Tatlılar",
+      "description": "Tatlılar",
+      "icon": "dessert_icon.png"
+    }
+  },
+  "timestamp": 1703000000000,
+  "version": "1.0"
 }
