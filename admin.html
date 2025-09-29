@@ -269,22 +269,8 @@
             <!-- Categories Section -->
             <div id="categories" class="admin-section">
                 <h2>Kategoriler</h2>
-                <div class="category-selector">
-                    <div class="category-card" data-category="hot-drinks">
-                        <h3>☕ Sıcak İçecekler</h3>
-                    </div>
-                    <div class="category-card" data-category="cold-drinks">
-                        <h3>🧊 Soğuk İçecekler</h3>
-                    </div>
-                    <div class="category-card" data-category="meals">
-                        <h3>🍽️ Yemekler</h3>
-                    </div>
-                    <div class="category-card" data-category="desserts">
-                        <h3>🍰 Tatlılar</h3>
-                    </div>
-                    <div class="category-card" data-category="snacks">
-                        <h3>🍿 Atıştırmalıklar</h3>
-                    </div>
+                <div class="category-selector" id="categories-grid">
+                    <!-- Categories will be loaded dynamically -->
                 </div>
                 <form id="category-form">
                     <div class="form-group">
@@ -308,11 +294,7 @@
                     <label for="item-category">Kategori Seçin:</label>
                     <select id="item-category" required>
                         <option value="">Kategori seçin...</option>
-                        <option value="hot-drinks">Sıcak İçecekler</option>
-                        <option value="cold-drinks">Soğuk İçecekler</option>
-                        <option value="meals">Yemekler</option>
-                        <option value="desserts">Tatlılar</option>
-                        <option value="snacks">Atıştırmalıklar</option>
+                        <!-- Categories will be loaded dynamically -->
                     </select>
                 </div>
                 

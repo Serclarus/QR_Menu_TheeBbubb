@@ -271,33 +271,50 @@ async function saveCafeInfo() {
 
 // Save category information to online storage only
 async function saveCategoryInfo() {
-    const categoryName = document.getElementById('categoryName').value;
-    const categoryDescription = document.getElementById('categoryDescription').value;
-    const categoryIcon = document.getElementById('categoryIcon').value;
+    const categoryTitle = document.getElementById('category-title').value.trim();
+    const categoryDescription = document.getElementById('category-description').value.trim();
 
-    if (!categoryName) {
-        alert('Please enter a category name');
+    if (!categoryTitle) {
+        alert('Please enter a category title');
         return;
     }
 
-    const categoryData = {
-        name: categoryName,
-        description: categoryDescription,
-        icon: categoryIcon
-    };
-
     try {
+        // Check if we're updating an existing category
+        const categoryForm = document.getElementById('category-form');
+        const existingCategoryName = categoryForm.getAttribute('data-category');
+        
         const data = await loadDataFromServer();
         const categories = data.categories || {};
-        categories[categoryName] = categoryData;
         
-        const success = await saveDataToServer({ categories });
+        if (existingCategoryName) {
+            // Update existing category
+            const category = categories[existingCategoryName];
+            if (category) {
+                category.name = categoryTitle;
+                category.description = categoryDescription;
+            }
+        } else {
+            // Create new category
+            categories[categoryTitle] = {
+                name: categoryTitle,
+                description: categoryDescription,
+                icon: ''
+            };
+        }
+        
+        const success = await saveDataToServer({
+            menuData: data.menuData || {},
+            cafeData: data.cafeData || {},
+            categories: categories
+        });
+        
         if (success) {
             console.log('Category information saved to online storage');
             alert('Category information saved successfully!');
-            document.getElementById('categoryName').value = '';
-            document.getElementById('categoryDescription').value = '';
-            document.getElementById('categoryIcon').value = '';
+            document.getElementById('category-title').value = '';
+            document.getElementById('category-description').value = '';
+            categoryForm.removeAttribute('data-category');
             loadCategories();
         } else {
             throw new Error('Failed to save category information');
@@ -314,25 +331,29 @@ async function loadCategories() {
         const data = await loadDataFromServer();
         const categories = data.categories || {};
         
-        const categoryList = document.getElementById('categoryList');
-        categoryList.innerHTML = '';
+        const categoriesGrid = document.getElementById('categories-grid');
+        if (categoriesGrid) {
+            categoriesGrid.innerHTML = '';
 
-        for (const [name, category] of Object.entries(categories)) {
-            const categoryItem = document.createElement('div');
-            categoryItem.className = 'category-item';
-            categoryItem.innerHTML = `
-                <div class="category-info">
-                    <h3>${name}</h3>
+            for (const [name, category] of Object.entries(categories)) {
+                const categoryCard = document.createElement('div');
+                categoryCard.className = 'category-card';
+                categoryCard.setAttribute('data-category', name);
+                categoryCard.innerHTML = `
+                    <h3>${category.name || name}</h3>
                     <p>${category.description || 'No description'}</p>
                     <p><strong>Icon:</strong> ${category.icon || 'No icon'}</p>
-                </div>
-                <div class="category-actions">
-                    <button onclick="editCategory('${name}')" class="btn btn-sm btn-primary">Edit</button>
-                    <button onclick="deleteCategory('${name}')" class="btn btn-sm btn-danger">Delete</button>
-                </div>
-            `;
-            categoryList.appendChild(categoryItem);
+                    <div class="category-actions">
+                        <button onclick="editCategory('${name}')" class="btn-small">Düzenle</button>
+                        <button onclick="deleteCategory('${name}')" class="btn-small btn-danger">Sil</button>
+                    </div>
+                `;
+                categoriesGrid.appendChild(categoryCard);
+            }
         }
+        
+        // Also load categories for dropdown
+        loadCategoriesForDropdown();
     } catch (error) {
         console.error('Error loading categories:', error);
     }
@@ -579,15 +600,56 @@ function clearItemForm() {
 }
 
 // Additional functions needed for admin panel functionality
-function editCategory(categoryName) {
-    loadCategoryForEdit(categoryName);
+async function editCategory(categoryName) {
+    try {
+        const data = await loadDataFromServer();
+        const categories = data.categories || {};
+        const category = categories[categoryName];
+        
+        if (category) {
+            document.getElementById('category-title').value = category.name || categoryName;
+            document.getElementById('category-description').value = category.description || '';
+            
+            // Store the category name for updating
+            document.getElementById('category-form').setAttribute('data-category', categoryName);
+        }
+    } catch (error) {
+        console.error('Error loading category for editing:', error);
+        alert('Error loading category for editing: ' + error.message);
+    }
 }
 
-function deleteCategory(categoryName) {
-    if (confirm('Are you sure you want to delete this category?')) {
-        // Implementation for deleting category
-        console.log('Delete category:', categoryName);
-        // TODO: Implement category deletion
+async function deleteCategory(categoryName) {
+    if (confirm(`Are you sure you want to delete the category "${categoryName}"? This will also delete all menu items in this category.`)) {
+        try {
+            const data = await loadDataFromServer();
+            const menuData = data.menuData || {};
+            const categories = data.categories || {};
+            
+            // Remove category from menu data
+            delete menuData[categoryName];
+            
+            // Remove category from categories
+            delete categories[categoryName];
+            
+            // Save updated data
+            const updatedData = {
+                menuData: menuData,
+                cafeData: data.cafeData || {},
+                categories: categories
+            };
+            
+            const success = await saveDataToServer(updatedData);
+            if (success) {
+                alert('Category deleted successfully!');
+                loadCategories();
+            } else {
+                throw new Error('Failed to delete category');
+            }
+        } catch (error) {
+            console.error('Error deleting category:', error);
+            alert('Error deleting category: ' + error.message);
+        }
     }
 }
 
@@ -624,6 +686,15 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Set up event listeners
     document.getElementById('saveCafeBtn').addEventListener('click', saveCafeInfo);
     document.getElementById('saveCategoryBtn').addEventListener('click', saveCategoryInfo);
+    
+    // Handle category form submission
+    const categoryForm = document.getElementById('category-form');
+    if (categoryForm) {
+        categoryForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveCategoryInfo();
+        });
+    }
     
     // Handle menu items form submission
     const itemForm = document.getElementById('item-form');
