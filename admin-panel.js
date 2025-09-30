@@ -14,55 +14,57 @@ const HARDCODED_CATEGORIES = {
 // Global variables
 let menuData = {};
 
-// Load menu data from API
+// Load menu data from API (GitHub)
 async function loadMenuData() {
     try {
-        console.log('Loading menu data...');
+        console.log('Loading menu data from GitHub API...');
         const response = await fetch('menu-data.json');
         if (response.ok) {
             const data = await response.json();
             menuData = data.menuData || {};
-            console.log('Menu data loaded:', menuData);
+            console.log('✅ Menu data loaded from GitHub API:', menuData);
             return data;
         } else {
-            console.log('No menu-data.json found, using default data');
+            console.log('❌ No menu-data.json found on GitHub');
+            alert('⚠️ No menu data found. Please add some menu items first.');
             return { menuData: {} };
         }
     } catch (error) {
-        console.error('Error loading menu data:', error);
+        console.error('❌ Error loading menu data from API:', error);
+        alert('❌ Failed to load menu data from GitHub. Please check your connection.');
         return { menuData: {} };
     }
 }
 
-// Save menu data to API (GitHub)
+// Save menu data to API (GitHub) ONLY
 async function saveMenuData() {
     try {
-        console.log('Saving menu data...');
+        console.log('Saving menu data to GitHub API...');
         const data = {
             menuData: menuData,
             categories: HARDCODED_CATEGORIES,
             lastUpdated: Date.now()
         };
         
-        // Try to save via GitHub API if available
-        if (typeof saveToGitHub === 'function') {
-            const success = await saveToGitHub(data);
-            if (success) {
-                console.log('✅ Data saved to GitHub API');
-                alert('✅ Menu updated successfully!');
-                return true;
-            }
+        // Check if GitHub API is available
+        if (typeof saveToGitHub !== 'function') {
+            alert('❌ GitHub API not available! Please configure your GitHub token first.');
+            return false;
         }
         
-        // Fallback: save to localStorage
-        localStorage.setItem('menuData', JSON.stringify(menuData));
-        localStorage.setItem('lastUpdated', Date.now().toString());
-        console.log('⚠️ Data saved to localStorage only');
-        alert('⚠️ Menu saved locally only');
-        return true;
+        // Save via GitHub API
+        const success = await saveToGitHub(data);
+        if (success) {
+            console.log('✅ Data saved to GitHub API');
+            alert('✅ Menu updated successfully! Changes are now live for all customers.');
+            return true;
+        } else {
+            alert('❌ Failed to save to GitHub API. Please check your token and try again.');
+            return false;
+        }
     } catch (error) {
         console.error('Error saving menu data:', error);
-        alert('Error saving: ' + error.message);
+        alert('❌ Error saving to API: ' + error.message);
         return false;
     }
 }
