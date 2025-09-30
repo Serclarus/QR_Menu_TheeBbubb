@@ -74,14 +74,9 @@
     }
   },
   "cafeData": {
-    "name": "Thee Bbubb Cafe",
-    "description": "Sıcak ve samimi atmosferde lezzetli yemekler",
-    "address": "Merkez Mahallesi, Cafe Sokak No:1",
-    "phone": "+90 555 123 4567",
-    "email": "info@theebbubb.com",
-    "website": "www.theebbubb.com",
-    "hours": "Her gün 08:00 - 24:00",
-    "logo": "logo.png"
+    "description": "Hoşgeldiniz",
+    "image": "",
+    "instagram": "https://www.instagram.com/theebbubb07"
   },
   "categories": {
     "Sıcak İçecekler": {
