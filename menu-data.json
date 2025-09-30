@@ -44,7 +44,13 @@
         "price": 101
       }
     },
-    "Ana Yemekler": {},
+    "Ana Yemekler": {
+      "Tost": {
+        "name": "Tost",
+        "description": "Karışık ve kaşarlı çeşitleriyle\nÇay ikramımızdır.",
+        "price": 100
+      }
+    },
     "Tatlılar": {
       "Tatlı": {
         "name": "Tatlı",
@@ -99,5 +105,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759249311818
+  "lastUpdated": 1759249417384
 }
