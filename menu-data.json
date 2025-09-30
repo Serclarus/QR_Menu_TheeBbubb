@@ -1,20 +1,10 @@
 {
   "menuData": {
     "Sıcak İçecekler": {
-      "Türk Kahvesi": {
-        "name": "Türk Kahvesi",
-        "description": "Geleneksel Türk kahvesi",
-        "price": 15
-      },
       "Çay": {
         "name": "Çay",
         "description": "Demli çay",
-        "price": 5
-      },
-      "Sıcak Çikolata": {
-        "name": "Sıcak Çikolata",
-        "description": "Kremalı sıcak çikolata",
-        "price": 12
+        "price": 40
       }
     },
     "Soğuk İçecekler": {
@@ -31,7 +21,7 @@
       "Kola": {
         "name": "Kola",
         "description": "Soğuk kola",
-        "price": 6
+        "price": 70
       }
     },
     "Ana Yemekler": {
@@ -124,9 +114,5 @@
       "description": "Nargile",
       "icon": "hookah_icon.png"
     }
-  },
-  "lastUpdated": 1704067200000,
-  "timestamp": 1704067200000,
-  "version": "1.0.0",
-  "updateId": "initial_data"
+  }
 }
