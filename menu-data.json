@@ -5,6 +5,11 @@
         "name": "Çay",
         "description": "",
         "price": 25
+      },
+      "Oralet": {
+        "name": "Oralet",
+        "description": "Kivi,karadut, kuşburnu, portakal,limon,muz,kakao, çilek,elma,tarçın,nane limon aromalı oralet çeşitleri",
+        "price": 25
       }
     },
     "Nargile": {
@@ -80,5 +85,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759247932844
+  "lastUpdated": 1759248709305
 }
