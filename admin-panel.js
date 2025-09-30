@@ -48,7 +48,15 @@ async function saveMenuData() {
         
         // Check if GitHub API is available
         if (typeof saveToGitHub !== 'function') {
+            console.error('❌ saveToGitHub function not found');
             alert('❌ GitHub API not available! Please configure your GitHub token first.');
+            return false;
+        }
+        
+        // Check if GitHub API is configured
+        if (!window.githubAPI || !window.githubAPI.token) {
+            console.error('❌ GitHub API not configured');
+            alert('❌ GitHub API not configured! Please set your GitHub token in the GitHub API section.');
             return false;
         }
         
@@ -163,18 +171,19 @@ async function loadItemsForCategory(category) {
 
 // 🔒 SECURE: Save menu item with XSS prevention
 async function saveMenuItem() {
-    console.log('saveMenuItem called');
-    const category = document.getElementById('item-category').value;
-    const name = document.getElementById('item-name').value;
-    const description = document.getElementById('item-description').value;
-    const price = document.getElementById('item-price').value;
-    
-    console.log('Form values:', { category, name, description, price });
-    
-    if (!category || !name || !price) {
-        alert('Please fill in all required fields');
-        return;
-    }
+    try {
+        console.log('saveMenuItem called');
+        const category = document.getElementById('item-category').value;
+        const name = document.getElementById('item-name').value;
+        const description = document.getElementById('item-description').value;
+        const price = document.getElementById('item-price').value;
+        
+        console.log('Form values:', { category, name, description, price });
+        
+        if (!category || !name || !price) {
+            alert('Please fill in all required fields');
+            return;
+        }
     
     // 🔒 XSS PREVENTION: Sanitize all inputs
     const sanitizedData = {
@@ -220,12 +229,16 @@ async function saveMenuItem() {
     
     menuData[sanitizedData.category][sanitizedData.name] = itemData;
     
-    console.log('Updated menuData before saving:', menuData);
-    const success = await saveMenuData();
-    if (success) {
-        alert(`✅ Menu item saved successfully!\n\nCategory: ${sanitizedData.category}\nItem: ${sanitizedData.name}\nPrice: ${sanitizedData.price} TL`);
-        clearItemForm();
-        loadItemsForCategory(sanitizedData.category);
+        console.log('Updated menuData before saving:', menuData);
+        const success = await saveMenuData();
+        if (success) {
+            alert(`✅ Menu item saved successfully!\n\nCategory: ${sanitizedData.category}\nItem: ${sanitizedData.name}\nPrice: ${sanitizedData.price} TL`);
+            clearItemForm();
+            loadItemsForCategory(sanitizedData.category);
+        }
+    } catch (error) {
+        console.error('Error in saveMenuItem:', error);
+        alert('❌ Error saving menu item: ' + error.message);
     }
 }
 
