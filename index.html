@@ -526,11 +526,11 @@
                     devtools = true;
                 }
                 
-                // Check for console access
-                let start = Date.now();
-                debugger;
-                let end = Date.now();
-                if (end - start > 100) devtools = true;
+                // Check for console access - TEMPORARILY DISABLED
+                // let start = Date.now();
+                // debugger;
+                // let end = Date.now();
+                // if (end - start > 100) devtools = true;
                 
                 // Check for script injection
                 const scripts = document.getElementsByTagName('script');
