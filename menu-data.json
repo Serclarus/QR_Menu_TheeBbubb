@@ -10,6 +10,11 @@
         "name": "Çay",
         "description": "",
         "price": 20
+      },
+      "Americano": {
+        "name": "Americano",
+        "description": "",
+        "price": 70
       }
     },
     "Nargile": {
@@ -71,5 +76,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759234921210
+  "lastUpdated": 1759235033486
 }
