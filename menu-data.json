@@ -5,6 +5,11 @@
         "name": "Çay",
         "description": "Demli çay",
         "price": 40
+      },
+      "Americano": {
+        "name": "Americano",
+        "description": "",
+        "price": 44
       }
     },
     "Soğuk İçecekler": {
