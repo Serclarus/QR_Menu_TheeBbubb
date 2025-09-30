@@ -93,6 +93,11 @@
         "name": "Halley",
         "description": "",
         "price": 20
+      },
+      "Biskrem": {
+        "name": "Biskrem",
+        "description": "",
+        "price": 40
       }
     },
     "Soğuk İçecekler": {
@@ -170,5 +175,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759256701853
+  "lastUpdated": 1759256714978
 }
