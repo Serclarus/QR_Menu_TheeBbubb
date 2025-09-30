@@ -15,6 +15,11 @@
         "name": "Türk Kahvesi",
         "description": "Bol köpüklü Türk kahvemiz",
         "price": 60
+      },
+      "Sıcak Çikolata": {
+        "name": "Sıcak Çikolata",
+        "description": "",
+        "price": 80
       }
     },
     "Nargile": {
@@ -90,5 +95,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759248783740
+  "lastUpdated": 1759249100765
 }
