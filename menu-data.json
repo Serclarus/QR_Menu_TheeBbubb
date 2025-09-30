@@ -59,6 +59,11 @@
         "name": "Ekmek Arası Tavuk Bonfile",
         "description": "İçerik:tavuk bonfile,domates,maydanoz,isteğe bağlı olarak soğan",
         "price": 200
+      },
+      "Ekmek Arası Tavuk Şis": {
+        "name": "Ekmek Arası Tavuk Şis",
+        "description": "İçerik: Tavuk Şis, domates, maydanoz, isteğe bağlı olarak soğan",
+        "price": 200
       }
     },
     "Tatlılar": {
@@ -115,5 +120,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759249618975
+  "lastUpdated": 1759249721723
 }
