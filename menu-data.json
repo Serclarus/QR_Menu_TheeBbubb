@@ -39,6 +39,13 @@
         "description": "",
         "price": 111
       }
+    },
+    "Atıştırmalıklar": {
+      "Atış": {
+        "name": "Atış",
+        "description": "1",
+        "price": 111
+      }
     }
   },
   "categories": {
@@ -73,5 +80,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759234402557
+  "lastUpdated": 1759234429213
 }
