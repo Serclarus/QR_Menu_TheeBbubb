@@ -71,71 +71,8 @@ async function loadFromCloudStorage() {
     }
 }
 
-// Auto-refresh functionality for real-time updates
-let lastUpdateTime = 0;
-let refreshInterval;
-
-function startAutoRefresh() {
-    // Check for updates every 5 seconds
-    refreshInterval = setInterval(async () => {
-        try {
-            // Check if we're running on a server (local development)
-            const isLocalServer = window.location.hostname === 'localhost' || 
-                                 window.location.hostname === '127.0.0.1' ||
-                                 window.location.hostname.includes('192.168.');
-            
-            if (isLocalServer) {
-                // Local server mode - use secure server API
-                const response = await fetch('/api/public-menu');
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.lastUpdated && data.lastUpdated > lastUpdateTime) {
-                        console.log('Menu data updated from secure server, refreshing...');
-                        lastUpdateTime = data.lastUpdated;
-                        await loadMenuData();
-                        await loadCafeData();
-                        await loadCategoryTitles();
-                        // Refresh the current view if we're in a category
-                        const currentCategory = document.querySelector('.category-card.selected')?.getAttribute('data-category');
-                        if (currentCategory) {
-                            showCategory(currentCategory);
-                        }
-                    }
-                }
-            } else {
-                // Online mode - check cloud storage for updates
-                try {
-                    const response = await fetch('menu-data.json');
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data.timestamp && data.timestamp > lastUpdateTime) {
-                            console.log('Menu data updated from cloud storage, refreshing...');
-                            lastUpdateTime = data.timestamp;
-                            await loadMenuData();
-                            await loadCafeData();
-                            await loadCategoryTitles();
-                            // Refresh the current view if we're in a category
-                            const currentCategory = document.querySelector('.category-card.selected')?.getAttribute('data-category');
-                            if (currentCategory) {
-                                showCategory(currentCategory);
-                            }
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error checking for updates:', error);
-                }
-            }
-        } catch (error) {
-            console.error('Error checking for updates:', error);
-        }
-    }, 5000);
-}
-
-function stopAutoRefresh() {
-    if (refreshInterval) {
-        clearInterval(refreshInterval);
-    }
-}
+// Auto-refresh functionality removed for better performance
+// Menu data now loads only when the page loads, not periodically
 
 // Server communication functions with cloud storage and auto-refresh
 async function loadDataFromServer() {
@@ -738,15 +675,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadCafeData();
     await loadCategoryTitles();
     
-    // Start auto-refresh for real-time updates (only in online mode)
-    const isLocalServer = window.location.hostname === 'localhost' || 
-                         window.location.hostname === '127.0.0.1' ||
-                         window.location.hostname.includes('192.168.');
-    
-    if (!isLocalServer) {
-        startAutoRefresh();
-        console.log('Auto-refresh started for real-time menu updates');
-    }
+    // Auto-refresh disabled - menu data loads only on page load
+    // This prevents unnecessary API calls and improves performance
+    console.log('Menu data loaded on page load - no periodic updates');
     
     // Add loading animation
     document.body.style.opacity = '0';
