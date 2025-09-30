@@ -91,11 +91,6 @@
       }
     },
     "Soğuk İçecekler": {
-      "İçecek1": {
-        "name": "İçecek1",
-        "description": "",
-        "price": 1
-      },
       "Su": {
         "name": "Su",
         "description": "",
@@ -135,5 +130,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759249959576
+  "lastUpdated": 1759249964178
 }
