@@ -32,13 +32,7 @@
         "price": 50
       }
     },
-    "Nargile": {
-      "Elmalı": {
-        "name": "Elmalı",
-        "description": "",
-        "price": 101
-      }
-    },
+    "Nargile": {},
     "Ana Yemekler": {
       "Tost": {
         "name": "Tost",
@@ -160,5 +154,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759251396493
+  "lastUpdated": 1759251409133
 }
