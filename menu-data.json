@@ -5,11 +5,6 @@
         "name": "Çay",
         "description": "",
         "price": 20
-      },
-      "Salep2": {
-        "name": "Salep2",
-        "description": "",
-        "price": 9
       }
     },
     "Nargile": {
@@ -85,5 +80,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759237017605
+  "lastUpdated": 1759247920295
 }
