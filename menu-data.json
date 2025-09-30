@@ -76,13 +76,7 @@
         "price": 250
       }
     },
-    "Tatlılar": {
-      "Tatlı": {
-        "name": "Tatlı",
-        "description": "",
-        "price": 112
-      }
-    },
+    "Tatlılar": {},
     "Atıştırmalıklar": {
       "Çikolatalı Gofret": {
         "name": "Çikolatalı Gofret",
@@ -195,5 +189,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759256924147
+  "lastUpdated": 1759257040175
 }
