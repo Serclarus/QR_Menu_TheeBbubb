@@ -108,6 +108,11 @@
         "name": "Kremalı Sandviç Bisküvi",
         "description": "",
         "price": 40
+      },
+      "Çizi": {
+        "name": "Çizi",
+        "description": "",
+        "price": 30
       }
     },
     "Soğuk İçecekler": {
@@ -185,5 +190,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759256766537
+  "lastUpdated": 1759256807471
 }
