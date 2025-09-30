@@ -8,6 +8,11 @@
       }
     },
     "Nargile": {
+      "1": {
+        "name": "1",
+        "description": "",
+        "price": 1
+      },
       "Elmalı": {
         "name": "Elmalı",
         "description": "",
@@ -47,5 +52,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759233311949
+  "lastUpdated": 1759233330732
 }
