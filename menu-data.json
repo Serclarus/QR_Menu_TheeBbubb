@@ -69,6 +69,11 @@
         "name": "Tavuk Burger",
         "description": "Tavuk köfte,Marul , domates, isteğe bağlı olarak soğan",
         "price": 250
+      },
+      "Köfte Burger": {
+        "name": "Köfte Burger",
+        "description": "Köfte,marul, domates, isteğe bağlı olarak soğan",
+        "price": 250
       }
     },
     "Tatlılar": {
@@ -125,5 +130,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759249864160
+  "lastUpdated": 1759249912974
 }
