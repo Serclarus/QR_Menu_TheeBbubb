@@ -88,6 +88,11 @@
         "name": "Çikolatalı Gofret",
         "description": "",
         "price": 30
+      },
+      "Halley": {
+        "name": "Halley",
+        "description": "",
+        "price": 20
       }
     },
     "Soğuk İçecekler": {
@@ -165,5 +170,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759256674558
+  "lastUpdated": 1759256701853
 }
