@@ -1,9 +1,18 @@
-// Simple Admin Panel - Menu Management
-console.log('Simple Admin Panel loaded');
+// Simple Admin Panel - Menu Items Only
+console.log('Simple Menu Admin loaded');
+
+// Hardcoded categories - no API management needed
+const HARDCODED_CATEGORIES = {
+    'Sıcak İçecekler': { name: 'Sıcak İçecekler', description: 'Sıcak içecekler', icon: 'hotdrinks_icon.png' },
+    'Soğuk İçecekler': { name: 'Soğuk İçecekler', description: 'Soğuk içecekler', icon: 'colddrinks_icon.png' },
+    'Ana Yemekler': { name: 'Ana Yemekler', description: 'Ana yemekler', icon: 'maindishes_icon.png' },
+    'Tatlılar': { name: 'Tatlılar', description: 'Tatlılar', icon: 'desserts_icon.png' },
+    'Atıştırmalıklar': { name: 'Atıştırmalıklar', description: 'Atıştırmalıklar', icon: 'snacks_icon.png' },
+    'Nargile': { name: 'Nargile', description: 'Nargile', icon: 'hookah_icon.png' }
+};
 
 // Global variables
 let menuData = {};
-let categories = {};
 
 // Load menu data from API
 async function loadMenuData() {
@@ -13,17 +22,15 @@ async function loadMenuData() {
         if (response.ok) {
             const data = await response.json();
             menuData = data.menuData || {};
-            categories = data.categories || {};
             console.log('Menu data loaded:', menuData);
-            console.log('Categories loaded:', categories);
             return data;
         } else {
             console.log('No menu-data.json found, using default data');
-            return { menuData: {}, categories: {} };
+            return { menuData: {} };
         }
     } catch (error) {
         console.error('Error loading menu data:', error);
-        return { menuData: {}, categories: {} };
+        return { menuData: {} };
     }
 }
 
@@ -33,7 +40,7 @@ async function saveMenuData() {
         console.log('Saving menu data...');
         const data = {
             menuData: menuData,
-            categories: categories,
+            categories: HARDCODED_CATEGORIES,
             lastUpdated: Date.now()
         };
         
@@ -42,17 +49,16 @@ async function saveMenuData() {
             const success = await saveToGitHub(data);
             if (success) {
                 console.log('✅ Data saved to GitHub API');
-                alert('✅ Changes saved successfully!');
+                alert('✅ Menu updated successfully!');
                 return true;
             }
         }
         
         // Fallback: save to localStorage
         localStorage.setItem('menuData', JSON.stringify(menuData));
-        localStorage.setItem('categories', JSON.stringify(categories));
         localStorage.setItem('lastUpdated', Date.now().toString());
         console.log('⚠️ Data saved to localStorage only');
-        alert('⚠️ Changes saved locally only');
+        alert('⚠️ Menu saved locally only');
         return true;
     } catch (error) {
         console.error('Error saving menu data:', error);
@@ -80,10 +86,8 @@ function showSection(sectionId) {
     // Add active class to clicked button
     event.target.classList.add('active');
     
-    // Load data for specific sections
-    if (sectionId === 'categories') {
-        loadCategories();
-    } else if (sectionId === 'menu-items') {
+    // Load data for menu items section
+    if (sectionId === 'menu-items') {
         loadCategoriesForDropdown();
     }
 }
@@ -98,90 +102,13 @@ function logoutAdmin() {
     }
 }
 
-// Category management
-async function loadCategories() {
-    try {
-        const categoriesGrid = document.getElementById('categories-grid');
-        if (categoriesGrid) {
-            categoriesGrid.innerHTML = '';
-            
-            for (const [name, category] of Object.entries(categories)) {
-                const categoryCard = document.createElement('div');
-                categoryCard.className = 'category-card';
-                categoryCard.innerHTML = `
-                    <h3>${category.name || name}</h3>
-                    <p>${category.description || 'No description'}</p>
-                    <div class="category-actions">
-                        <button onclick="editCategory('${name}')" class="btn-small">Edit</button>
-                        <button onclick="deleteCategory('${name}')" class="btn-small btn-danger">Delete</button>
-                    </div>
-                `;
-                categoriesGrid.appendChild(categoryCard);
-            }
-        }
-    } catch (error) {
-        console.error('Error loading categories:', error);
-    }
-}
-
-async function saveCategory() {
-    const categoryTitle = document.getElementById('category-title').value.trim();
-    const categoryDescription = document.getElementById('category-description').value.trim();
-    
-    if (!categoryTitle) {
-        alert('Please enter a category title');
-        return;
-    }
-    
-    // Add or update category
-    categories[categoryTitle] = {
-        name: categoryTitle,
-        description: categoryDescription,
-        icon: ''
-    };
-    
-    // Initialize menu data for this category if it doesn't exist
-    if (!menuData[categoryTitle]) {
-        menuData[categoryTitle] = {};
-    }
-    
-    const success = await saveMenuData();
-    if (success) {
-        alert('Category saved successfully!');
-        document.getElementById('category-title').value = '';
-        document.getElementById('category-description').value = '';
-        loadCategories();
-    }
-}
-
-async function editCategory(categoryName) {
-    const category = categories[categoryName];
-    if (category) {
-        document.getElementById('category-title').value = category.name || categoryName;
-        document.getElementById('category-description').value = category.description || '';
-    }
-}
-
-async function deleteCategory(categoryName) {
-    if (confirm(`Delete category "${categoryName}"? This will also delete all menu items in this category.`)) {
-        delete categories[categoryName];
-        delete menuData[categoryName];
-        
-        const success = await saveMenuData();
-        if (success) {
-            alert('Category deleted successfully!');
-            loadCategories();
-        }
-    }
-}
-
 // Menu item management
 async function loadCategoriesForDropdown() {
     const categorySelect = document.getElementById('item-category');
     if (categorySelect) {
         categorySelect.innerHTML = '<option value="">Select category...</option>';
         
-        for (const [name, category] of Object.entries(categories)) {
+        for (const [name, category] of Object.entries(HARDCODED_CATEGORIES)) {
             const option = document.createElement('option');
             option.value = name;
             option.textContent = name;
@@ -335,17 +262,16 @@ function cancelEdit() {
 
 // Initialize admin panel
 document.addEventListener('DOMContentLoaded', async function() {
-    console.log('Simple Admin Panel initialized');
+    console.log('Simple Menu Admin initialized');
     
     try {
         // Load initial data
         await loadMenuData();
-        await loadCategories();
         await loadCategoriesForDropdown();
         
-        console.log('Admin panel ready');
+        console.log('Menu admin ready');
     } catch (error) {
-        console.error('Error initializing admin panel:', error);
+        console.error('Error initializing menu admin:', error);
     }
     
     // Set up event listeners
