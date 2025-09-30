@@ -32,6 +32,13 @@
         "description": "",
         "price": 111
       }
+    },
+    "Soğuk İçecekler": {
+      "Gazoz": {
+        "name": "Gazoz",
+        "description": "",
+        "price": 111
+      }
     }
   },
   "categories": {
@@ -66,5 +73,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759234384823
+  "lastUpdated": 1759234402557
 }
