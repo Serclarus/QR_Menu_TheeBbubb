@@ -20,27 +20,28 @@ async function loadFromCloudStorage() {
                 throw new Error(`Server error: ${response.status}`);
             }
         } else {
-            // Online mode - check localStorage first (for admin changes), then menu-data.json (for GitHub API)
+            // Online mode - prioritize menu-data.json for customers, localStorage for admin
             try {
-                // First check if localStorage has recent data (admin changes)
-                const lastUpdated = localStorage.getItem('lastUpdated');
-                const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
-                const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
-                const categories = JSON.parse(localStorage.getItem('categories') || '{}');
-                
-                if (lastUpdated && (Object.keys(menuData).length > 0 || Object.keys(cafeData).length > 0 || Object.keys(categories).length > 0)) {
-                    console.log('Menu data loaded from localStorage (admin changes)');
-                    return { menuData, cafeData, categories };
-                }
-                
-                // If no localStorage data, try menu-data.json (GitHub API)
+                // First try to load from menu-data.json (for all customers)
                 const response = await fetch('menu-data.json');
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('Menu data loaded from menu-data.json (GitHub API)');
+                    console.log('Menu data loaded from menu-data.json (for customers)');
                     return data;
                 } else {
-                    console.log('menu-data.json not found, no data available');
+                    console.log('menu-data.json not found, trying localStorage');
+                    // Fallback to localStorage (for admin changes)
+                    const lastUpdated = localStorage.getItem('lastUpdated');
+                    const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
+                    const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
+                    const categories = JSON.parse(localStorage.getItem('categories') || '{}');
+                    
+                    if (lastUpdated && (Object.keys(menuData).length > 0 || Object.keys(cafeData).length > 0 || Object.keys(categories).length > 0)) {
+                        console.log('Menu data loaded from localStorage (admin changes)');
+                        return { menuData, cafeData, categories };
+                    }
+                    
+                    console.log('No data found, returning empty data (will use default)');
                     return {};
                 }
             } catch (error) {
@@ -474,6 +475,19 @@ async function loadMenuData() {
     if (!menuData || Object.keys(menuData).length === 0) {
         console.log('Menu data is empty, using default data');
         menuData = defaultMenuData;
+    }
+    
+    // Final safety check - if still empty, create basic menu structure
+    if (!menuData || Object.keys(menuData).length === 0) {
+        console.log('Creating basic menu structure as final fallback');
+        menuData = {
+            'Sıcak İçecekler': {},
+            'Soğuk İçecekler': {},
+            'Ana Yemekler': {},
+            'Tatlılar': {},
+            'Atıştırmalıklar': {},
+            'Nargile': {}
+        };
     }
 }
 
