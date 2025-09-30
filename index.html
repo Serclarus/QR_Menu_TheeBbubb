@@ -85,6 +85,129 @@
 
     <script src="script.js"></script>
     <script>
+        // 🔒 DEV TOOLS DETECTION AND PREVENTION
+        (function() {
+            let devtools = false;
+            const threshold = 160;
+            
+            // Method 1: Window size detection
+            function detectDevTools() {
+                if (window.outerHeight - window.innerHeight > threshold || 
+                    window.outerWidth - window.innerWidth > threshold) {
+                    devtools = true;
+                    handleDevToolsDetection();
+                }
+            }
+            
+            // Method 2: Console detection
+            function detectConsole() {
+                let start = Date.now();
+                debugger;
+                let end = Date.now();
+                if (end - start > 100) {
+                    devtools = true;
+                    handleDevToolsDetection();
+                }
+            }
+            
+            // Method 3: Function override detection
+            let devtoolsOpen = false;
+            const originalLog = console.log;
+            console.log = function() {
+                devtoolsOpen = true;
+                handleDevToolsDetection();
+                return originalLog.apply(console, arguments);
+            };
+            
+            // Method 4: Performance timing detection
+            function detectPerformanceDevTools() {
+                const start = performance.now();
+                debugger;
+                const end = performance.now();
+                if (end - start > 100) {
+                    devtools = true;
+                    handleDevToolsDetection();
+                }
+            }
+            
+            // Handle dev tools detection
+            function handleDevToolsDetection() {
+                if (devtools) {
+                    console.clear();
+                    console.log('%c🔒 Dev Tools Detected!', 'color: red; font-size: 20px; font-weight: bold;');
+                    console.log('%cAccess to developer tools is restricted on this page.', 'color: red; font-size: 14px;');
+                    console.log('%cThis page is protected against code inspection.', 'color: red; font-size: 14px;');
+                    
+                    // Optional: Redirect or show warning
+                    // window.location.href = 'about:blank';
+                }
+            }
+            
+            // Continuous monitoring
+            setInterval(detectDevTools, 1000);
+            setInterval(detectConsole, 2000);
+            setInterval(detectPerformanceDevTools, 3000);
+            
+            // Window resize detection
+            window.addEventListener('resize', detectDevTools);
+            
+            // Console override
+            const noop = () => {};
+            ['log', 'warn', 'error', 'info', 'debug'].forEach(method => {
+                console[method] = noop;
+            });
+            
+            // Disable right-click context menu
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // Disable F12, Ctrl+Shift+I, Ctrl+U, etc.
+            document.addEventListener('keydown', function(e) {
+                // F12
+                if (e.keyCode === 123) {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+Shift+I
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+U
+                if (e.ctrlKey && e.keyCode === 85) {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+Shift+J
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+Shift+C
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // Disable text selection
+            document.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // Disable drag
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            console.log('🔒 Page protection activated');
+        })();
+    </script>
+    <script>
         // Instagram button handler - simple and reliable
         document.addEventListener('DOMContentLoaded', function() {
             const instagramLink = document.getElementById('instagram-link');
