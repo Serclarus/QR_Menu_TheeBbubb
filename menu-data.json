@@ -37,6 +37,11 @@
         "name": "Nargile",
         "description": "Lady killer,inferno nights,hawai",
         "price": 250
+      },
+      "Buzlu Nargile": {
+        "name": "Buzlu Nargile",
+        "description": "Lady killer, inferno nights,hawai",
+        "price": 300
       }
     },
     "Ana Yemekler": {
@@ -160,5 +165,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759251432261
+  "lastUpdated": 1759251475392
 }
