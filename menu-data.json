@@ -40,7 +40,7 @@
       "Tatlı": {
         "name": "Tatlı",
         "description": "",
-        "price": 111
+        "price": 112
       }
     },
     "Atıştırmalıklar": {
@@ -90,5 +90,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759235903214
+  "lastUpdated": 1759235925205
 }
