@@ -83,7 +83,13 @@
         "price": 112
       }
     },
-    "Atıştırmalıklar": {},
+    "Atıştırmalıklar": {
+      "Çikolatalı Gofret": {
+        "name": "Çikolatalı Gofret",
+        "description": "",
+        "price": 30
+      }
+    },
     "Soğuk İçecekler": {
       "Su": {
         "name": "Su",
@@ -159,5 +165,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759256635247
+  "lastUpdated": 1759256674558
 }
