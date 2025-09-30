@@ -6,11 +6,6 @@
         "description": "",
         "price": 20
       },
-      "Americano": {
-        "name": "Americano",
-        "description": "",
-        "price": 70
-      },
       "Salep2": {
         "name": "Salep2",
         "description": "",
@@ -90,5 +85,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759235966497
+  "lastUpdated": 1759237017605
 }
