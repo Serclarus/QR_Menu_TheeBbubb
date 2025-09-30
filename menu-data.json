@@ -95,6 +95,11 @@
         "name": "İçecek1",
         "description": "",
         "price": 1
+      },
+      "Su": {
+        "name": "Su",
+        "description": "",
+        "price": 20
       }
     }
   },
@@ -130,5 +135,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759249912974
+  "lastUpdated": 1759249959576
 }
