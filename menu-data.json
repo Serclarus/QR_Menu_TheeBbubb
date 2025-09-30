@@ -1,11 +1,6 @@
 {
   "menuData": {
     "Sıcak İçecekler": {
-      "Türk Kahvesi": {
-        "name": "Türk Kahvesi",
-        "description": "Geleneksel Türk kahvesi",
-        "price": 15
-      },
       "Çay": {
         "name": "Çay",
         "description": "Demli çay",
