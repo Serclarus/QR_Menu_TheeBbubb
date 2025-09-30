@@ -47,7 +47,7 @@
       "2": {
         "name": "2",
         "description": "",
-        "price": 2
+        "price": 3
       }
     },
     "Soğuk İçecekler": {
@@ -90,5 +90,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759235925205
+  "lastUpdated": 1759235941559
 }
