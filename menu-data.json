@@ -86,6 +86,11 @@
         "name": "Limonlu Cheesecake",
         "description": "",
         "price": 150
+      },
+      "Frambuazlı Cheesecake": {
+        "name": "Frambuazlı Cheesecake",
+        "description": "",
+        "price": 150
       }
     },
     "Atıştırmalıklar": {
@@ -200,5 +205,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759261679386
+  "lastUpdated": 1759261696745
 }
