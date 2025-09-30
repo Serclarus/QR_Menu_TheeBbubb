@@ -1,11 +1,6 @@
 {
   "menuData": {
     "Sıcak İçecekler": {
-      "Salep": {
-        "name": "Salep",
-        "description": "",
-        "price": 99
-      },
       "Çay": {
         "name": "Çay",
         "description": "",
@@ -15,6 +10,11 @@
         "name": "Americano",
         "description": "",
         "price": 70
+      },
+      "Salep2": {
+        "name": "Salep2",
+        "description": "",
+        "price": 9
       }
     },
     "Nargile": {
@@ -83,5 +83,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759235192645
+  "lastUpdated": 1759235851791
 }
