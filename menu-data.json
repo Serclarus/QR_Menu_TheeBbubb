@@ -120,6 +120,11 @@
         "name": "Gazoz",
         "description": "",
         "price": 40
+      },
+      "Ice Tea": {
+        "name": "Ice Tea",
+        "description": "Şeftali,limon",
+        "price": 70
       }
     }
   },
@@ -155,5 +160,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759250149158
+  "lastUpdated": 1759250203022
 }
