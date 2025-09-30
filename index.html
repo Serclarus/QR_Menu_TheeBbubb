@@ -720,15 +720,15 @@
                 return;
             }
             
-            // 🔒 PROTOCOL 4: Time-based Access Control
-            if (!securityProtocols.checkTimeRestrictions()) {
-                errorDiv.textContent = 'Erişim saati dışında! Sadece 06:00-23:00 arası erişim sağlanabilir.';
-                errorDiv.style.display = 'block';
-                securityProtocols.logRequest(false, 'time_restriction', {
-                    currentHour: new Date().getHours()
-                });
-                return;
-            }
+            // 🔒 PROTOCOL 4: Time-based Access Control - DISABLED FOR MULTIPLE ADMINS
+            // if (!securityProtocols.checkTimeRestrictions()) {
+            //     errorDiv.textContent = 'Erişim saati dışında! Sadece 06:00-23:00 arası erişim sağlanabilir.';
+            //     errorDiv.style.display = 'block';
+            //     securityProtocols.logRequest(false, 'time_restriction', {
+            //         currentHour: new Date().getHours()
+            //     });
+            //     return;
+            // }
             
             // 🔒 PROTOCOL 5: Rate Limiting
             if (now < lockoutTime) {
