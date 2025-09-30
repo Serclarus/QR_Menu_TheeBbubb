@@ -689,36 +689,39 @@
             const errorDiv = document.getElementById('admin-error');
             const now = Date.now();
             
-            // 🔒 PROTOCOL 1: Anti-Debugging Protection
-            if (securityProtocols.detectDebugging()) {
-                errorDiv.textContent = 'Geliştirici araçları tespit edildi! Erişim reddedildi.';
-                errorDiv.style.display = 'block';
-                securityProtocols.logRequest(false, 'debugging_detected', { 
-                    windowSize: `${window.outerWidth}x${window.outerHeight}`,
-                    innerSize: `${window.innerWidth}x${window.innerHeight}`
-                });
-                return;
-            }
+            // 🔒 PROTOCOL 1: Anti-Debugging Protection - DISABLED FOR TESTING
+            console.log('🔓 SECURITY DISABLED: Anti-debugging protection bypassed');
+            // if (securityProtocols.detectDebugging()) {
+            //     errorDiv.textContent = 'Geliştirici araçları tespit edildi! Erişim reddedildi.';
+            //     errorDiv.style.display = 'block';
+            //     securityProtocols.logRequest(false, 'debugging_detected', { 
+            //         windowSize: `${window.outerWidth}x${window.outerHeight}`,
+            //         innerSize: `${window.innerWidth}x${window.innerHeight}`
+            //     });
+            //     return;
+            // }
             
-            // 🔒 PROTOCOL 2: Suspicious Activity Detection
-            if (securityProtocols.detectSuspiciousActivity()) {
-                errorDiv.textContent = 'Şüpheli aktivite tespit edildi! Erişim reddedildi.';
-                errorDiv.style.display = 'block';
-                securityProtocols.logRequest(false, 'suspicious_activity', {
-                    userAgent: navigator.userAgent,
-                    webdriver: navigator.webdriver,
-                    phantom: !!window.phantom
-                });
-                return;
-            }
+            // 🔒 PROTOCOL 2: Suspicious Activity Detection - DISABLED FOR TESTING
+            console.log('🔓 SECURITY DISABLED: Suspicious activity detection bypassed');
+            // if (securityProtocols.detectSuspiciousActivity()) {
+            //     errorDiv.textContent = 'Şüpheli aktivite tespit edildi! Erişim reddedildi.';
+            //     errorDiv.style.display = 'block';
+            //     securityProtocols.logRequest(false, 'suspicious_activity', {
+            //         userAgent: navigator.userAgent,
+            //         webdriver: navigator.webdriver,
+            //         phantom: !!window.phantom
+            //     });
+            //     return;
+            // }
             
-            // 🔒 PROTOCOL 3: Anti-Tampering Protection
-            if (securityProtocols.detectTampering()) {
-                errorDiv.textContent = 'Güvenlik ihlali tespit edildi! Erişim reddedildi.';
-                errorDiv.style.display = 'block';
-                securityProtocols.logRequest(false, 'tampering_detected');
-                return;
-            }
+            // 🔒 PROTOCOL 3: Anti-Tampering Protection - DISABLED FOR TESTING
+            console.log('🔓 SECURITY DISABLED: Anti-tampering protection bypassed');
+            // if (securityProtocols.detectTampering()) {
+            //     errorDiv.textContent = 'Güvenlik ihlali tespit edildi! Erişim reddedildi.';
+            //     errorDiv.style.display = 'block';
+            //     securityProtocols.logRequest(false, 'tampering_detected');
+            //     return;
+            // }
             
             // 🔒 PROTOCOL 4: Time-based Access Control - DISABLED FOR MULTIPLE ADMINS
             // if (!securityProtocols.checkTimeRestrictions()) {
