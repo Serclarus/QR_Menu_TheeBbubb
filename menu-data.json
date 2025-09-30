@@ -26,7 +26,7 @@
       "Elmalı": {
         "name": "Elmalı",
         "description": "",
-        "price": 100
+        "price": 101
       }
     },
     "Ana Yemekler": {
@@ -90,5 +90,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759235957307
+  "lastUpdated": 1759235966497
 }
