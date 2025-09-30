@@ -49,6 +49,11 @@
         "name": "Tost",
         "description": "Karışık ve kaşarlı çeşitleriyle\nÇay ikramımızdır.",
         "price": 100
+      },
+      "Köfte Ekmek": {
+        "name": "Köfte Ekmek",
+        "description": "Acılı,acısız \nİçerik: maydanoz,domates, köfte,isteğe bağlı soğan",
+        "price": 200
       }
     },
     "Tatlılar": {
@@ -105,5 +110,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759249417384
+  "lastUpdated": 1759249554985
 }
