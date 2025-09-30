@@ -4,14 +4,7 @@
       "Salep": {
         "name": "Salep",
         "description": "",
-        "price": 90
-      }
-    },
-    "Soğuk İçecekler": {
-      "Kola": {
-        "name": "Kola",
-        "description": "",
-        "price": 10
+        "price": 99
       }
     }
   },
@@ -47,5 +40,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759232440440
+  "lastUpdated": 1759232647114
 }
