@@ -113,6 +113,11 @@
         "name": "Çizi",
         "description": "",
         "price": 30
+      },
+      "Çubuk Kraker": {
+        "name": "Çubuk Kraker",
+        "description": "",
+        "price": 20
       }
     },
     "Soğuk İçecekler": {
@@ -190,5 +195,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759256807471
+  "lastUpdated": 1759256845127
 }
