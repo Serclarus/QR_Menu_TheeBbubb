@@ -1,4 +1,4 @@
-// Simple Admin Panel - Menu Items Only
+// Simple Menu Admin - Add/Edit/Delete Menu Items Only
 console.log('Simple Menu Admin loaded');
 
 // Hardcoded categories - no API management needed
@@ -14,7 +14,7 @@ const HARDCODED_CATEGORIES = {
 // Global variables
 let menuData = {};
 
-// Load menu data from API (GitHub)
+// Load menu data from GitHub API
 async function loadMenuData() {
     try {
         console.log('Loading menu data from GitHub API...');
@@ -26,17 +26,15 @@ async function loadMenuData() {
             return data;
         } else {
             console.log('❌ No menu-data.json found on GitHub');
-            alert('⚠️ No menu data found. Please add some menu items first.');
             return { menuData: {} };
         }
     } catch (error) {
         console.error('❌ Error loading menu data from API:', error);
-        alert('❌ Failed to load menu data from GitHub. Please check your connection.');
         return { menuData: {} };
     }
 }
 
-// Save menu data to API (GitHub) ONLY
+// Save menu data to GitHub API ONLY
 async function saveMenuData() {
     try {
         console.log('Saving menu data to GitHub API...');
@@ -104,7 +102,7 @@ function logoutAdmin() {
     }
 }
 
-// Menu item management
+// Load categories for dropdown
 async function loadCategoriesForDropdown() {
     const categorySelect = document.getElementById('item-category');
     if (categorySelect) {
@@ -119,6 +117,7 @@ async function loadCategoriesForDropdown() {
     }
 }
 
+// Load items for selected category
 async function loadItemsForCategory(category) {
     const itemList = document.getElementById('items-list');
     if (itemList) {
@@ -160,6 +159,7 @@ async function loadItemsForCategory(category) {
     }
 }
 
+// Save menu item (add or edit)
 async function saveMenuItem() {
     const category = document.getElementById('item-category').value;
     const name = document.getElementById('item-name').value;
@@ -199,6 +199,7 @@ async function saveMenuItem() {
     }
 }
 
+// Edit existing item
 async function editItem(category, itemName) {
     const item = menuData[category] && menuData[category][itemName];
     
@@ -224,6 +225,7 @@ async function editItem(category, itemName) {
     }
 }
 
+// Delete item
 async function deleteItem(category, itemName) {
     if (confirm(`Delete item "${itemName}"?`)) {
         if (menuData[category] && menuData[category][itemName]) {
@@ -238,6 +240,7 @@ async function deleteItem(category, itemName) {
     }
 }
 
+// Clear form
 function clearItemForm() {
     document.getElementById('item-name').value = '';
     document.getElementById('item-name').removeAttribute('data-original-name');
@@ -258,6 +261,7 @@ function clearItemForm() {
     }
 }
 
+// Cancel edit
 function cancelEdit() {
     clearItemForm();
 }
