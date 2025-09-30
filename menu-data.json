@@ -95,6 +95,11 @@
         "name": "Su",
         "description": "",
         "price": 20
+      },
+      "Sade Soda": {
+        "name": "Sade Soda",
+        "description": "",
+        "price": 30
       }
     }
   },
@@ -130,5 +135,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759249964178
+  "lastUpdated": 1759249985528
 }
