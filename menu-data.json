@@ -83,13 +83,7 @@
         "price": 112
       }
     },
-    "Atıştırmalıklar": {
-      "2": {
-        "name": "2",
-        "description": "",
-        "price": 3
-      }
-    },
+    "Atıştırmalıklar": {},
     "Soğuk İçecekler": {
       "Su": {
         "name": "Su",
@@ -165,5 +159,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759251475392
+  "lastUpdated": 1759256635247
 }
