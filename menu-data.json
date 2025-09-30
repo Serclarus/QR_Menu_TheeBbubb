@@ -103,6 +103,11 @@
         "name": "Kremalı Gofret",
         "description": "Muzlu",
         "price": 30
+      },
+      "Kremalı Sandviç Bisküvi": {
+        "name": "Kremalı Sandviç Bisküvi",
+        "description": "",
+        "price": 40
       }
     },
     "Soğuk İçecekler": {
@@ -180,5 +185,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759256739662
+  "lastUpdated": 1759256766537
 }
