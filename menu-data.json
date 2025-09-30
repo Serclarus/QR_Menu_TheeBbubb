@@ -99,11 +99,6 @@
         "description": "",
         "price": 40
       },
-      "Kremalı Gofret": {
-        "name": "Kremalı Gofret",
-        "description": "Muzlu",
-        "price": 30
-      },
       "Kremalı Sandviç Bisküvi": {
         "name": "Kremalı Sandviç Bisküvi",
         "description": "",
@@ -118,6 +113,11 @@
         "name": "Çubuk Kraker",
         "description": "",
         "price": 20
+      },
+      "Kremalı Gofret 9Kattat": {
+        "name": "Kremalı Gofret 9Kattat",
+        "description": "Muzlu",
+        "price": 30
       }
     },
     "Soğuk İçecekler": {
@@ -195,5 +195,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759256845127
+  "lastUpdated": 1759256924147
 }
