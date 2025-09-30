@@ -4,7 +4,47 @@
       "Salep": {
         "name": "Salep",
         "description": "",
-        "price": 90
+        "price": 9
+      }
+    },
+    "Nargile": {
+      "11": {
+        "name": "11",
+        "description": "11",
+        "price": 11
+      },
+      "Elmalı": {
+        "name": "Elmalı",
+        "description": "",
+        "price": 100
+      }
+    },
+    "Ana Yemekler": {
+      "Yemek": {
+        "name": "Yemek",
+        "description": "",
+        "price": 111
+      }
+    },
+    "Tatlılar": {
+      "Tatlı": {
+        "name": "Tatlı",
+        "description": "",
+        "price": 111
+      }
+    },
+    "Soğuk İçecekler": {
+      "Gazoz": {
+        "name": "Gazoz",
+        "description": "",
+        "price": 111
+      }
+    },
+    "Atıştırmalıklar": {
+      "Atış": {
+        "name": "Atış",
+        "description": "1",
+        "price": 111
       }
     }
   },
@@ -40,5 +80,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759229243959
+  "lastUpdated": 1759234451825
 }
