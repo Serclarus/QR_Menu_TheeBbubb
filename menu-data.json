@@ -32,7 +32,13 @@
         "price": 50
       }
     },
-    "Nargile": {},
+    "Nargile": {
+      "Nargile": {
+        "name": "Nargile",
+        "description": "Lady killer,inferno nights,hawai",
+        "price": 250
+      }
+    },
     "Ana Yemekler": {
       "Tost": {
         "name": "Tost",
@@ -154,5 +160,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759251409133
+  "lastUpdated": 1759251432261
 }
