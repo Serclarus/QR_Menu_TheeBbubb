@@ -109,6 +109,33 @@ class GitHubAPI {
             throw error;
         }
     }
+
+    // Test GitHub connection
+    async testConnection() {
+        try {
+            if (!this.token) {
+                throw new Error('No GitHub token provided');
+            }
+
+            const response = await fetch(`${this.baseURL}/repos/${this.repository}`, {
+                headers: {
+                    'Authorization': `token ${this.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+
+            if (response.ok) {
+                console.log('✅ GitHub connection successful');
+                return true;
+            } else {
+                console.error('❌ GitHub connection failed:', response.status);
+                return false;
+            }
+        } catch (error) {
+            console.error('❌ GitHub connection error:', error);
+            return false;
+        }
+    }
 }
 
 // Create global instance
