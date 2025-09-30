@@ -20,44 +20,46 @@ async function loadFromCloudStorage() {
                 throw new Error(`Server error: ${response.status}`);
             }
         } else {
-            // Online mode - load from localStorage first, then menu-data.json as fallback
+            // Online mode - load from menu-data.json first (for customers), then localStorage (for admin)
             try {
-                // First try to load from localStorage (admin changes)
-                const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
-                const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
-                const categories = JSON.parse(localStorage.getItem('categories') || '{}');
-                
-                if (Object.keys(menuData).length > 0 || Object.keys(cafeData).length > 0 || Object.keys(categories).length > 0) {
-                    console.log('Menu data loaded from localStorage (admin changes)');
-                    return { menuData, cafeData, categories };
-                }
-                
-                // Fallback to menu-data.json if no localStorage data
-                console.log('No localStorage data found, trying menu-data.json');
+                // First try to load from menu-data.json (updated by GitHub API)
                 const response = await fetch('menu-data.json');
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('Menu data loaded from menu-data.json (fallback)');
+                    console.log('Menu data loaded from menu-data.json (GitHub API updates)');
                     return data;
                 } else {
-                    console.log('No cloud storage data found');
+                    console.log('menu-data.json not found, trying localStorage');
+                    // Fallback to localStorage if no JSON file
+                    const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
+                    const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
+                    const categories = JSON.parse(localStorage.getItem('categories') || '{}');
+                    
+                    if (Object.keys(menuData).length > 0 || Object.keys(cafeData).length > 0 || Object.keys(categories).length > 0) {
+                        console.log('Menu data loaded from localStorage (fallback)');
+                        return { menuData, cafeData, categories };
+                    }
+                    
+                    console.log('No data found');
                     return {};
                 }
             } catch (error) {
-                console.error('Error loading from localStorage, trying menu-data.json:', error);
-                // Fallback to menu-data.json
+                console.error('Error loading from menu-data.json, trying localStorage:', error);
+                // Fallback to localStorage
                 try {
-                    const response = await fetch('menu-data.json');
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log('Menu data loaded from menu-data.json (fallback)');
-                        return data;
-                    } else {
-                        console.log('No cloud storage data found');
-                        return {};
+                    const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
+                    const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
+                    const categories = JSON.parse(localStorage.getItem('categories') || '{}');
+                    
+                    if (Object.keys(menuData).length > 0 || Object.keys(cafeData).length > 0 || Object.keys(categories).length > 0) {
+                        console.log('Menu data loaded from localStorage (fallback)');
+                        return { menuData, cafeData, categories };
                     }
-                } catch (fallbackError) {
-                    console.error('Error loading from menu-data.json:', fallbackError);
+                    
+                    console.log('No data found');
+                    return {};
+                } catch (localError) {
+                    console.error('Error loading from localStorage:', localError);
                     return {};
                 }
             }
