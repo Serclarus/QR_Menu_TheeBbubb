@@ -18,10 +18,10 @@
       }
     },
     "Nargile": {
-      "1": {
-        "name": "1",
-        "description": "",
-        "price": 1
+      "2": {
+        "name": "2",
+        "description": "2",
+        "price": 2
       },
       "Elmalı": {
         "name": "Elmalı",
@@ -40,7 +40,7 @@
       "Tatlı": {
         "name": "Tatlı",
         "description": "",
-        "price": 112
+        "price": 111
       }
     }
   },
@@ -76,5 +76,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759235066371
+  "lastUpdated": 1759235169244
 }
