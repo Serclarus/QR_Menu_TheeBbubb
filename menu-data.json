@@ -110,6 +110,11 @@
         "name": "Kola",
         "description": "",
         "price": 70
+      },
+      "Fanta": {
+        "name": "Fanta",
+        "description": "",
+        "price": 70
       }
     }
   },
@@ -145,5 +150,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759250114072
+  "lastUpdated": 1759250121031
 }
