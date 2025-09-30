@@ -5,11 +5,6 @@
         "name": "Çay",
         "description": "Demli çay",
         "price": 40
-      },
-      "Sıcak Çikolata": {
-        "name": "Sıcak Çikolata",
-        "description": "Kremalı sıcak çikolata",
-        "price": 12
       }
     },
     "Soğuk İçecekler": {
