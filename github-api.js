@@ -9,36 +9,14 @@ class GitHubAPI {
         this.baseURL = 'https://api.github.com';
     }
 
-    // 🔒 SECURE: Set GitHub token with server-side storage
-    async setToken(token) {
-        try {
-            // Send token to secure server for encrypted storage
-            const response = await fetch('/api/secure-token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.getSessionToken()}`
-                },
-                body: JSON.stringify({ token: token })
-            });
-            
-            if (response.ok) {
-                this.token = token; // Store locally for immediate use
-                console.log('✅ GitHub token securely stored');
-                return true;
-            } else {
-                console.error('❌ Failed to store GitHub token securely');
-                return false;
-            }
-        } catch (error) {
-            console.error('❌ Error storing GitHub token:', error);
-            return false;
+    // Set GitHub token (client-side storage)
+    setToken(token) {
+        this.token = token;
+        // Store in localStorage for persistence
+        if (token) {
+            localStorage.setItem('githubToken', token);
+            console.log('✅ GitHub token stored locally');
         }
-    }
-    
-    // Get session token for authentication
-    getSessionToken() {
-        return sessionStorage.getItem('adminSessionToken') || localStorage.getItem('adminSessionToken');
     }
 
     // Get the current content of menu-data.json
