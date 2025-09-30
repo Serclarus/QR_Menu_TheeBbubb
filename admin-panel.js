@@ -3,12 +3,12 @@ console.log('Simple Menu Admin loaded');
 
 // Hardcoded categories - no API management needed
 const HARDCODED_CATEGORIES = {
-    'Sıcak İçecekler': { name: 'Sıcak İçecekler', description: 'Sıcak içecekler', icon: 'hotdrinks_icon.png' },
-    'Soğuk İçecekler': { name: 'Soğuk İçecekler', description: 'Soğuk içecekler', icon: 'colddrinks_icon.png' },
-    'Ana Yemekler': { name: 'Ana Yemekler', description: 'Ana yemekler', icon: 'maindishes_icon.png' },
-    'Tatlılar': { name: 'Tatlılar', description: 'Tatlılar', icon: 'desserts_icon.png' },
-    'Atıştırmalıklar': { name: 'Atıştırmalıklar', description: 'Atıştırmalıklar', icon: 'snacks_icon.png' },
-    'Nargile': { name: 'Nargile', description: 'Nargile', icon: 'hookah_icon.png' }
+                            'Sıcak İçecekler': { name: 'Sıcak İçecekler', description: 'Sıcak içecekler', icon: 'hotdrinks_icon.png' },
+                            'Soğuk İçecekler': { name: 'Soğuk İçecekler', description: 'Soğuk içecekler', icon: 'colddrinks_icon.png' },
+                            'Ana Yemekler': { name: 'Ana Yemekler', description: 'Ana yemekler', icon: 'maindishes_icon.png' },
+                            'Tatlılar': { name: 'Tatlılar', description: 'Tatlılar', icon: 'desserts_icon.png' },
+                            'Atıştırmalıklar': { name: 'Atıştırmalıklar', description: 'Atıştırmalıklar', icon: 'snacks_icon.png' },
+                            'Nargile': { name: 'Nargile', description: 'Nargile', icon: 'hookah_icon.png' }
 };
 
 // Global variables
@@ -124,47 +124,50 @@ async function loadItemsForCategory(category) {
         itemList.innerHTML = '';
         
         const items = menuData[category] || {};
-        
-        if (Object.keys(items).length === 0) {
+            
+            if (Object.keys(items).length === 0) {
             itemList.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No items in this category.</p>';
-            return;
-        }
-        
-        for (const [name, item] of Object.entries(items)) {
-            const itemElement = document.createElement('div');
-            itemElement.className = 'item';
-            itemElement.style.cssText = `
-                background: white;
-                padding: 1rem;
-                margin: 0.5rem 0;
-                border-radius: 8px;
-                border: 1px solid #ddd;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            `;
-            itemElement.innerHTML = `
-                <div class="item-info">
-                    <h3 style="margin: 0 0 0.5rem 0; color: #2c3e50;">${name}</h3>
+        return;
+    }
+    
+            for (const [name, item] of Object.entries(items)) {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'item';
+                itemElement.style.cssText = `
+                    background: white;
+                    padding: 1rem;
+                    margin: 0.5rem 0;
+                    border-radius: 8px;
+                    border: 1px solid #ddd;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                `;
+                itemElement.innerHTML = `
+                    <div class="item-info">
+                        <h3 style="margin: 0 0 0.5rem 0; color: #2c3e50;">${name}</h3>
                     <p style="margin: 0 0 0.5rem 0; color: #666;">${item.description || 'No description'}</p>
-                    <p style="margin: 0; color: #e67e22; font-weight: bold;">₺${item.price}</p>
-                </div>
-                <div class="item-actions">
+                        <p style="margin: 0; color: #e67e22; font-weight: bold;">₺${item.price}</p>
+                    </div>
+                    <div class="item-actions">
                     <button onclick="editItem('${category}', '${name}')" style="background: #3498db; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; margin-right: 0.5rem; cursor: pointer;">Edit</button>
                     <button onclick="deleteItem('${category}', '${name}')" style="background: #e74c3c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Delete</button>
-                </div>
-            `;
-            itemList.appendChild(itemElement);
-        }
+                    </div>
+                `;
+                itemList.appendChild(itemElement);
+            }
     }
 }
 
 // Save menu item (add or edit)
 async function saveMenuItem() {
+    console.log('saveMenuItem called');
     const category = document.getElementById('item-category').value;
     const name = document.getElementById('item-name').value;
     const description = document.getElementById('item-description').value;
     const price = document.getElementById('item-price').value;
+    
+    console.log('Form values:', { category, name, description, price });
     
     if (!category || !name || !price) {
         alert('Please fill in all required fields');
@@ -201,27 +204,27 @@ async function saveMenuItem() {
 
 // Edit existing item
 async function editItem(category, itemName) {
-    const item = menuData[category] && menuData[category][itemName];
-    
-    if (item) {
-        document.getElementById('item-category').value = category;
-        document.getElementById('item-name').value = itemName;
-        document.getElementById('item-name').setAttribute('data-original-name', itemName);
-        document.getElementById('item-description').value = item.description || '';
-        document.getElementById('item-price').value = item.price || '';
+        const item = menuData[category] && menuData[category][itemName];
         
+        if (item) {
+            document.getElementById('item-category').value = category;
+            document.getElementById('item-name').value = itemName;
+            document.getElementById('item-name').setAttribute('data-original-name', itemName);
+            document.getElementById('item-description').value = item.description || '';
+            document.getElementById('item-price').value = item.price || '';
+            
         // Change button text
-        const submitButton = document.querySelector('#item-form button[type="submit"]');
-        if (submitButton) {
+            const submitButton = document.querySelector('#item-form button[type="submit"]');
+            if (submitButton) {
             submitButton.textContent = 'Update Item';
             submitButton.style.backgroundColor = '#e67e22';
-        }
-        
+            }
+            
         // Show cancel button
-        const cancelBtn = document.getElementById('cancel-edit-btn');
-        if (cancelBtn) {
-            cancelBtn.style.display = 'inline-block';
-        }
+            const cancelBtn = document.getElementById('cancel-edit-btn');
+            if (cancelBtn) {
+                cancelBtn.style.display = 'inline-block';
+            }
     }
 }
 
@@ -291,5 +294,17 @@ document.addEventListener('DOMContentLoaded', async function() {
                 document.getElementById('items-list').innerHTML = '';
             }
         });
+    }
+    
+    // Set up form submission
+    const itemForm = document.getElementById('item-form');
+    if (itemForm) {
+        itemForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Form submitted, calling saveMenuItem');
+            saveMenuItem();
+        });
+    } else {
+        console.error('Item form not found!');
     }
 });
