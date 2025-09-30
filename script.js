@@ -20,27 +20,27 @@ async function loadFromCloudStorage() {
                 throw new Error(`Server error: ${response.status}`);
             }
         } else {
-            // Online mode - load from menu-data.json first (for customers), then localStorage (for admin)
+            // Online mode - check localStorage first (for admin changes), then menu-data.json (for GitHub API)
             try {
-                // First try to load from menu-data.json (updated by GitHub API)
+                // First check if localStorage has recent data (admin changes)
+                const lastUpdated = localStorage.getItem('lastUpdated');
+                const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
+                const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
+                const categories = JSON.parse(localStorage.getItem('categories') || '{}');
+                
+                if (lastUpdated && (Object.keys(menuData).length > 0 || Object.keys(cafeData).length > 0 || Object.keys(categories).length > 0)) {
+                    console.log('Menu data loaded from localStorage (admin changes)');
+                    return { menuData, cafeData, categories };
+                }
+                
+                // If no localStorage data, try menu-data.json (GitHub API)
                 const response = await fetch('menu-data.json');
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('Menu data loaded from menu-data.json (GitHub API updates)');
+                    console.log('Menu data loaded from menu-data.json (GitHub API)');
                     return data;
                 } else {
-                    console.log('menu-data.json not found, trying localStorage');
-                    // Fallback to localStorage if no JSON file
-                    const menuData = JSON.parse(localStorage.getItem('menuData') || '{}');
-                    const cafeData = JSON.parse(localStorage.getItem('cafeData') || '{}');
-                    const categories = JSON.parse(localStorage.getItem('categories') || '{}');
-                    
-                    if (Object.keys(menuData).length > 0 || Object.keys(cafeData).length > 0 || Object.keys(categories).length > 0) {
-                        console.log('Menu data loaded from localStorage (fallback)');
-                        return { menuData, cafeData, categories };
-                    }
-                    
-                    console.log('No data found');
+                    console.log('menu-data.json not found, no data available');
                     return {};
                 }
             } catch (error) {
