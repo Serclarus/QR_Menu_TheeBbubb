@@ -298,12 +298,27 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Set up form submission
     const itemForm = document.getElementById('item-form');
+    console.log('Item form element:', itemForm);
     if (itemForm) {
+        console.log('Adding form submission listener');
         itemForm.addEventListener('submit', function(e) {
             e.preventDefault();
             console.log('Form submitted, calling saveMenuItem');
             saveMenuItem();
         });
+        console.log('Form submission listener added');
+        
+        // Also add click listener to submit button as backup
+        const submitButton = itemForm.querySelector('button[type="submit"]');
+        console.log('Submit button:', submitButton);
+        if (submitButton) {
+            submitButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Submit button clicked, calling saveMenuItem');
+                saveMenuItem();
+            });
+            console.log('Submit button click listener added');
+        }
     } else {
         console.error('Item form not found!');
     }
