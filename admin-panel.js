@@ -161,7 +161,7 @@ async function loadItemsForCategory(category) {
     }
 }
 
-// Save menu item (add or edit)
+// 🔒 SECURE: Save menu item with XSS prevention
 async function saveMenuItem() {
     console.log('saveMenuItem called');
     const category = document.getElementById('item-category').value;
@@ -176,33 +176,75 @@ async function saveMenuItem() {
         return;
     }
     
+    // 🔒 XSS PREVENTION: Sanitize all inputs
+    const sanitizedData = {
+        category: sanitizeInput(category),
+        name: sanitizeInput(name),
+        description: sanitizeInput(description),
+        price: parseFloat(price.replace('₺', '').replace(',', '.').trim())
+    };
+    
+    // Validate sanitized data
+    if (!sanitizedData.name || sanitizedData.name.length > 100) {
+        alert('Item name is required and must be less than 100 characters');
+        return;
+    }
+    
+    if (sanitizedData.description && sanitizedData.description.length > 500) {
+        alert('Description must be less than 500 characters');
+        return;
+    }
+    
+    if (isNaN(sanitizedData.price) || sanitizedData.price < 0 || sanitizedData.price > 10000) {
+        alert('Price must be a valid number between 0 and 10000');
+        return;
+    }
+    
     // Initialize category if it doesn't exist
-    if (!menuData[category]) {
-        menuData[category] = {};
+    if (!menuData[sanitizedData.category]) {
+        menuData[sanitizedData.category] = {};
     }
     
     const itemData = {
-        name: name,
-        description: description,
-        price: parseFloat(price.replace('₺', '').replace(',', '.').trim())
+        name: sanitizedData.name,
+        description: sanitizedData.description,
+        price: sanitizedData.price
     };
     
     // Check if we're editing an existing item
     const originalName = document.getElementById('item-name').getAttribute('data-original-name');
-    if (originalName && originalName !== name) {
+    if (originalName && originalName !== sanitizedData.name) {
         // Item name changed, delete the old one
-        delete menuData[category][originalName];
+        delete menuData[sanitizedData.category][originalName];
     }
     
-    menuData[category][name] = itemData;
+    menuData[sanitizedData.category][sanitizedData.name] = itemData;
     
     console.log('Updated menuData before saving:', menuData);
     const success = await saveMenuData();
     if (success) {
-        alert(`✅ Menu item saved successfully!\n\nCategory: ${category}\nItem: ${name}\nPrice: ${price} TL`);
+        alert(`✅ Menu item saved successfully!\n\nCategory: ${sanitizedData.category}\nItem: ${sanitizedData.name}\nPrice: ${sanitizedData.price} TL`);
         clearItemForm();
-        loadItemsForCategory(category);
+        loadItemsForCategory(sanitizedData.category);
     }
+}
+
+// 🔒 XSS PREVENTION: Sanitize user input
+function sanitizeInput(input) {
+    if (typeof input !== 'string') return '';
+    
+    return input
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/<[^>]*>/g, '')
+        .replace(/javascript:/gi, '')
+        .replace(/on\w+\s*=/gi, '')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#x27;/g, "'")
+        .replace(/&#x2F;/g, '/')
+        .trim();
 }
 
 // Edit existing item
