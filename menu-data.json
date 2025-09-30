@@ -6,6 +6,13 @@
         "description": "",
         "price": 90
       }
+    },
+    "Soğuk İçecekler": {
+      "Kola": {
+        "name": "Kola",
+        "description": "",
+        "price": 10
+      }
     }
   },
   "categories": {
@@ -40,5 +47,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759229243959
+  "lastUpdated": 1759232440440
 }
