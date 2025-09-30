@@ -459,11 +459,20 @@ async function loadMenuData() {
         const serverData = await loadDataFromServer();
         if (serverData.menuData && Object.keys(serverData.menuData).length > 0) {
             menuData = serverData.menuData;
+            console.log('Menu data loaded from server:', Object.keys(menuData));
         } else {
+            console.log('No server data found, using default menu data');
             menuData = defaultMenuData;
         }
     } catch (error) {
         console.error('Error loading menu data:', error);
+        console.log('Using default menu data due to error');
+        menuData = defaultMenuData;
+    }
+    
+    // Ensure we always have menu data
+    if (!menuData || Object.keys(menuData).length === 0) {
+        console.log('Menu data is empty, using default data');
         menuData = defaultMenuData;
     }
 }
