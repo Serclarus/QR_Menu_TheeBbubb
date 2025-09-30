@@ -33,7 +33,7 @@
       "Yemek": {
         "name": "Yemek",
         "description": "",
-        "price": 111
+        "price": 112
       }
     },
     "Tatlılar": {
@@ -90,5 +90,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759235882057
+  "lastUpdated": 1759235901192
 }
