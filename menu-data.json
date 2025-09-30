@@ -4,7 +4,7 @@
       "Salep": {
         "name": "Salep",
         "description": "",
-        "price": 99
+        "price": 90
       }
     }
   },
@@ -40,5 +40,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759228914364
+  "lastUpdated": 1759229243959
 }
