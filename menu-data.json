@@ -54,6 +54,11 @@
         "name": "Köfte Ekmek",
         "description": "Acılı,acısız \nİçerik: maydanoz,domates, köfte,isteğe bağlı soğan",
         "price": 200
+      },
+      "Ekmek Arası Tavuk Bonfile": {
+        "name": "Ekmek Arası Tavuk Bonfile",
+        "description": "İçerik:tavuk bonfile,domates,maydanoz,isteğe bağlı olarak soğan",
+        "price": 200
       }
     },
     "Tatlılar": {
@@ -110,5 +115,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759249554985
+  "lastUpdated": 1759249618975
 }
