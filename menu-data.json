@@ -3,7 +3,7 @@
     "Sıcak İçecekler": {
       "Çay": {
         "name": "Çay",
-        "description": "",
+        "description": "Bergamotlu türk çayı",
         "price": 25
       },
       "Oralet": {
@@ -85,5 +85,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759248709305
+  "lastUpdated": 1759248729436
 }
