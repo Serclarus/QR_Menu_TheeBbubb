@@ -20,6 +20,11 @@
         "name": "Sıcak Çikolata",
         "description": "",
         "price": 80
+      },
+      "Sahlep": {
+        "name": "Sahlep",
+        "description": "",
+        "price": 80
       }
     },
     "Nargile": {
@@ -95,5 +100,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759249100765
+  "lastUpdated": 1759249113466
 }
