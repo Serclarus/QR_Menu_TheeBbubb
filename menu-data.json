@@ -4,7 +4,7 @@
       "Salep": {
         "name": "Salep",
         "description": "",
-        "price": 99
+        "price": 9
       }
     },
     "Nargile": {
@@ -66,5 +66,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759234314503
+  "lastUpdated": 1759234384823
 }
