@@ -13,7 +13,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add test button for debugging
     addTestButton();
+    
+    // Set up form submission
+    setupFormSubmission();
 });
+
+// Set up form submission for menu items
+function setupFormSubmission() {
+    const itemForm = document.getElementById('item-form');
+    if (itemForm) {
+        itemForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('🔓 Form submitted - calling saveMenuItem');
+            saveMenuItem();
+        });
+    }
+}
 
 // Load menu data from menu-data.json
 async function loadMenuData() {
@@ -115,6 +130,21 @@ async function loadCategoriesForDropdown() {
                 option.textContent = name;
                 categorySelect.appendChild(option);
             }
+            
+            // Add event listener for category selection
+            categorySelect.addEventListener('change', function() {
+                const selectedCategory = this.value;
+                console.log('🔓 Category selected:', selectedCategory);
+                if (selectedCategory) {
+                    // Show the menu items section
+                    showSection('menu-items');
+                    // Load items for the selected category
+                    loadItemsForCategory(selectedCategory);
+                } else {
+                    document.getElementById('items-list').innerHTML = '';
+                }
+            });
+            
         } catch (error) {
             console.error('Error loading categories for dropdown:', error);
         }
