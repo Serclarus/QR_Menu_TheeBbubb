@@ -108,7 +108,7 @@
       },
       "Kola": {
         "name": "Kola",
-        "description": "",
+        "description": "Kutu ve şişe seçenekleriyle",
         "price": 70
       },
       "Fanta": {
@@ -160,5 +160,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759250378177
+  "lastUpdated": 1759250424858
 }
