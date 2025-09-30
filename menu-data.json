@@ -105,6 +105,11 @@
         "name": "Meyveli Soda",
         "description": "",
         "price": 40
+      },
+      "Kola": {
+        "name": "Kola",
+        "description": "",
+        "price": 70
       }
     }
   },
@@ -140,5 +145,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759250022506
+  "lastUpdated": 1759250114072
 }
