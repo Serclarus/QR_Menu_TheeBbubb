@@ -23,7 +23,7 @@ async function loadFromCloudStorage() {
             // Online mode - prioritize menu-data.json for customers, localStorage for admin
             try {
                 // First try to load from menu-data.json (for all customers)
-                const response = await fetch('menu-data.json');
+                const response = await fetch(`menu-data.json?t=${Date.now()}`);
                 if (response.ok) {
                     const data = await response.json();
                     console.log('Menu data loaded from menu-data.json (for customers)');

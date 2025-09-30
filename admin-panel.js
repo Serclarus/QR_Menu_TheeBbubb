@@ -44,6 +44,8 @@ async function saveMenuData() {
             lastUpdated: Date.now()
         };
         
+        console.log('Data being sent to GitHub:', data);
+        
         // Check if GitHub API is available
         if (typeof saveToGitHub !== 'function') {
             alert('❌ GitHub API not available! Please configure your GitHub token first.');
@@ -194,6 +196,7 @@ async function saveMenuItem() {
     
     menuData[category][name] = itemData;
     
+    console.log('Updated menuData before saving:', menuData);
     const success = await saveMenuData();
     if (success) {
         alert(`✅ Menu item saved successfully!\n\nCategory: ${category}\nItem: ${name}\nPrice: ${price} TL`);
