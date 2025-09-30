@@ -64,6 +64,11 @@
         "name": "Ekmek Arası Tavuk Şis",
         "description": "İçerik: Tavuk Şis, domates, maydanoz, isteğe bağlı olarak soğan",
         "price": 200
+      },
+      "Tavuk Burger": {
+        "name": "Tavuk Burger",
+        "description": "Tavuk köfte,Marul , domates, isteğe bağlı olarak soğan",
+        "price": 250
       }
     },
     "Tatlılar": {
@@ -120,5 +125,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759249721723
+  "lastUpdated": 1759249864160
 }
