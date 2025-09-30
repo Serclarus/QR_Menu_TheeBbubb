@@ -81,6 +81,11 @@
         "name": "Fıstık Bahçesi",
         "description": "",
         "price": 150
+      },
+      "Limonlu Cheesecake": {
+        "name": "Limonlu Cheesecake",
+        "description": "",
+        "price": 150
       }
     },
     "Atıştırmalıklar": {
@@ -195,5 +200,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759261662347
+  "lastUpdated": 1759261679386
 }
