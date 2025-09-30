@@ -1,9 +1,12 @@
 {
-  "menuData": {},
-  "cafeData": {
-    "description": "Hoşgeldiniz",
-    "image": "",
-    "instagramUrl": "https://www.instagram.com/theebbubb07"
+  "menuData": {
+    "Sıcak İçecekler": {
+      "Salep": {
+        "name": "Salep",
+        "description": "",
+        "price": 99
+      }
+    }
   },
   "categories": {
     "Sıcak İçecekler": {
@@ -36,5 +39,6 @@
       "description": "Nargile",
       "icon": "hookah_icon.png"
     }
-  }
+  },
+  "lastUpdated": 1759228784415
 }
