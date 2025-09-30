@@ -25,6 +25,11 @@
         "name": "Sahlep",
         "description": "",
         "price": 80
+      },
+      "Nescafe": {
+        "name": "Nescafe",
+        "description": "Bütün Nescafe çeşitleri",
+        "price": 50
       }
     },
     "Nargile": {
@@ -100,5 +105,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759249113466
+  "lastUpdated": 1759249296414
 }
