@@ -115,6 +115,11 @@
         "name": "Fanta",
         "description": "",
         "price": 70
+      },
+      "Gazoz": {
+        "name": "Gazoz",
+        "description": "",
+        "price": 40
       }
     }
   },
@@ -150,5 +155,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1759250121031
+  "lastUpdated": 1759250149158
 }
