@@ -14,37 +14,85 @@ const HARDCODED_CATEGORIES = {
 // Global variables
 let menuData = {};
 
-// Load menu data from GitHub API
+// Load menu data from GitHub API with backup recovery
 async function loadMenuData() {
     try {
-        console.log('Loading menu data from GitHub API...');
-        const response = await fetch('menu-data.json');
+        console.log('📥 Loading menu data from GitHub API...');
+        const response = await fetch(`menu-data.json?t=${Date.now()}`);
         if (response.ok) {
             const data = await response.json();
             menuData = data.menuData || {};
             console.log('✅ Menu data loaded from GitHub API:', menuData);
+            
+            // Check if we have a newer backup
+            const backupData = localStorage.getItem('menuDataBackup');
+            const backupTime = localStorage.getItem('menuDataBackupTime');
+            
+            if (backupData && backupTime) {
+                const backupTimestamp = parseInt(backupTime);
+                const apiTimestamp = data.lastUpdated || 0;
+                
+                if (backupTimestamp > apiTimestamp) {
+                    console.log('🔄 Found newer backup data, restoring...');
+                    const backup = JSON.parse(backupData);
+                    menuData = backup.menuData || {};
+                    
+                    // Try to save the backup to GitHub
+                    try {
+                        await saveMenuData();
+                        console.log('✅ Backup data restored and saved to GitHub');
+                    } catch (error) {
+                        console.warn('⚠️ Could not save backup to GitHub:', error.message);
+                    }
+                }
+            }
+            
             return data;
         } else {
             console.log('❌ No menu-data.json found on GitHub');
+            
+            // Try to restore from backup
+            const backupData = localStorage.getItem('menuDataBackup');
+            if (backupData) {
+                console.log('🔄 Restoring from backup...');
+                const backup = JSON.parse(backupData);
+                menuData = backup.menuData || {};
+                alert('⚠️ Using backup data. Please check your GitHub connection.');
+                return backup;
+            }
+            
+            alert('⚠️ No menu data found. Please add some menu items first.');
             return { menuData: {} };
         }
     } catch (error) {
         console.error('❌ Error loading menu data from API:', error);
+        
+        // Try to restore from backup
+        const backupData = localStorage.getItem('menuDataBackup');
+        if (backupData) {
+            console.log('🔄 Restoring from backup due to error...');
+            const backup = JSON.parse(backupData);
+            menuData = backup.menuData || {};
+            alert('⚠️ Using backup data due to connection error.');
+            return backup;
+        }
+        
+        alert('❌ Failed to load menu data from GitHub. Please check your connection.');
         return { menuData: {} };
     }
 }
 
-// Save menu data to GitHub API ONLY
+// Save menu data to GitHub API with backup mechanism
 async function saveMenuData() {
     try {
-        console.log('Saving menu data to GitHub API...');
+        console.log('💾 Saving menu data to GitHub API...');
         const data = {
             menuData: menuData,
             categories: HARDCODED_CATEGORIES,
             lastUpdated: Date.now()
         };
         
-        console.log('Data being sent to GitHub:', data);
+        console.log('📊 Data being sent to GitHub:', data);
         
         // Check if GitHub API is available
         if (typeof saveToGitHub !== 'function') {
@@ -60,18 +108,60 @@ async function saveMenuData() {
             return false;
         }
         
-        // Save via GitHub API
-        const success = await saveToGitHub(data);
-        if (success) {
-            console.log('✅ Data saved to GitHub API');
-            alert('✅ Menu updated successfully! Changes are now live for all customers.');
-            return true;
-        } else {
-            alert('❌ Failed to save to GitHub API. Please check your token and try again.');
+        // 🔒 BACKUP: Save to localStorage as backup
+        try {
+            localStorage.setItem('menuDataBackup', JSON.stringify(data));
+            localStorage.setItem('menuDataBackupTime', Date.now().toString());
+            console.log('💾 Data backed up to localStorage');
+        } catch (backupError) {
+            console.warn('⚠️ Could not backup to localStorage:', backupError.message);
+        }
+        
+        // Save via GitHub API with retry mechanism
+        let success = false;
+        let attempt = 1;
+        const maxAttempts = 3;
+        
+        while (attempt <= maxAttempts && !success) {
+            try {
+                console.log(`🔄 GitHub API attempt ${attempt}/${maxAttempts}...`);
+                success = await saveToGitHub(data);
+                
+                if (success) {
+                    console.log('✅ Data saved to GitHub API successfully');
+                    
+                    // Clear backup after successful save
+                    localStorage.removeItem('menuDataBackup');
+                    localStorage.removeItem('menuDataBackupTime');
+                    
+                    alert('✅ Menu updated successfully! Changes are now live for all customers.');
+                    return true;
+                } else {
+                    console.warn(`⚠️ GitHub API attempt ${attempt} failed`);
+                    attempt++;
+                    if (attempt <= maxAttempts) {
+                        console.log(`⏳ Waiting 2 seconds before retry...`);
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                    }
+                }
+            } catch (error) {
+                console.error(`❌ GitHub API attempt ${attempt} error:`, error);
+                attempt++;
+                if (attempt <= maxAttempts) {
+                    console.log(`⏳ Waiting 2 seconds before retry...`);
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                }
+            }
+        }
+        
+        if (!success) {
+            console.error('❌ All GitHub API attempts failed');
+            alert('❌ Failed to save to GitHub API after multiple attempts. Data is backed up locally. Please check your token and try again.');
             return false;
         }
+        
     } catch (error) {
-        console.error('Error saving menu data:', error);
+        console.error('❌ Error saving menu data:', error);
         alert('❌ Error saving to API: ' + error.message);
         return false;
     }

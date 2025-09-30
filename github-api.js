@@ -47,44 +47,134 @@ class GitHubAPI {
     // Update menu-data.json with new content
     async updateMenuData(newData) {
         try {
-            // Get current file info
-            const currentFile = await this.getCurrentContent();
+            console.log('🔄 Starting GitHub API update...');
             
-            // Prepare new content
+            // Get current file info with retry mechanism
+            let currentFile;
+            let retryCount = 0;
+            const maxRetries = 3;
+            
+            while (retryCount < maxRetries) {
+                try {
+                    currentFile = await this.getCurrentContent();
+                    console.log('✅ Current file info retrieved, SHA:', currentFile.sha);
+                    break;
+                } catch (error) {
+                    retryCount++;
+                    console.warn(`⚠️ Attempt ${retryCount} failed to get current file info:`, error.message);
+                    if (retryCount >= maxRetries) {
+                        throw new Error(`Failed to get current file info after ${maxRetries} attempts: ${error.message}`);
+                    }
+                    // Wait before retry
+                    await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+                }
+            }
+            
+            // Prepare new content with validation
             const content = JSON.stringify(newData, null, 2);
-            const encodedContent = btoa(unescape(encodeURIComponent(content)));
+            console.log('📝 Content prepared, size:', content.length, 'characters');
             
-            // Update the file
-            const response = await fetch(`${this.baseURL}/repos/${this.repository}/contents/${this.filePath}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `token ${this.token}`,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    message: `Update menu data - ${new Date().toISOString()}`,
-                    content: encodedContent,
-                    sha: currentFile.sha
-                })
-            });
+            // Validate content size (GitHub has 100MB limit, but we'll be more conservative)
+            if (content.length > 1000000) { // 1MB limit
+                throw new Error('Content too large for GitHub API (over 1MB)');
+            }
+            
+            const encodedContent = btoa(unescape(encodeURIComponent(content)));
+            console.log('🔐 Content encoded, size:', encodedContent.length, 'characters');
+            
+            // Update the file with retry mechanism
+            let response;
+            retryCount = 0;
+            
+            while (retryCount < maxRetries) {
+                try {
+                    response = await fetch(`${this.baseURL}/repos/${this.repository}/contents/${this.filePath}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${this.token}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json',
+                            'User-Agent': 'QR-Menu-Admin/1.0'
+                        },
+                        body: JSON.stringify({
+                            message: `Update menu data - ${new Date().toISOString()}`,
+                            content: encodedContent,
+                            sha: currentFile.sha
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        break;
+                    } else {
+                        const errorData = await response.json();
+                        console.warn(`⚠️ GitHub API error (attempt ${retryCount + 1}):`, response.status, errorData.message);
+                        
+                        // Check for specific error types
+                        if (response.status === 409) {
+                            // Conflict - file was modified by someone else
+                            console.log('🔄 File conflict detected, refreshing and retrying...');
+                            // Get fresh file info
+                            currentFile = await this.getCurrentContent();
+                            retryCount++;
+                            continue;
+                        } else if (response.status === 422) {
+                            // Validation error - might be content encoding issue
+                            throw new Error(`GitHub validation error: ${errorData.message}`);
+                        } else if (response.status === 403) {
+                            // Rate limit or permission error
+                            if (errorData.message.includes('rate limit')) {
+                                const resetTime = response.headers.get('X-RateLimit-Reset');
+                                const waitTime = resetTime ? (parseInt(resetTime) * 1000 - Date.now()) : 60000;
+                                console.log(`⏳ Rate limit hit, waiting ${waitTime}ms...`);
+                                await new Promise(resolve => setTimeout(resolve, waitTime));
+                                retryCount++;
+                                continue;
+                            } else {
+                                throw new Error(`GitHub permission error: ${errorData.message}`);
+                            }
+                        } else {
+                            throw new Error(`GitHub API error: ${response.status} - ${errorData.message}`);
+                        }
+                    }
+                } catch (error) {
+                    retryCount++;
+                    console.warn(`⚠️ Attempt ${retryCount} failed:`, error.message);
+                    if (retryCount >= maxRetries) {
+                        throw error;
+                    }
+                    // Wait before retry
+                    await new Promise(resolve => setTimeout(resolve, 2000 * retryCount));
+                }
+            }
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(`GitHub API error: ${response.status} - ${errorData.message}`);
+                throw new Error(`GitHub API error after retries: ${response.status} - ${errorData.message}`);
             }
 
             const result = await response.json();
-            console.log('Menu data updated successfully via GitHub API');
-            console.log('Commit SHA:', result.commit.sha);
+            console.log('✅ Menu data updated successfully via GitHub API');
+            console.log('📝 Commit SHA:', result.commit.sha);
+            console.log('🕒 Timestamp:', new Date().toISOString());
+            
+            // Verify the save by checking the file content
+            setTimeout(async () => {
+                try {
+                    const verifyFile = await this.getCurrentContent();
+                    console.log('✅ Save verification: File SHA updated to', verifyFile.sha);
+                } catch (error) {
+                    console.warn('⚠️ Could not verify save:', error.message);
+                }
+            }, 2000);
             
             return {
                 success: true,
                 commitSha: result.commit.sha,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                retryCount: retryCount
             };
         } catch (error) {
-            console.error('Error updating menu data via GitHub API:', error);
+            console.error('❌ Error updating menu data via GitHub API:', error);
             throw error;
         }
     }
