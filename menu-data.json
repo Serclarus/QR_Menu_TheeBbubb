@@ -139,7 +139,7 @@
       "Sade Soda": {
         "name": "Sade Soda",
         "description": "",
-        "price": 30
+        "price": 40
       },
       "Meyveli Soda": {
         "name": "Meyveli Soda",
@@ -205,5 +205,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1760798480011
+  "lastUpdated": 1760798492299
 }
