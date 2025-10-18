@@ -144,7 +144,7 @@
       "Meyveli Soda": {
         "name": "Meyveli Soda",
         "description": "Limon,kivi, şeftali,elma,karpuz&çilek",
-        "price": 40
+        "price": 50
       },
       "Kola": {
         "name": "Kola",
@@ -205,5 +205,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1760798492299
+  "lastUpdated": 1760798499842
 }
