@@ -96,6 +96,11 @@
         "name": "Fıstık Rüyası",
         "description": "",
         "price": 150
+      },
+      "Devil's Fudge": {
+        "name": "Devil's Fudge",
+        "description": "",
+        "price": 150
       }
     },
     "Atıştırmalıklar": {
@@ -210,5 +215,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1760798533843
+  "lastUpdated": 1760798581554
 }
