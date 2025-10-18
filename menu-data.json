@@ -91,6 +91,11 @@
         "name": "Frambuazlı Cheesecake",
         "description": "",
         "price": 150
+      },
+      "Fıstık Rüyası": {
+        "name": "Fıstık Rüyası",
+        "description": "",
+        "price": 150
       }
     },
     "Atıştırmalıklar": {
@@ -205,5 +210,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1760798499842
+  "lastUpdated": 1760798533843
 }
