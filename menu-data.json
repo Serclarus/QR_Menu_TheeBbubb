@@ -171,11 +171,6 @@
         "description": "",
         "price": 40
       },
-      "Ice Tea": {
-        "name": "Ice Tea",
-        "description": "Şeftali,limon",
-        "price": 70
-      },
       "Churchill": {
         "name": "Churchill",
         "description": "",
@@ -215,5 +210,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1760798581554
+  "lastUpdated": 1762371509000
 }
