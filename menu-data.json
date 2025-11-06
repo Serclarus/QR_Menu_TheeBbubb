@@ -112,7 +112,7 @@
       "Halley": {
         "name": "Halley",
         "description": "",
-        "price": 20
+        "price": 25
       },
       "Biskrem": {
         "name": "Biskrem",
@@ -210,5 +210,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1762371509000
+  "lastUpdated": 1762452998163
 }
