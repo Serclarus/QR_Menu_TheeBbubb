@@ -161,11 +161,6 @@
         "description": "Kutu ve şişe seçenekleriyle",
         "price": 70
       },
-      "Fanta": {
-        "name": "Fanta",
-        "description": "",
-        "price": 70
-      },
       "Gazoz": {
         "name": "Gazoz",
         "description": "",
@@ -210,5 +205,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1762452998163
+  "lastUpdated": 1763994754851
 }
