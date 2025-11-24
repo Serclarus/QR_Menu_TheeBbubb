@@ -159,7 +159,7 @@
       "Kola": {
         "name": "Kola",
         "description": "Kutu ve şişe seçenekleriyle",
-        "price": 70
+        "price": 90
       },
       "Gazoz": {
         "name": "Gazoz",
@@ -205,5 +205,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1763994754851
+  "lastUpdated": 1763994799172
 }
