@@ -180,6 +180,11 @@
         "name": "Red Bull",
         "description": "Orijinal,şekersiz,şeftali",
         "price": 90
+      },
+      "Şişe Kola": {
+        "name": "Şişe Kola",
+        "description": "",
+        "price": 60
       }
     }
   },
@@ -215,5 +220,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1763994909213
+  "lastUpdated": 1763994944190
 }
