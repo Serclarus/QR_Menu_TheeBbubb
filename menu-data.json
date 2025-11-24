@@ -175,6 +175,11 @@
         "name": "Fuse Tea",
         "description": "Karpuz,Çilek,Şeftali,Limon",
         "price": 90
+      },
+      "Red Bull": {
+        "name": "Red Bull",
+        "description": "Orijinal,şekersiz,şeftali",
+        "price": 90
       }
     }
   },
@@ -210,5 +215,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1763994869547
+  "lastUpdated": 1763994909213
 }
