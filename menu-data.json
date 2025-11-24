@@ -170,6 +170,11 @@
         "name": "Churchill",
         "description": "",
         "price": 70
+      },
+      "Fuse Tea": {
+        "name": "Fuse Tea",
+        "description": "Karpuz,Çilek,Şeftali,Limon",
+        "price": 90
       }
     }
   },
@@ -205,5 +210,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1763994799172
+  "lastUpdated": 1763994869547
 }
