@@ -169,7 +169,7 @@
       "Churchill": {
         "name": "Churchill",
         "description": "",
-        "price": 70
+        "price": 75
       },
       "Fuse Tea": {
         "name": "Fuse Tea",
@@ -220,5 +220,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1765813163244
+  "lastUpdated": 1765813190584
 }
