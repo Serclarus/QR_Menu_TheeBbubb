@@ -107,7 +107,7 @@
       "Çikolatalı Gofret": {
         "name": "Çikolatalı Gofret",
         "description": "",
-        "price": 30
+        "price": 25
       },
       "Halley": {
         "name": "Halley",
@@ -225,5 +225,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1765813280008
+  "lastUpdated": 1765813353937
 }
