@@ -47,7 +47,7 @@
     "Ana Yemekler": {
       "Tost": {
         "name": "Tost",
-        "description": "Karışık ve kaşarlı çeşitleriyle\nÇay ikramımızdır.",
+        "description": "Karışık ve kaşarlı çeşitleriyle",
         "price": 100
       },
       "Köfte Ekmek": {
@@ -220,5 +220,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1765813371677
+  "lastUpdated": 1765817484983
 }
