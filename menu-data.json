@@ -185,6 +185,11 @@
         "name": "Şişe Kola",
         "description": "",
         "price": 60
+      },
+      "Fanta": {
+        "name": "Fanta",
+        "description": "",
+        "price": 90
       }
     }
   },
@@ -220,5 +225,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1765813201597
+  "lastUpdated": 1765813219358
 }
