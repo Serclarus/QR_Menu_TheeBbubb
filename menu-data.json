@@ -122,7 +122,7 @@
       "Çizi": {
         "name": "Çizi",
         "description": "",
-        "price": 30
+        "price": 25
       },
       "Çubuk Kraker": {
         "name": "Çubuk Kraker",
@@ -220,5 +220,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1765813360258
+  "lastUpdated": 1765813371677
 }
