@@ -114,11 +114,6 @@
         "description": "",
         "price": 25
       },
-      "Biskrem": {
-        "name": "Biskrem",
-        "description": "",
-        "price": 40
-      },
       "Kremalı Sandviç Bisküvi": {
         "name": "Kremalı Sandviç Bisküvi",
         "description": "",
@@ -225,5 +220,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1765813353937
+  "lastUpdated": 1765813360258
 }
