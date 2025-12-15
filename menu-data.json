@@ -14,7 +14,7 @@
       "Türk Kahvesi": {
         "name": "Türk Kahvesi",
         "description": "Bol köpüklü Türk kahvemiz",
-        "price": 60
+        "price": 75
       },
       "Sıcak Çikolata": {
         "name": "Sıcak Çikolata",
@@ -220,5 +220,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1763994944190
+  "lastUpdated": 1765813163244
 }
