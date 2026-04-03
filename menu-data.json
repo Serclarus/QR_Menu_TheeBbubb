@@ -48,7 +48,7 @@
       "Tost": {
         "name": "Tost",
         "description": "Karışık ve kaşarlı çeşitleriyle",
-        "price": 150
+        "price": 175
       },
       "Köfte Ekmek": {
         "name": "Köfte Ekmek",
@@ -220,5 +220,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1775241774159
+  "lastUpdated": 1775241784738
 }
