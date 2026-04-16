@@ -9,7 +9,7 @@
       "Oralet": {
         "name": "Oralet",
         "description": "Kivi,karadut, kuşburnu, portakal,limon,muz,kakao, çilek,elma,tarçın,nane limon aromalı oralet çeşitleri",
-        "price": 25
+        "price": 30
       },
       "Türk Kahvesi": {
         "name": "Türk Kahvesi",
@@ -220,5 +220,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1776365424769
+  "lastUpdated": 1776365436643
 }
