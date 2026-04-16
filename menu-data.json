@@ -4,7 +4,7 @@
       "Çay": {
         "name": "Çay",
         "description": "Bergamotlu türk çayı",
-        "price": 25
+        "price": 30
       },
       "Oralet": {
         "name": "Oralet",
@@ -220,5 +220,5 @@
       "icon": "hookah_icon.png"
     }
   },
-  "lastUpdated": 1775347166114
+  "lastUpdated": 1776365422788
 }
